@@ -12,23 +12,17 @@ struct ContentView: View {
     // Create a new Bluetooth Manager which handles the central and peripheral role.
     @ObservedObject var bluetoothManager = BluetoothManager()
     
-    // THIS IS A TEST ON BRANCHES
+    
     
     var body: some View {
         NavigationView {
-//
-//            List( bluetoothManager.threads ) { thread in
-//                ContactView(thread: thread)
-//            }
+
             List(bluetoothManager.messages) {message in
                 ContactView(message: message, BM: bluetoothManager)
             }
-//
-//            List() {
-//                ContactView(thread: Thread(id: 10, author: "Kasper", lastMessage: "Fun night", messages: []))
-//            }
             
             .navigationTitle("Chat")
+
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink(

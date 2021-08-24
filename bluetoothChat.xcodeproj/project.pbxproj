@@ -123,10 +123,8 @@
 		B05E1F4D26D3C7FF00AD9E65 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B06E299E26D5358000FBB67E /* Bluetooth */,
 				B0C8C32F26D4F8E200984BFA /* ThreadManager.swift */,
-				B05E1F4E26D3C9C100AD9E65 /* BluetoothManager.swift */,
-				B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */,
-				B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -138,6 +136,16 @@
 				B05E1F6226D41DD400AD9E65 /* CustomScrollView.swift */,
 			);
 			path = ChatModels;
+			sourceTree = "<group>";
+		};
+		B06E299E26D5358000FBB67E /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				B05E1F4E26D3C9C100AD9E65 /* BluetoothManager.swift */,
+				B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */,
+				B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */,
+			);
+			path = Bluetooth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

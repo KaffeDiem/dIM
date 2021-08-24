@@ -25,7 +25,7 @@ extension BluetoothManager {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         // Print the name of discovered peripherals.
         if let name = advertisementData[CBAdvertisementDataLocalNameKey] {
-            print("A peripheral has been discovered: \(name)")
+            print("Peripheral discovered: \(name)")
         }
         // Connect to the newly discovered peripheral.
         centralManager.connect(peripheral, options: nil)
@@ -42,6 +42,14 @@ extension BluetoothManager {
         peripheral.delegate = self
         // Discover services which the peripheral has to offer.
         peripheral.discoverServices([self.service.UUID])
+    }
+    
+    
+    // MARK: TODO - this function, whatever it does.
+    // Whenever a peripheral disconnects we got to remove it from the
+    // list of connected peripherals.
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        cleanUp(peripheral)
     }
     
     
@@ -88,9 +96,8 @@ extension BluetoothManager {
             print("Unable to get new notification: \(error.localizedDescription)")
         }
         
-        if characteristic.isNotifying {
-            print("Receiving notifications from: \(peripheral.name ?? "Unknown")")
-        } else {
+        // Cancel subs if they are not for us.
+        if !characteristic.isNotifying {
             print("Cancel subsribtions from: \(peripheral.name ?? "Unknown")")
             centralManager.cancelPeripheralConnection(peripheral)
         }
@@ -107,7 +114,6 @@ extension BluetoothManager {
         guard let data = characteristic.value else { return }
         
         let decoder = JSONDecoder()
-        
         // Decode the message received from a connected peripheral and save it.
         do {
             let message = try decoder.decode(Message.self, from: data)
@@ -120,8 +126,8 @@ extension BluetoothManager {
         }
     }
     
-    
+    // MARK: TODO - this function, whatever it does.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        
+        cleanUp(peripheral)
     }
 }

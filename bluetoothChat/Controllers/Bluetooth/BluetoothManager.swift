@@ -38,8 +38,23 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     // MARK: Helper functions.
+    
+    // Return amount of connected devices.
     func getConnectedDevices() -> Int {
         return connectedCharateristics.count
+    }
+    
+    // Remove a device from connected devices.
+    // MARK: DOES NOT DO PROPER CLEANUP YET
+    func cleanUp(_ peripheral: CBPeripheral) {
+        connectedPeripherals.removeAll() { device in
+            return device == peripheral
+        }
+        print("Remove device from connected devices.")
+        
+        centralManager.cancelPeripheralConnection(peripheral)
+        print(centralManager.retrieveConnectedPeripherals(withServices: [self.service.UUID]))
+        print("Cancelled connection to peripheral")
     }
 }
 
