@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 struct ChatView: View {
-    var BM: BluetoothManager
     
     @ObservedObject var model = ChatModel()
+    @EnvironmentObject var bluetoothManager: BluetoothManager
     
     var body: some View {
         GeometryReader { geo in
@@ -40,7 +40,6 @@ struct ChatView: View {
                             model.position = model.position == BubblePosition.received ? BubblePosition.sent : BubblePosition.received
                             model.positions.append(model.position)
                             model.messages.append(model.text)
-                            BM.sendData(message: model.text)
                             model.text = ""
                         }
                     }

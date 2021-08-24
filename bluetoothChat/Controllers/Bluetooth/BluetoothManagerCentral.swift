@@ -117,10 +117,7 @@ extension BluetoothManager {
         // Decode the message received from a connected peripheral and save it.
         do {
             let message = try decoder.decode(Message.self, from: data)
-            
-            print("\(message.author): \(message.text)")
-            
-            messages.append(message)
+            retreiveData(message)
         } catch {
             print("Error decoding message: \(error)")
         }

@@ -10,15 +10,35 @@ import SwiftUI
 struct ContentView: View {
     
     // Create a new Bluetooth Manager which handles the central and peripheral role.
-    @ObservedObject var bluetoothManager = BluetoothManager()
-    
-    
+    @StateObject var bluetoothManager = BluetoothManager()
     
     var body: some View {
         NavigationView {
 
-            List(bluetoothManager.messages) {message in
-                ContactView(message: message, BM: bluetoothManager)
+            // List of each thread
+            List(bluetoothManager.conversations) {conversation in
+                NavigationLink(
+                    destination: ChatView()
+                        .environmentObject(bluetoothManager),
+                    label: {
+                        HStack {
+                            Image(systemName: "person")
+                                .frame(width: 50, height: 50, alignment: .center)
+                            
+                            VStack {
+                                HStack {
+                                    Text(conversation.author)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text("Here is some text")
+                                        .scaledToFit()
+                                        .font(.footnote)
+                                    Spacer()
+                                }
+                            }
+                        }
+                    })
             }
             
             .navigationTitle("Chat")
@@ -32,7 +52,7 @@ struct ContentView: View {
                         })
                     Button("Count", action: {print(bluetoothManager.getConnectedDevices())})
                     Button("Send", action: {
-                            print(bluetoothManager.sendData(message: "Here is data!"))
+                            print(bluetoothManager.sendData(message: "Sent data."))
                     })
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

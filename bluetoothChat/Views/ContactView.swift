@@ -13,26 +13,6 @@ struct ContactView: View {
     var BM: BluetoothManager
     
     var body: some View {
-        NavigationLink(
-            destination: ChatView(BM: BM),
-            label: {
-                HStack {
-                    Image(systemName: "person")
-                        .frame(width: 50, height: 50, alignment: .center)
-                    
-                    VStack { 
-                        HStack {
-                            Text(message.author)
-                            Spacer()
-                        }
-                        HStack {
-                            Text(message.text)
-                                .scaledToFit()
-                                .font(.footnote)
-                            Spacer()
-                        }
-                    }
-                }
-            })
+        
     }
 }

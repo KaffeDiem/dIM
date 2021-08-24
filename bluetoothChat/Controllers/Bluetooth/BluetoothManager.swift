@@ -13,19 +13,22 @@ import CoreBluetooth
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
+    
     // Published variables are used outside of this class.
     @Published var isReady: Bool = false
-    @Published var connectedPeripherals: [CBPeripheral] = []
-    @Published var connectedCharateristics: [CBCharacteristic] = []
     
-    // Holds all messages received from all peripherals. 
+    var connectedPeripherals: [CBPeripheral] = []
+    var connectedCharateristics: [CBCharacteristic] = []
+    
+    // Holds all messages received from all peripherals.
+    @Published var conversations: [Conversation] = []
     @Published var messages: [Message] = []
     
     let service = Service()
     
     var centralManager: CBCentralManager!
     var peripheralManager: CBPeripheralManager!
-    
+
     var characteristic: CBMutableCharacteristic?
     
     override init() {
@@ -37,11 +40,43 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         centralManager.delegate = self
     }
     
-    // MARK: Helper functions.
+    // MARK: Public functions.
     
     // Return amount of connected devices.
     func getConnectedDevices() -> Int {
         return connectedCharateristics.count
+    }
+    
+    
+    // MARK: Helper functions.
+    
+    // Retreive a message from a connected peripheral.
+    func retreiveData(_ message: Message) {
+        /* Loop trough all conversations. If a conversation exists with the author
+         then add the message to said conversation. Otherwise create a new one. */
+        var authorFound = false
+        
+        for (index, conv) in conversations.enumerated() {
+            if conv.author == message.author {
+                authorFound = true
+                conversations[index].addMessage(add: message)
+                conversations[index].updateLastMessage(new: message)
+            }
+        }
+        
+        // Append a new conversation if none was found.
+        if !authorFound {
+            conversations.append(
+                Conversation(
+                    id: message.id,
+                    author: message.author,
+                    lastMessage: message,
+                    messages: [message]
+                )
+            )
+        }
+        
+        print("\(message.author): \(message.text)")
     }
     
     // Remove a device from connected devices.
@@ -50,11 +85,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         connectedPeripherals.removeAll() { device in
             return device == peripheral
         }
-        print("Remove device from connected devices.")
         
         centralManager.cancelPeripheralConnection(peripheral)
         print(centralManager.retrieveConnectedPeripherals(withServices: [self.service.UUID]))
-        print("Cancelled connection to peripheral")
+        print("Cleanup (on device: \(peripheral.name ?? "Unknown")")
     }
 }
 
