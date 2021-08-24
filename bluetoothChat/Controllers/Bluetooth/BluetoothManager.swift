@@ -47,6 +47,17 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         return connectedCharateristics.count
     }
     
+    // Get a given conversation
+    func getConversation(author: String) -> [Message] {
+        for conversation in conversations {
+            if conversation.author == author {
+                return conversation.messages
+            }
+        }
+        print("There was an error fetching conversation from \(author)")
+        return []
+    }
+    
     
     // MARK: Helper functions.
     

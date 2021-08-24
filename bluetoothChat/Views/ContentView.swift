@@ -18,7 +18,7 @@ struct ContentView: View {
             // List of each thread
             List(bluetoothManager.conversations) {conversation in
                 NavigationLink(
-                    destination: ChatView()
+                    destination: ChatView(author: conversation.author)
                         .environmentObject(bluetoothManager),
                     label: {
                         HStack {

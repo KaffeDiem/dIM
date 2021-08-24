@@ -20,8 +20,6 @@
 		B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */; };
 		B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */; };
 		B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */; };
-		B05E1F5F26D41D7A00AD9E65 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5E26D41D7A00AD9E65 /* ChatModel.swift */; };
-		B05E1F6326D41DD400AD9E65 /* CustomScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F6226D41DD400AD9E65 /* CustomScrollView.swift */; };
 		B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06079B326D54F54007B4DF6 /* ConversationModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,8 +39,6 @@
 		B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerCentral.swift; sourceTree = "<group>"; };
 		B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerPeripheral.swift; sourceTree = "<group>"; };
 		B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
-		B05E1F5E26D41D7A00AD9E65 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
-		B05E1F6226D41DD400AD9E65 /* CustomScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomScrollView.swift; sourceTree = "<group>"; };
 		B06079B326D54F54007B4DF6 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,7 +109,6 @@
 				B05E1F5026D3CADC00AD9E65 /* ServiceModel.swift */,
 				B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */,
 				B06079B326D54F54007B4DF6 /* ConversationModel.swift */,
-				B05E1F6026D41DB800AD9E65 /* ChatModels */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -124,15 +119,6 @@
 				B06E299E26D5358000FBB67E /* Bluetooth */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		B05E1F6026D41DB800AD9E65 /* ChatModels */ = {
-			isa = PBXGroup;
-			children = (
-				B05E1F5E26D41D7A00AD9E65 /* ChatModel.swift */,
-				B05E1F6226D41DD400AD9E65 /* CustomScrollView.swift */,
-			);
-			path = ChatModels;
 			sourceTree = "<group>";
 		};
 		B06E299E26D5358000FBB67E /* Bluetooth */ = {
@@ -219,7 +205,6 @@
 				B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */,
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
-				B05E1F6326D41DD400AD9E65 /* CustomScrollView.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
@@ -227,7 +212,6 @@
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* BluetoothManager.swift in Sources */,
-				B05E1F5F26D41D7A00AD9E65 /* ChatModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
