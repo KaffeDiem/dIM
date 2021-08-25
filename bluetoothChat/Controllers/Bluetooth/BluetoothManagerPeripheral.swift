@@ -44,23 +44,6 @@ extension BluetoothManager {
         print("Central unsubscribed from characteristic")
     }
     
-    func sendData(message: String) {
-        if let characteristic = self.characteristic {
-            
-            let packet = Message(id: Int.random(in: 1...1000), text: message, author: self.service.name)
-
-            let encoder = JSONEncoder()
-
-            do {
-                let messageEncoded = try encoder.encode(packet)
-                print("-")
-                peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
-            } catch {
-                print("Error encoding message: \(message) -> \(error)")
-            }
-            
-//            peripheralManager.updateValue(message.data(using: .utf8)!, for: characteristic, onSubscribedCentrals: nil)
-        }
-    }
+    
 }
 

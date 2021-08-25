@@ -31,7 +31,7 @@ struct ContentView: View {
                                     Spacer()
                                 }
                                 HStack {
-                                    Text("Here is some text")
+                                    Text(conversation.lastMessage.text)
                                         .scaledToFit()
                                         .font(.footnote)
                                     Spacer()

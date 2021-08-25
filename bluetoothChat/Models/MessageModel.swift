@@ -7,6 +7,9 @@
 
 import Foundation
 
+/*
+ Messages are the only thing actually sent between devices.
+*/
 struct Message: Codable, Identifiable {
     var id: Int
     var text: String

@@ -40,14 +40,37 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         centralManager.delegate = self
     }
     
-    // MARK: Public functions.
+    // MARK: Functions allowed to call from other classes.
     
-    // Return amount of connected devices.
+    /*
+     Send data to all connected peripherals encoded as a JSON data stream.
+     It is then up to the receipent to decode the data.
+     */
+    func sendData(message: String) {
+        
+        guard message != "" else { return }
+        
+        if let characteristic = self.characteristic {
+        
+            let packet = Message(id: Int.random(in: 1...1000), text: message, author: self.service.name)
+            let encoder = JSONEncoder()
+            
+            do {
+                let messageEncoded = try encoder.encode(packet)
+                print("-")
+                peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+            } catch {
+                print("Error encoding message: \(message) -> \(error)")
+            }
+        }
+    }
+    
+    /* Return amount of connected devices. */
     func getConnectedDevices() -> Int {
         return connectedCharateristics.count
     }
     
-    // Get a given conversation
+    /* Get a conversation with some user. */
     func getConversation(author: String) -> [Message] {
         for conversation in conversations {
             if conversation.author == author {
@@ -61,12 +84,13 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     // MARK: Helper functions.
     
-    // Retreive a message from a connected peripheral.
+    /*
+     Add messages to the correct conversation or create a new one if the
+     sender has not been seen before.
+     */
     func retreiveData(_ message: Message) {
-        /* Loop trough all conversations. If a conversation exists with the author
-         then add the message to said conversation. Otherwise create a new one. */
         var authorFound = false
-        
+        //  Loop trough conversations to find a match if possible.
         for (index, conv) in conversations.enumerated() {
             if conv.author == message.author {
                 authorFound = true
@@ -74,8 +98,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 conversations[index].updateLastMessage(new: message)
             }
         }
-        
-        // Append a new conversation if none was found.
+        //  Create a new conversation if the sender has not been seen.
         if !authorFound {
             conversations.append(
                 Conversation(
@@ -86,12 +109,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 )
             )
         }
-        
-        print("\(message.author): \(message.text)")
     }
     
-    // Remove a device from connected devices.
-    // MARK: DOES NOT DO PROPER CLEANUP YET
+    
+    // MARK: Implement proper cleanUp of disconnected peripherals.
     func cleanUp(_ peripheral: CBPeripheral) {
         connectedPeripherals.removeAll() { device in
             return device == peripheral

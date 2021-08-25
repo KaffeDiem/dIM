@@ -8,43 +8,40 @@
 import Foundation
 import SwiftUI
 
+
 struct ChatView: View {
     
-    @ObservedObject var model = ChatModel()
     @EnvironmentObject var bluetoothManager: BluetoothManager
+    var author: String
     
+    @State var message: String = ""
+        
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                //MARK:- ScrollView
-                CustomScrollView(scrollToEnd: true) {
-                    LazyVStack {
-                        ForEach(0..<model.messages.count, id:\.self) { index in
-                            ChatBubble(position: model.positions[index], color: model.positions[index] == BubblePosition.sent ?.green : .blue) {
-                                Text(model.messages[index])
-                            }
-                        }
-                    }
-                }.padding(.top)
-                //MARK:- text editor
-                HStack {
-                    ZStack {
-                        TextEditor(text: $model.text)
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke()
-                            .foregroundColor(.gray)
-                    }.frame(height: 50)
+        
+        VStack {
+            List (bluetoothManager.getConversation(author: author)) {message in
+                Text(message.text)
                     
-                    Button("send") {
-                        if model.text != "" {
-                            model.position = model.position == BubblePosition.received ? BubblePosition.sent : BubblePosition.received
-                            model.positions.append(model.position)
-                            model.messages.append(model.text)
-                            model.text = ""
-                        }
-                    }
-                }.padding()
-                .navigationTitle("A chat window")
+                .navigationTitle(author)
+            }
+            HStack {
+                TextField("Aa", text: $message, onEditingChanged: {changed in
+                    print("onEditingChanged: \(changed)")
+                }, onCommit: {
+                    bluetoothManager.sendData(message: message)
+                })
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Button(action: {
+                    bluetoothManager.sendData(message: message)
+                }) {
+                    Image(systemName: "chevron.forward.circle.fill")
+                }
+                .padding(.bottom)
+                .padding(.trailing)
+                .padding(.top)
+                .scaleEffect(1.8)
             }
         }
     }
