@@ -12,8 +12,28 @@ import CoreBluetooth
 extension BluetoothManager {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        // TODO: Handle other states as well.
+        // MARK: TODO: Handle other states as well.
         guard central.state == .poweredOn else {return}
+        
+        /*
+         Should handle states such that the user is prompted if Bluetooth is turned off,
+         the user has not allowed bluetooth access for the app and so on ...
+         
+             switch central.state {
+                 case .poweredOn:
+                     startScan()
+                 case .poweredOff:
+                     // Alert user to turn on Bluetooth
+                 case .resetting:
+                     // Wait for next state update and consider logging interruption of Bluetooth service
+                 case .unauthorized:
+                     // Alert user to enable Bluetooth permission in app Settings
+                 case .unsupported:
+                     // Alert user their device does not support Bluetooth and app will not work as expected
+                 case .unknown:
+                    // Wait for next state update
+              }
+         */
         
         isReady = true
         // Start scanning for devices as soon as the state is on.
@@ -21,18 +41,29 @@ extension BluetoothManager {
     }
     
     
-    // Connect to peripherals when they are discovered.
+    /*
+     Connect to peripheral devices which broadcast the chosen UUID
+     for the app and add it to discovered devices.
+     Callback function activated whenever a peripheral is discovered.
+     */
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         // Print the name of discovered peripherals.
         if let name = advertisementData[CBAdvertisementDataLocalNameKey] {
             print("Peripheral discovered: \(name)")
+            // Connect to the newly discovered peripheral.
+            centralManager.connect(peripheral, options: nil)
+            // Save the connected peripheral in connectedPeripherals for later use.
+            discoveredPeripherals.append(
+                Device(
+                    uuid: peripheral.identifier.uuidString,
+                    rssi: RSSI.intValue,
+                    name: name as! String,
+                    peripheral: peripheral)
+            )
+        } else {
+            print("Error: Peripheral had no name and therefore could not connect.")
         }
-        // Connect to the newly discovered peripheral.
-        centralManager.connect(peripheral, options: nil)
-        // Save the connected peripheral in connectedPeripherals for later use.
-        connectedPeripherals.append(peripheral)
     }
-    
     
     // Check to make sure that the device we are connecting to is
     // broadcasting the correct characteristics.
@@ -44,13 +75,27 @@ extension BluetoothManager {
         peripheral.discoverServices([self.service.UUID])
     }
     
+    // MARK: TODO - delegate method if a peripheral fails to connect.
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print("Peripheral failed to connect: \(peripheral.name ?? "Unknown")")
+    }
+    
     
     // MARK: TODO - this function, whatever it does.
     // Whenever a peripheral disconnects we got to remove it from the
     // list of connected peripherals.
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        cleanUp(peripheral)
+        print("Peripheral disconnected: \(peripheral.name ?? "Unknown")")
+        
+        for (index, device) in discoveredPeripherals.enumerated() {
+            if device.peripheral == peripheral {
+                discoveredPeripherals.remove(at: index)
+            }
+            
+        }
+//        cleanUp(peripheral)
     }
+    
     
     
     // Discover characteristics if the correct service has been found.
@@ -125,6 +170,6 @@ extension BluetoothManager {
     
     // MARK: TODO - this function, whatever it does.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        cleanUp(peripheral)
+//        cleanUp(peripheral)
     }
 }

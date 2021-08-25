@@ -36,7 +36,8 @@ extension BluetoothManager {
         peripheralManager.add(service)
         peripheralManager.startAdvertising([
             CBAdvertisementDataServiceUUIDsKey: [self.service.UUID],
-            CBAdvertisementDataLocalNameKey: self.service.name
+            //  Advertise either the set username or the default name of the device.
+            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username") ?? self.service.deviceName
         ])
     }
     

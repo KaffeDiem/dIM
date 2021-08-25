@@ -1,6 +1,41 @@
 {
   "colors" : [
     {
+      "color" : {
+        "platform" : "ios",
+        "reference" : "systemOrangeColor"
+      },
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "color" : {
+        "platform" : "ios",
+        "reference" : "systemOrangeColor"
+      },
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "color-space" : "extended-srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.122",
+          "green" : "0.600",
+          "red" : "1.000"
+        }
+      },
       "idiom" : "universal"
     }
   ],

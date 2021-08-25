@@ -20,21 +20,37 @@ struct ChatView: View {
         
         VStack {
             List (bluetoothManager.getConversation(author: author)) {message in
-                Text(message.text)
+                VStack {
+                    HStack {
+                        Text(message.text)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(message.author)
+                            .font(.footnote)
+                        Spacer()
+                    }
+                }
                     
                 .navigationTitle(author)
             }
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in
-                    print("onEditingChanged: \(changed)")
+                    // Should anything go here?
                 }, onCommit: {
+                    bluetoothManager.addMessage(receipent: author, messageText: message)
                     bluetoothManager.sendData(message: message)
+                    UIApplication.shared.endEditing()
+                    message = ""
                 })
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 Button(action: {
+                    bluetoothManager.addMessage(receipent: author, messageText: message)
                     bluetoothManager.sendData(message: message)
+                    UIApplication.shared.endEditing()
+                    message = ""
                 }) {
                     Image(systemName: "chevron.forward.circle.fill")
                 }

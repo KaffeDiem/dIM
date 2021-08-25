@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct ConnectionView: View {
-    let connectedDevices: Int
+    @EnvironmentObject var bluetoothManager: BluetoothManager
     
     var body: some View {
-        Text(connectedDevices > 0 ? "\(connectedDevices) connected device\(connectedDevices > 1 ? "s" : ""). You should be connected to the outside world." : "No devices available.")
+        Text(bluetoothManager.discoveredPeripherals.count > 0 ? "\(bluetoothManager.discoveredPeripherals.count) connected device\(bluetoothManager.discoveredPeripherals.count > 1 ? "s" : ""). You should be connected to the outside world." : "No devices available.")
+            .padding()
     }
 }
 
 
 struct ConnectionView_Previews: PreviewProvider {
     static var previews: some View {
-        ConnectionView(connectedDevices: 1)
+        ConnectionView()
     }
 }

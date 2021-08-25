@@ -17,7 +17,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     // Published variables are used outside of this class.
     @Published var isReady: Bool = false
     
-    var connectedPeripherals: [CBPeripheral] = []
+    var discoveredPeripherals: [Device] = []
     var connectedCharateristics: [CBCharacteristic] = []
     
     // Holds all messages received from all peripherals.
@@ -51,8 +51,15 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         guard message != "" else { return }
         
         if let characteristic = self.characteristic {
-        
-            let packet = Message(id: Int.random(in: 1...1000), text: message, author: self.service.name)
+            
+            let username = UserDefaults.standard.string(forKey: "Username") ?? self.service.deviceName
+            let packet = Message(
+                id: Int.random(in: 1...1000),
+                text: message,
+                // If no username has been saved in UserDefaults then use the name of the device.
+                author: username
+            )
+            
             let encoder = JSONEncoder()
             
             do {
@@ -79,6 +86,19 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
         print("There was an error fetching conversation from \(author)")
         return []
+    }
+    
+    /* Add a message to a conversation - used when sending messages*/
+    func addMessage(receipent: String, messageText: String) {
+        for (index, conv) in conversations.enumerated() {
+            if conv.author == receipent {
+                let message = Message(
+                    id: Int.random(in: 0...1000),
+                    text: messageText,
+                    author: UserDefaults.standard.string(forKey: "Username") ?? service.deviceName)
+                conversations[index].addMessage(add: message)
+            }
+        }
     }
     
     
@@ -112,15 +132,15 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     
-    // MARK: Implement proper cleanUp of disconnected peripherals.
-    func cleanUp(_ peripheral: CBPeripheral) {
-        connectedPeripherals.removeAll() { device in
-            return device == peripheral
-        }
-        
-        centralManager.cancelPeripheralConnection(peripheral)
-        print(centralManager.retrieveConnectedPeripherals(withServices: [self.service.UUID]))
-        print("Cleanup (on device: \(peripheral.name ?? "Unknown")")
+    // MARK: TODO: Implement cleanup.
+    func cleanUp(_ device: Device) {
+//        discoveredPeripherals.removeAll() { device in
+//            return device == peripheral
+//        }
+//
+//        centralManager.cancelPeripheralConnection(peripheral)
+//        print(centralManager.retrieveConnectedPeripherals(withServices: [self.service.UUID]))
+//        print("Cleanup (on device: \(peripheral.name ?? "Unknown")")
     }
 }
 

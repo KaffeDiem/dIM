@@ -2,11 +2,15 @@
 //  DeviceModel.swift
 //  bluetoothChat
 //
-//  Created by Kasper Munch on 23/08/2021.
+//  Created by Kasper Munch on 25/08/2021.
 //
 
 import Foundation
+import CoreBluetooth
 
 struct Device {
-    <#fields#>
+    let uuid: String
+    let rssi: Int
+    let name: String
+    let peripheral: CBPeripheral
 }

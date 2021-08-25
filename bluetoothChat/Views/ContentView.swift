@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/*
+ This is the main view from which everything else will be loaded.
+ Most important is the Bluetooth Manager which handles the logic
+ of the app.
+ */
 struct ContentView: View {
     
     // Create a new Bluetooth Manager which handles the central and peripheral role.
@@ -46,23 +51,24 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink(
-                        destination: Text("Settings: Work in progress."),
+                        destination: SettingsView(),
                         label: {
                             Image(systemName: "gearshape.fill")
                         })
-                    Button("Count", action: {print(bluetoothManager.getConnectedDevices())})
-                    Button("Send", action: {
-                            print(bluetoothManager.sendData(message: "Sent data."))
-                    })
+//                    Button("Send", action: {
+//                            print(bluetoothManager.sendData(message: "Sent data."))
+//                    })
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     NavigationLink(
-                        destination: Text("Add user: Work in progress."),
+                        destination: DiscoverView()
+                            .environmentObject(bluetoothManager),
                         label: {
                             Image(systemName: "person.fill.badge.plus")
                         })
                     NavigationLink(
-                        destination: ConnectionView(connectedDevices: bluetoothManager.getConnectedDevices()),
+                        destination: ConnectionView()
+                            .environmentObject(bluetoothManager),
                         label: {
                             Image(systemName: "bolt.horizontal.circle.fill")
                         })
