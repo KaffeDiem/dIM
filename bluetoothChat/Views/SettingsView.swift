@@ -17,23 +17,26 @@ struct SettingsView: View {
     var body: some View {
         VStack {
             
-            HStack {
-                Text("Username")
-                    .padding(.leading)
-                    .padding(.top)
-                Spacer()
+            VStack {
+                HStack {
+                    Text("Username")
+                        .foregroundColor(.accentColor)
+                        .padding(.leading)
+                    Spacer()
+                }
+                TextField(defaults.string(forKey: "Username") ?? "", text: $usernameTemp, onEditingChanged: {changed in
+                    // Do something with onEditingChanged?
+                }, onCommit: {
+                    UIApplication.shared.endEditing()
+                    defaults.set(usernameTemp, forKey: "Username")
+                })
+                .padding(.leading)
+                .padding(.trailing)
+                .padding(.bottom)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
+                .autocapitalization(.none)
             }
-            TextField(defaults.string(forKey: "Username") ?? "Aa", text: $usernameTemp, onEditingChanged: {changed in
-                print("onEditingChanged: \(changed)")
-            }, onCommit: {
-                UIApplication.shared.endEditing()
-                defaults.set(usernameTemp, forKey: "Username")
-            })
-            .padding(.leading)
-            .padding(.trailing)
-            .padding(.bottom)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            
             .navigationBarTitle("Settings")
             
         }

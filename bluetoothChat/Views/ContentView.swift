@@ -18,7 +18,7 @@ struct ContentView: View {
     @StateObject var bluetoothManager = BluetoothManager()
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
 
             // List of each thread
             List(bluetoothManager.conversations) {conversation in
@@ -74,7 +74,7 @@ struct ContentView: View {
                         })
                 }
             }
-        }
+//        }
     }
 }
 

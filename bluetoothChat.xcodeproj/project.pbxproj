@@ -21,6 +21,7 @@
 		B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */; };
 		B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */; };
 		B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06079B326D54F54007B4DF6 /* ConversationModel.swift */; };
+		B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetUpView.swift */; };
 		B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179C26D6276C00F9C649 /* SettingsView.swift */; };
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
 		B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A026D6342900F9C649 /* DiscoverView.swift */; };
@@ -44,6 +45,7 @@
 		B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerPeripheral.swift; sourceTree = "<group>"; };
 		B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		B06079B326D54F54007B4DF6 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
+		B064B43626D771F0005D6BFB /* SetUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpView.swift; sourceTree = "<group>"; };
 		B074179C26D6276C00F9C649 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B07417A026D6342900F9C649 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				B05E1F4A26D3B44300AD9E65 /* ChatView.swift */,
 				B074179C26D6276C00F9C649 /* SettingsView.swift */,
 				B07417A026D6342900F9C649 /* DiscoverView.swift */,
+				B064B43626D771F0005D6BFB /* SetUpView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
+				B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */,
 				B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* BluetoothManager.swift in Sources */,

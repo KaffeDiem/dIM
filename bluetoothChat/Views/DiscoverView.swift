@@ -13,7 +13,9 @@ struct DiscoverView: View {
     var body: some View {
         VStack {
             Text("Send a message to a nearby device.")
-                .padding()
+                .padding(.top)
+                .padding(.leading)
+                .padding(.trailing)
             
             List(bluetoothManager.discoveredPeripherals, id: \.uuid) {device in
                 HStack {
@@ -21,10 +23,12 @@ struct DiscoverView: View {
                         bluetoothManager.sendData(message: "Hello there!")
                     }, label: {
                         Text(device.name)
+                            .padding()
                     })
                     Spacer()
                     Text("\(device.rssi)")
                         .font(.footnote)
+                        .padding()
                 }
             }
             .navigationBarTitle("Discover", displayMode: .inline)

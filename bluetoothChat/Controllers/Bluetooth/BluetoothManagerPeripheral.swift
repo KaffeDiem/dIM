@@ -44,7 +44,5 @@ extension BluetoothManager {
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         print("Central unsubscribed from characteristic")
     }
-    
-    
 }
 

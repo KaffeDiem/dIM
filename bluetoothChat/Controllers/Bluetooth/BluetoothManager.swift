@@ -72,12 +72,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
     
-    /* Return amount of connected devices. */
-    func getConnectedDevices() -> Int {
-        return connectedCharateristics.count
-    }
     
-    /* Get a conversation with some user. */
+    /* Get a conversation with some user. Used for displaying the chat */
     func getConversation(author: String) -> [Message] {
         for conversation in conversations {
             if conversation.author == author {
