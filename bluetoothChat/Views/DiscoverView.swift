@@ -20,7 +20,7 @@ struct DiscoverView: View {
             List(bluetoothManager.discoveredPeripherals, id: \.uuid) {device in
                 HStack {
                     Button(action: {
-                        bluetoothManager.sendData(message: "Hello there!")
+                        bluetoothManager.sendData(message: "Has started a conversation!")
                     }, label: {
                         Text(device.name)
                             .padding()
@@ -33,11 +33,5 @@ struct DiscoverView: View {
             }
             .navigationBarTitle("Discover", displayMode: .inline)
         }
-    }
-}
-
-struct DiscoverView_Previews: PreviewProvider {
-    static var previews: some View {
-        DiscoverView()
     }
 }

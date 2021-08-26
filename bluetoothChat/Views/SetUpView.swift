@@ -6,10 +6,19 @@
 //
 
 import SwiftUI
+import UIKit
+
+/*
+ SetUpView handles all initial first logins where users choose a username
+ and are then redirected to ContentView which is the main View of the app.
+ */
+
 
 struct SetUpView: View {
     @State var username: String = ""
     @State var hasUsername: Bool = false
+    
+    @Environment(\.colorScheme) var colorScheme
     
     init() {
         
@@ -31,13 +40,18 @@ struct SetUpView: View {
                 Spacer()
                 
                 VStack {
-                    Text("Login")
+                    Text("Choose username")
                     TextField("Aa", text: $username, onCommit: {
                         // Do something on commit.
-                    })
-                        .padding()
-                        .background(Color("smashed-white"))
-                        .cornerRadius(10.0)
+                        }
+                    )
+                    .keyboardType(.namePhonePad)
+                    .padding()
+                    .background(
+                        colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                    )
+                    .cornerRadius(10.0)
+                    
                     /*
                      Guiding text below textfield
                      */
@@ -45,8 +59,8 @@ struct SetUpView: View {
                         Text("Minimum 4 characters.")
                             .font(.footnote)
                             .foregroundColor(.accentColor)
-                    } else if username.count > 12 {
-                        Text("Maximum 12 characters.")
+                    } else if username.count > 16 {
+                        Text("Maximum 16 characters.")
                             .font(.footnote)
                             .foregroundColor(.accentColor)
                     } else if username.contains(" ") {
@@ -58,28 +72,46 @@ struct SetUpView: View {
                     }
                 }
                 .padding()
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
                 
                 Spacer()
                 
+                /*
+                 Enter button which handles setting the username if valid.
+                 */
                 VStack {
                     Button("Enter", action: {
-                        hasUsername = checkUsername(username: username)
-                        })
+                        let usernameValid: Bool = checkUsername(username: username)
+                        //  If the username is accepted then save it to persistent memory.
+                        if usernameValid {
+                            UserDefaults.standard.set(username, forKey: "Username")
+                        }
+                        
+                        hasUsername = usernameValid
+                        }
+                    )
                     .padding()
                     .foregroundColor(.white)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity)
-                .background(LinearGradient(gradient: Gradient(colors: [Color(.red), Color(.orange)]), startPoint: .leading, endPoint: .trailing))
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
                 .cornerRadius(10.0)
                 .padding()
-                    
+                
+                // Empty link which takes the user to the main screen if username has been set.
                 NavigationLink(destination: ContentView()
                                 .navigationBarTitle("")
                                 .navigationBarBackButtonHidden(true),
                                isActive: $hasUsername) {
                     EmptyView()
                 }
-                
             }
             .onAppear() {
                 // Check if the user already has a username.
@@ -97,15 +129,13 @@ struct SetUpView: View {
      Check if the username is 4-12 chars and does not include space
      */
     func checkUsername(username: String) -> Bool{
-        
         if username.count < 4 {
             return false
-        } else if username.count > 12 {
+        } else if username.count > 16 {
             return false
         } else if username.contains(" ") {
             return false
         }
-        
         return true
     }
 }

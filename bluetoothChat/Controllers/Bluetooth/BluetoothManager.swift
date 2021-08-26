@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreBluetooth
+import UserNotifications
 
 // The Bluetooth Manager handles all searching for, creating connection to
 // and sending/receiving messages to/from other Bluetooth devices.
@@ -52,7 +53,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         
         if let characteristic = self.characteristic {
             
-            let username = UserDefaults.standard.string(forKey: "Username") ?? self.service.deviceName
+            let username = UserDefaults.standard.string(forKey: "Username")!
             let packet = Message(
                 id: Int.random(in: 1...1000),
                 text: message,
@@ -91,7 +92,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 let message = Message(
                     id: Int.random(in: 0...1000),
                     text: messageText,
-                    author: UserDefaults.standard.string(forKey: "Username") ?? service.deviceName)
+                    author: UserDefaults.standard.string(forKey: "Username")!)
                 conversations[index].addMessage(add: message)
             }
         }
@@ -125,6 +126,18 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 )
             )
         }
+        
+        /* Send a notification when we receive a message */
+        let content = UNMutableNotificationContent()
+        content.title = message.author
+        content.body = message.text
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.5, repeats: false)
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request)
     }
     
     

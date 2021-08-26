@@ -18,63 +18,74 @@ struct ContentView: View {
     @StateObject var bluetoothManager = BluetoothManager()
     
     var body: some View {
-//        NavigationView {
+        List(bluetoothManager.conversations) {conversation in
+            NavigationLink(
+                destination: ChatView(author: conversation.author)
+                    .environmentObject(bluetoothManager),
+                label: {
+                    HStack {
+                        Image(systemName: "person")
+                            .frame(width: 50, height: 50, alignment: .center)
 
-            // List of each thread
-            List(bluetoothManager.conversations) {conversation in
-                NavigationLink(
-                    destination: ChatView(author: conversation.author)
-                        .environmentObject(bluetoothManager),
-                    label: {
-                        HStack {
-                            Image(systemName: "person")
-                                .frame(width: 50, height: 50, alignment: .center)
-                            
-                            VStack {
-                                HStack {
-                                    Text(conversation.author)
-                                    Spacer()
-                                }
-                                HStack {
-                                    Text(conversation.lastMessage.text)
-                                        .scaledToFit()
-                                        .font(.footnote)
-                                    Spacer()
-                                }
+                        VStack {
+                            HStack {
+                                Text(conversation.author)
+                                Spacer()
+                            }
+                            HStack {
+                                Text(conversation.lastMessage.text)
+                                    .scaledToFit()
+                                    .font(.footnote)
+                                Spacer()
                             }
                         }
-                    })
+                    }
+                }
+            )
+        }
+        .onAppear() {
+            // Request user for permission to send notifications.
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("All set!")
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        
+        .navigationTitle("Chat")
+
+        .toolbar {
+            // Settings button
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                NavigationLink(
+                    destination: SettingsView(),
+                    label: {
+                        Image(systemName: "gearshape.fill")
+                    }
+                )
             }
             
-            .navigationTitle("Chat")
-
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarLeading) {
-                    NavigationLink(
-                        destination: SettingsView(),
-                        label: {
-                            Image(systemName: "gearshape.fill")
-                        })
-//                    Button("Send", action: {
-//                            print(bluetoothManager.sendData(message: "Sent data."))
-//                    })
-                }
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    NavigationLink(
-                        destination: DiscoverView()
-                            .environmentObject(bluetoothManager),
-                        label: {
-                            Image(systemName: "person.fill.badge.plus")
-                        })
-                    NavigationLink(
-                        destination: ConnectionView()
-                            .environmentObject(bluetoothManager),
-                        label: {
-                            Image(systemName: "bolt.horizontal.circle.fill")
-                        })
-                }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                // Discover button
+                NavigationLink(
+                    destination: DiscoverView()
+                        .environmentObject(bluetoothManager),
+                    label: {
+                        Image(systemName: "person.fill.badge.plus")
+                    }
+                )
+                // Connection Button
+                NavigationLink(
+                    destination: ConnectionView()
+                        .environmentObject(bluetoothManager),
+                    label: {
+                        Image(systemName: "bolt.horizontal.circle.fill")
+                    }
+                )
             }
-//        }
+        }
     }
 }
 

@@ -13,6 +13,15 @@ extension BluetoothManager {
     // Called whenever the status of the peripheral local device changes.
     // Once it is turned on we start advertising as to allow for discovery
     // by other devices.
+    
+    func startAdvertising(peripheralManager: CBPeripheralManager) {
+        peripheralManager.startAdvertising([
+            CBAdvertisementDataServiceUUIDsKey: [self.service.UUID],
+            //  Advertise either the set username or the default name of the device.
+            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username")! //?? self.service.deviceName
+        ])
+    }
+    
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         // Check that we only advertise if the state is on.
         guard peripheral.state == .poweredOn else {
@@ -34,14 +43,12 @@ extension BluetoothManager {
         // the apps unique UUID together with the name of the phone.
         // This allows for centrals to discover the peripheral device.
         peripheralManager.add(service)
-        peripheralManager.startAdvertising([
-            CBAdvertisementDataServiceUUIDsKey: [self.service.UUID],
-            //  Advertise either the set username or the default name of the device.
-            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username") ?? self.service.deviceName
-        ])
+        startAdvertising(peripheralManager: peripheralManager)
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
+        // Start advertising if the central unsubs.
+        startAdvertising(peripheralManager: peripheral)
         print("Central unsubscribed from characteristic")
     }
 }

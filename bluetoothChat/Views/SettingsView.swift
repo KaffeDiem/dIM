@@ -24,11 +24,11 @@ struct SettingsView: View {
                         .padding(.leading)
                     Spacer()
                 }
-                TextField(defaults.string(forKey: "Username") ?? "", text: $usernameTemp, onEditingChanged: {changed in
-                    // Do something with onEditingChanged?
-                }, onCommit: {
-                    UIApplication.shared.endEditing()
-                    defaults.set(usernameTemp, forKey: "Username")
+                TextField(defaults.string(forKey: "Username") ?? "", text: $usernameTemp,
+                          onCommit: {
+                            //  MARK: Check that the username is valid (according to SetUpView)
+                            UIApplication.shared.endEditing()
+                            defaults.set(usernameTemp, forKey: "Username")
                 })
                 .padding(.leading)
                 .padding(.trailing)

@@ -48,8 +48,8 @@ extension BluetoothManager {
      */
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         // Print the name of discovered peripherals.
-        if let name = advertisementData[CBAdvertisementDataLocalNameKey] {
-            print("Peripheral discovered: \(name)")
+        if let safeName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
+            print("Peripheral discovered: \(safeName)")
             // Connect to the newly discovered peripheral.
             centralManager.connect(peripheral, options: nil)
             // Save the connected peripheral in connectedPeripherals for later use.
@@ -57,7 +57,7 @@ extension BluetoothManager {
                 Device(
                     uuid: peripheral.identifier.uuidString,
                     rssi: RSSI.intValue,
-                    name: name as! String,
+                    name: safeName,
                     peripheral: peripheral)
             )
         } else {
@@ -87,9 +87,13 @@ extension BluetoothManager {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Peripheral disconnected: \(peripheral.name ?? "Unknown")")
         
+        central.cancelPeripheralConnection(peripheral)
+        centralManager.scanForPeripherals(withServices: [self.service.UUID], options: nil)
+        
         for (index, device) in discoveredPeripherals.enumerated() {
             if device.peripheral == peripheral {
                 discoveredPeripherals.remove(at: index)
+                print("^ And removed from the list of discovered devices.")
             }
             
         }
