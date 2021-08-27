@@ -15,36 +15,48 @@ import SwiftUI
 struct ContentView: View {
     
     // Create a new Bluetooth Manager which handles the central and peripheral role.
-    @StateObject var bluetoothManager = ChatBrain()
+    @StateObject var chatBrain = ChatBrain()
     
     var body: some View {
-        List(bluetoothManager.conversations) {conversation in
-            NavigationLink(
-                destination: ChatView(sender: conversation.author)
-                    .environmentObject(bluetoothManager),
-                label: {
-                    HStack {
-                        Image(systemName: "person")
-                            .frame(width: 50, height: 50, alignment: .center)
+        VStack {
+            
+            if chatBrain.conversations.count < 1 {
+                Spacer()
+                Text("Add a contact to start chatting.")
+                    .padding()
+                Spacer()
+            } else {
+            
+            /*
+             List of all conversations saved on device.
+             */
+            
+                List(chatBrain.conversations) {conversation in
+                    NavigationLink(
+                        destination: ChatView(sender: conversation.author)
+                            .environmentObject(chatBrain),
+                        label: {
+                            HStack {
+                                Image(systemName: "person")
+                                    .frame(width: 50, height: 50, alignment: .center)
 
-                        VStack {
-                            HStack {
-                                Text(conversation.author)
-                                Spacer()
-                            }
-                            HStack {
-                                Text(conversation.lastMessage.text)
-                                    .scaledToFit()
-                                    .font(.footnote)
-                                Spacer()
+                                VStack {
+                                    HStack {
+                                        Text(conversation.author)
+                                        Spacer()
+                                    }
+                                    HStack {
+                                        Text(conversation.lastMessage.text)
+                                            .scaledToFit()
+                                            .font(.footnote)
+                                        Spacer()
+                                    }
+                                }
                             }
                         }
-                    }
+                    )
                 }
-            )
-        }
-        .onAppear() {
-            
+            }
         }
         
         .navigationTitle("Chat")
@@ -64,7 +76,7 @@ struct ContentView: View {
                 // Discover button
                 NavigationLink(
                     destination: DiscoverView()
-                        .environmentObject(bluetoothManager),
+                        .environmentObject(chatBrain),
                     label: {
                         Image(systemName: "person.fill.badge.plus")
                     }
@@ -72,7 +84,7 @@ struct ContentView: View {
                 // Connection Button
                 NavigationLink(
                     destination: ConnectionView()
-                        .environmentObject(bluetoothManager),
+                        .environmentObject(chatBrain),
                     label: {
                         Image(systemName: "bolt.horizontal.circle.fill")
                     }

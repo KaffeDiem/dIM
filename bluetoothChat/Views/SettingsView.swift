@@ -39,15 +39,19 @@ struct SettingsView: View {
                 /*
                  Text field to input new username
                  */
-                TextField(defaults.string(forKey: "Username")!, text: $usernameTemp, onCommit: {
+                TextField(
+                    defaults.string(forKey: "Username")!,
+                    text: $usernameTemp,
+                    onCommit: {
                             
-                            UIApplication.shared.endEditing()
-                            
-                            if checkValidUsername(username: usernameTemp) {
-                                defaults.set(usernameTemp, forKey: "Username")
-                            }
-                            
-                            }
+                        UIApplication.shared.endEditing()
+                        
+                        if checkValidUsername(username: usernameTemp) {
+                            defaults.set(usernameTemp, forKey: "Username")
+                        } else {
+                            usernameTemp = ""
+                        }
+                    }
                 )
                 .keyboardType(.namePhonePad)
                 .padding()
@@ -56,6 +60,9 @@ struct SettingsView: View {
                 )
                 .cornerRadius(10.0)
                 
+                /*
+                 Text below textfield.
+                 */
                 
                 if usernameTemp.count < 4 {
                     Text("Minimum 4 characters.")

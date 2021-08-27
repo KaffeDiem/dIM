@@ -20,6 +20,7 @@ struct Bubble: Shape {
 
 struct ChatView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var bluetoothManager: ChatBrain
     var sender: String
     
@@ -29,6 +30,11 @@ struct ChatView: View {
     var body: some View {
         
         VStack {
+            
+            /*
+             Listing all chat messages.
+             */
+            
             ScrollView {
                 LazyVStack {
                     ForEach(bluetoothManager.getConversation(sender: sender)) {message in
@@ -39,7 +45,7 @@ struct ChatView: View {
                                 }
                                 Text(message.text).padding(12)
                                     .foregroundColor(.white)
-                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color(.gray) )
+                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
                                     .clipShape(Bubble(chat: username == message.sender))
                                 if username != message.sender {
                                     Spacer()
@@ -53,6 +59,11 @@ struct ChatView: View {
                         .navigationTitle(sender)
                 }
             }
+            
+            /*
+             Send message part
+             */
+            
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in
                     // Should anything go here?
@@ -61,7 +72,7 @@ struct ChatView: View {
                     bluetoothManager.addMessage(for: sender, text: message)
                     bluetoothManager.sendMessage(for: sender, text: message)
                     
-                    UIApplication.shared.endEditing()
+//                    UIApplication.shared.endEditing()
                     message = ""
                 })
                 .padding()
@@ -72,7 +83,7 @@ struct ChatView: View {
                     bluetoothManager.addMessage(for: sender, text: message)
                     bluetoothManager.sendMessage(for: sender, text: message)
                     
-                    UIApplication.shared.endEditing()
+//                    UIApplication.shared.endEditing()
                     message = ""
                 }) {
                     Image(systemName: "chevron.forward.circle.fill")
