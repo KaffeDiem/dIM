@@ -12,6 +12,8 @@ struct SettingsView: View {
     
     let defaults = UserDefaults.standard
     
+    @EnvironmentObject var chatBrain: ChatBrain
+    
     @State var usernameTemp: String = ""
     @Environment(\.colorScheme) var colorScheme
     
@@ -32,7 +34,7 @@ struct SettingsView: View {
                 
                 HStack {
                     Text("Set a new username")
-                        .foregroundColor(.accentColor)
+//                        .foregroundColor(.accentColor)
                         .padding(.leading)
                 }
                 
@@ -81,6 +83,15 @@ struct SettingsView: View {
                 }
                 
                 Spacer()
+                
+                if chatBrain.discoveredDevices.count < 1 {
+                    Text("Not connected to anyone.")
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                } else {
+                    Text("\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.")
+                        .foregroundColor(.accentColor)
+                }
             }
             .padding()
             .autocapitalization(.none)

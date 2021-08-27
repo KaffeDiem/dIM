@@ -21,7 +21,7 @@ struct Bubble: Shape {
 struct ChatView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var bluetoothManager: ChatBrain
+    @EnvironmentObject var chatBrain: ChatBrain
     var sender: String
     
     @State var message: String = ""
@@ -37,7 +37,7 @@ struct ChatView: View {
             
             ScrollView {
                 LazyVStack {
-                    ForEach(bluetoothManager.getConversation(sender: sender)) {message in
+                    ForEach(chatBrain.getConversation(sender: sender)) {message in
                         VStack {
                             HStack {
                                 if username == message.sender {
@@ -69,8 +69,8 @@ struct ChatView: View {
                     // Should anything go here?
                 }, onCommit: {
                     
-                    bluetoothManager.addMessage(for: sender, text: message)
-                    bluetoothManager.sendMessage(for: sender, text: message)
+                    chatBrain.addMessage(for: sender, text: message)
+                    chatBrain.sendMessage(for: sender, text: message)
                     
 //                    UIApplication.shared.endEditing()
                     message = ""
@@ -80,8 +80,8 @@ struct ChatView: View {
                 
                 Button(action: {
                     
-                    bluetoothManager.addMessage(for: sender, text: message)
-                    bluetoothManager.sendMessage(for: sender, text: message)
+                    chatBrain.addMessage(for: sender, text: message)
+                    chatBrain.sendMessage(for: sender, text: message)
                     
 //                    UIApplication.shared.endEditing()
                     message = ""

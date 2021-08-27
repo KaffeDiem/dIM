@@ -12,31 +12,25 @@ import CoreBluetooth
 extension ChatBrain {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        // MARK: TODO: Handle other states as well.
-        guard central.state == .poweredOn else {return}
         
-        /*
-         Should handle states such that the user is prompted if Bluetooth is turned off,
-         the user has not allowed bluetooth access for the app and so on ...
-         
-             switch central.state {
-                 case .poweredOn:
-                     startScan()
-                 case .poweredOff:
-                     // Alert user to turn on Bluetooth
-                 case .resetting:
-                     // Wait for next state update and consider logging interruption of Bluetooth service
-                 case .unauthorized:
-                     // Alert user to enable Bluetooth permission in app Settings
-                 case .unsupported:
-                     // Alert user their device does not support Bluetooth and app will not work as expected
-                 case .unknown:
-                    // Wait for next state update
-              }
-         */
+    switch central.state {
+        case .poweredOn:
+            centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
+//        case .poweredOff:
+//            // Alert user to turn on Bluetooth
+//        case .resetting:
+//            // Wait for next state update and consider logging interruption of Bluetooth service
+//        case .unauthorized:
+//            // Alert user to enable Bluetooth permission in app Settings
+//        case .unsupported:
+//            // Alert user their device does not support Bluetooth and app will not work as expected
+//        case .unknown:
+//            // Wait for next state update
+        default:
+            print("A default case was triggerd.")
+    }
         
-        // Scan for peripherals with our unique uuid.
-        centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
+        
     }
     
     
@@ -88,9 +82,9 @@ extension ChatBrain {
     }
     
     
-    // Check to make sure that the device we are connecting to is
-    // broadcasting the correct characteristics.
-    // Called once connection has been fully established.
+    /*
+     If connection to peripheral was successfull then discover its services.
+     */
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         // Set the delegate.
         peripheral.delegate = self
@@ -120,28 +114,26 @@ extension ChatBrain {
         )
         
         cleanUpPeripheral(peripheral)
-//        var removedDeviceCounter = 0  // Dont try to remove at an index no longer existing.
-//        for (index, device) in discoveredDevices.enumerated() {
-//            if device.peripheral == peripheral {
-//                discoveredDevices.remove(at: index - removedDeviceCounter)
-//                print("^ And removed from the list of discovered devices.")
-//                removedDeviceCounter += 1
-//            }
-//        }
     }
     
+    
     /*
+     Read RSSI from a peripheral and save it to device list.
      Callback function if 'peripheral.readRSSI()' is called on a peripheral.
      */
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-        // MARK: didReadRSSI to be implemented
-//        RSSI.intValue
+
+        if let error = error {
+            print("Error reading RSSI: \(error.localizedDescription)")
+        }
+        
         for (index, device) in discoveredDevices.enumerated() {
             if device.peripheral == peripheral {
                 discoveredDevices[index].rssi = RSSI.intValue
             }
         }
     }
+    
     
     // Discover characteristics if the correct service has been found.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {

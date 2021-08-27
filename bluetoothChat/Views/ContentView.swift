@@ -65,7 +65,8 @@ struct ContentView: View {
             // Settings button
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 NavigationLink(
-                    destination: SettingsView(),
+                    destination: SettingsView()
+                        .environmentObject(chatBrain),
                     label: {
                         Image(systemName: "gearshape.fill")
                     }
@@ -79,14 +80,6 @@ struct ContentView: View {
                         .environmentObject(chatBrain),
                     label: {
                         Image(systemName: "person.fill.badge.plus")
-                    }
-                )
-                // Connection Button
-                NavigationLink(
-                    destination: ConnectionView()
-                        .environmentObject(chatBrain),
-                    label: {
-                        Image(systemName: "bolt.horizontal.circle.fill")
                     }
                 )
             }

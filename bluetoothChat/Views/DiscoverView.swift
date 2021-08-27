@@ -22,12 +22,13 @@ struct DiscoverView: View {
                     Button(action: {
                         // Send a 'Hello' message to start a conversation.
                         chatBrain.sendMessage(for: device.name, text: "Has started a conversation!")
+                        
                     }, label: {
                         Text(device.name)
                             .padding()
                     })
                     Spacer()
-                    Text("\(device.rssi)")
+                    Text("\(calculateDistance(device.rssi))m away")
                         .font(.footnote)
                         .padding()
                 }
@@ -40,5 +41,21 @@ struct DiscoverView: View {
                 device.peripheral.readRSSI()
             }
         }
+    }
+    
+    func calculateDistance(_ rssi: Int) -> Int {
+        let txPower = -59
+        
+        if rssi == 0 {
+            return -1
+        }
+        
+        let ratio = Float(rssi)*1.0/Float(txPower)
+        
+        if ratio < 1.0 {
+            return Int(pow(ratio, 10.0))
+        }
+        
+        return Int((0.89976)*pow(ratio,7.709) + 0.111)
     }
 }
