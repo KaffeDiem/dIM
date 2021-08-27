@@ -47,14 +47,22 @@ extension ChatBrain {
      */
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        print(peripheral.identifier.uuidString)
-        
+        // See if we can get the custom Username of the peripheral.
         if let safeName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
             print("Peripheral discovered: \(safeName)")
+            
             
             // Check if we have already seen this device.
             var peripheralIsNew: Bool = true
             for device in discoveredDevices {
+                
+                /*
+                 Check if devices are still connected at the same time.
+                 */
+                if device.peripheral.state != .connected {
+                    cleanUpPeripheral(device.peripheral)
+                }
+                
                 if device.name == safeName {
                     peripheralIsNew = false
                 }
@@ -111,14 +119,15 @@ extension ChatBrain {
             ]
         )
         
-        var removedDeviceCounter = 0  // Dont try to remove at an index no longer existing.
-        for (index, device) in discoveredDevices.enumerated() {
-            if device.peripheral == peripheral {
-                discoveredDevices.remove(at: index - removedDeviceCounter)
-                print("^ And removed from the list of discovered devices.")
-                removedDeviceCounter += 1
-            }
-        }
+        cleanUpPeripheral(peripheral)
+//        var removedDeviceCounter = 0  // Dont try to remove at an index no longer existing.
+//        for (index, device) in discoveredDevices.enumerated() {
+//            if device.peripheral == peripheral {
+//                discoveredDevices.remove(at: index - removedDeviceCounter)
+//                print("^ And removed from the list of discovered devices.")
+//                removedDeviceCounter += 1
+//            }
+//        }
     }
     
     /*
@@ -198,7 +207,7 @@ extension ChatBrain {
         // Decode the message received from a connected peripheral and save it.
         do {
             let message = try decoder.decode(Message.self, from: data)
-            retreiveData(message)
+            retrieveMessage(message)
         } catch {
             print("Error decoding message: \(error)")
         }

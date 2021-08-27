@@ -21,7 +21,7 @@ struct Bubble: Shape {
 struct ChatView: View {
     
     @EnvironmentObject var bluetoothManager: ChatBrain
-    var author: String
+    var sender: String
     
     @State var message: String = ""
     let username: String = UserDefaults.standard.string(forKey: "Username")!
@@ -31,34 +31,36 @@ struct ChatView: View {
         VStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(bluetoothManager.getConversation(author: author)) {message in
+                    ForEach(bluetoothManager.getConversation(sender: sender)) {message in
                         VStack {
                             HStack {
-                                if username == message.author {
+                                if username == message.sender {
                                     Spacer()
                                 }
                                 Text(message.text).padding(12)
                                     .foregroundColor(.white)
-                                    .background(username == message.author ? Color("dimOrangeLIGHT") : Color(.gray) )
-                                    .clipShape(Bubble(chat: username == message.author))
-                                if username != message.author {
+                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color(.gray) )
+                                    .clipShape(Bubble(chat: username == message.sender))
+                                if username != message.sender {
                                     Spacer()
                                 }
                             }
                         }
-                        .clipShape(Bubble(chat: username == message.author))
+                        .clipShape(Bubble(chat: username == message.sender))
                         .padding(.leading)
                         .padding(.trailing)
                     }
-                        .navigationTitle(author)
+                        .navigationTitle(sender)
                 }
             }
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in
                     // Should anything go here?
                 }, onCommit: {
-                    bluetoothManager.addMessage(receipent: author, messageText: message)
-                    bluetoothManager.sendData(message: message)
+                    
+                    bluetoothManager.addMessage(for: sender, text: message)
+                    bluetoothManager.sendMessage(for: sender, text: message)
+                    
                     UIApplication.shared.endEditing()
                     message = ""
                 })
@@ -66,8 +68,10 @@ struct ChatView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 Button(action: {
-                    bluetoothManager.addMessage(receipent: author, messageText: message)
-                    bluetoothManager.sendData(message: message)
+                    
+                    bluetoothManager.addMessage(for: sender, text: message)
+                    bluetoothManager.sendMessage(for: sender, text: message)
+                    
                     UIApplication.shared.endEditing()
                     message = ""
                 }) {

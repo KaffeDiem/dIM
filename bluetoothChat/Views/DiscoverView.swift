@@ -20,7 +20,8 @@ struct DiscoverView: View {
             List(chatBrain.discoveredDevices, id: \.uuid) {device in
                 HStack {
                     Button(action: {
-                        chatBrain.sendData(message: "Has started a conversation!")
+                        // Send a 'Hello' message to start a conversation.
+                        chatBrain.sendMessage(for: device.name, text: "Has started a conversation!")
                     }, label: {
                         Text(device.name)
                             .padding()

@@ -20,7 +20,7 @@ struct ContentView: View {
     var body: some View {
         List(bluetoothManager.conversations) {conversation in
             NavigationLink(
-                destination: ChatView(author: conversation.author)
+                destination: ChatView(sender: conversation.author)
                     .environmentObject(bluetoothManager),
                 label: {
                     HStack {

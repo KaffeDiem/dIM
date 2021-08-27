@@ -49,7 +49,7 @@ extension ChatBrain {
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         
         // Start advertising if the central unsubs.
-        startAdvertising(peripheralManager: peripheral)
+//        startAdvertising(peripheralManager: peripheral)
         print("Central unsubscribed from characteristic")
     }
 }

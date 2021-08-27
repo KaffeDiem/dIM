@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreBluetooth
-import UserNotifications
 
 // The Bluetooth Manager handles all searching for, creating connection to
 // and sending/receiving messages to/from other Bluetooth devices.
@@ -15,7 +14,7 @@ import UserNotifications
 class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
         
-    var discoveredDevices: [Device] = []
+    @Published var discoveredDevices: [Device] = []
     var connectedCharateristics: [CBCharacteristic] = []
     
     // Holds all messages received from all peripherals.
@@ -25,6 +24,8 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     var peripheralManager: CBPeripheralManager!
 
     var characteristic: CBMutableCharacteristic?
+    
+    var seenMessages: [Int] = []
     
     override init() {
         super.init()
@@ -40,25 +41,26 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     /*
      Send a string to all connected devices.
      */
-    func sendData(message: String) {
+    func sendMessage(for receiver: String, text message: String) {
         
         guard message != "" else { return }
         
         if let characteristic = self.characteristic {
             
             let username = UserDefaults.standard.string(forKey: "Username")!
+            
             let packet = Message(
-                id: Int.random(in: 1...1000),
-                text: message,
-                // If no username has been saved in UserDefaults then use the name of the device.
-                author: username
+                id: Int.random(in: 0...1000),
+                sender: username,
+                receiver: receiver,
+                text: message
             )
             
-            let encoder = JSONEncoder()
+            seenMessages.append(packet.id)
             
             do {
-                let messageEncoded = try encoder.encode(packet)
-                print("-")
+                let messageEncoded = try JSONEncoder().encode(packet)
+
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {
                 print("Error encoding message: \(message) -> \(error)")
@@ -71,7 +73,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      Get the exchanged messages with a given user.
      Used when loading the ChatView()
      */
-    func getConversation(author: String) -> [Message] {
+    func getConversation(sender author: String) -> [Message] {
         for conversation in conversations {
             if conversation.author == author {
                 return conversation.messages
@@ -86,59 +88,42 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      Add a sent message to the conversation. Used when sending a device a
      new message.
      */
-    func addMessage(receipent: String, messageText: String) {
-        guard messageText != "" else { return } // Do not add empty messages.
+    func addMessage(for receiver: String, text: String) {
+        guard text != "" else { return } // Do not add empty messages.
+        
+        let username = UserDefaults.standard.string(forKey: "Username")!
         
         // Check which conversation to add the message to.
         for (index, conv) in conversations.enumerated() {
-            if conv.author == receipent {
+            if conv.author == receiver {
+                
                 let message = Message(
                     id: Int.random(in: 0...1000),
-                    text: messageText,
-                    author: UserDefaults.standard.string(forKey: "Username")!)
+                    sender: username,
+                    receiver: receiver,
+                    text: text
+                )
+                
                 conversations[index].addMessage(add: message)
             }
         }
     }
     
-    
     /*
-     Add messages to the correct conversation or create a new one if the
-     sender has not been seen before.
+     Remove a device from discoveredDevices and drop connection to it.
      */
-    func retreiveData(_ message: Message) {
-        var authorFound = false
-        //  Loop trough conversations to find a match if possible.
-        for (index, conv) in conversations.enumerated() {
-            if conv.author == message.author {
-                authorFound = true
-                conversations[index].addMessage(add: message)
-                conversations[index].updateLastMessage(new: message)
+    func cleanUpPeripheral(_ peripheral: CBPeripheral) {
+        
+        for (index, device) in discoveredDevices.enumerated() {
+            
+            if device.peripheral == peripheral {
+                
+                centralManager.cancelPeripheralConnection(peripheral)
+                
+                discoveredDevices.remove(at: index)
+                return
             }
         }
-        //  Create a new conversation if the sender has not been seen.
-        if !authorFound {
-            conversations.append(
-                Conversation(
-                    id: message.id,
-                    author: message.author,
-                    lastMessage: message,
-                    messages: [message]
-                )
-            )
-        }
-        
-        /* Send a notification when we receive a message */
-        let content = UNMutableNotificationContent()
-        content.title = message.author
-        content.body = message.text
-        content.sound = UNNotificationSound.default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.5, repeats: false)
-
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-        UNUserNotificationCenter.current().add(request)
     }
 }
 

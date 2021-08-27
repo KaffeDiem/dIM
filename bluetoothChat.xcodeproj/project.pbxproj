@@ -26,6 +26,9 @@
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
 		B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A026D6342900F9C649 /* DiscoverView.swift */; };
 		B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A226D6CB0800F9C649 /* DeviceModel.swift */; };
+		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
+		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
+		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +53,9 @@
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B07417A026D6342900F9C649 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
+		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
+		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
+		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +137,7 @@
 		B05E1F4D26D3C7FF00AD9E65 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B0D15B6B26D9138E0099F8F5 /* Transmission */,
 				B05E1F4E26D3C9C100AD9E65 /* ChatBrain.swift */,
 				B06E299E26D5358000FBB67E /* Bluetooth */,
 			);
@@ -144,6 +151,16 @@
 				B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */,
 			);
 			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		B0D15B6B26D9138E0099F8F5 /* Transmission */ = {
+			isa = PBXGroup;
+			children = (
+				B0D15B6C26D913A40099F8F5 /* SendMessage.swift */,
+				B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */,
+				B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */,
+			);
+			path = Transmission;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,10 +240,13 @@
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
+				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
 				B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */,
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,
+				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
+				B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */,
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */,
 				B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */,
