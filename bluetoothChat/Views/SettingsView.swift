@@ -13,33 +13,85 @@ struct SettingsView: View {
     let defaults = UserDefaults.standard
     
     @State var usernameTemp: String = ""
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         VStack {
             
             VStack {
+                /*
+                 dIM Icon in top of settings view.
+                 */
+                Image("appiconsvg")
+                    .resizable()
+                    .frame(width: 128, height: 128, alignment: .center)
+                    .aspectRatio(contentMode: .fit)
+                    .scaledToFit()
+                
+                Spacer()
+                
                 HStack {
-                    Text("Username")
+                    Text("Set a new username")
                         .foregroundColor(.accentColor)
                         .padding(.leading)
-                    Spacer()
                 }
-                TextField(defaults.string(forKey: "Username") ?? "", text: $usernameTemp,
-                          onCommit: {
-                            //  MARK: Check that the username is valid (according to SetUpView)
+                
+                /*
+                 Text field to input new username
+                 */
+                TextField(defaults.string(forKey: "Username")!, text: $usernameTemp, onCommit: {
+                            
                             UIApplication.shared.endEditing()
-                            defaults.set(usernameTemp, forKey: "Username")
-                })
-                .padding(.leading)
-                .padding(.trailing)
-                .padding(.bottom)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .autocapitalization(.none)
+                            
+                            if checkValidUsername(username: usernameTemp) {
+                                defaults.set(usernameTemp, forKey: "Username")
+                            }
+                            
+                            }
+                )
+                .keyboardType(.namePhonePad)
+                .padding()
+                .background(
+                    colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                )
+                .cornerRadius(10.0)
+                
+                
+                if usernameTemp.count < 4 {
+                    Text("Minimum 4 characters.")
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                } else if usernameTemp.count > 16 {
+                    Text("Maximum 16 characters.")
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                } else if usernameTemp.contains(" ") {
+                    Text("No spaces in username.")
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                } else {
+                    Text("")
+                }
+                
+                Spacer()
             }
-            .navigationBarTitle("Settings")
+            .padding()
+            .autocapitalization(.none)
+            .disableAutocorrection(true)
             
+            .navigationBarTitle("Settings")
         }
+    }
+    
+    func checkValidUsername(username: String) -> Bool{
+        if username.count < 4 {
+            return false
+        } else if username.count > 16 {
+            return false
+        } else if username.contains(" ") {
+            return false
+        }
+        return true
     }
 }
 

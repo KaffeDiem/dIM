@@ -9,16 +9,16 @@ import Foundation
 import CoreBluetooth
 
 // MARK: Bluetooth Peripheral Manager
-extension BluetoothManager {
+extension ChatBrain {
     // Called whenever the status of the peripheral local device changes.
     // Once it is turned on we start advertising as to allow for discovery
     // by other devices.
     
     func startAdvertising(peripheralManager: CBPeripheralManager) {
         peripheralManager.startAdvertising([
-            CBAdvertisementDataServiceUUIDsKey: [self.service.UUID],
+            CBAdvertisementDataServiceUUIDsKey: [Service().UUID],
             //  Advertise either the set username or the default name of the device.
-            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username")! //?? self.service.deviceName
+            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username")!
         ])
     }
     
@@ -29,14 +29,14 @@ extension BluetoothManager {
         }
         
         let characteristic = CBMutableCharacteristic(
-            type: service.charUUID,
+            type: Service().charUUID,
             properties: [.write, .notify],
             value: nil,
             permissions: [.writeable, .readable]
         )
         self.characteristic = characteristic
         
-        let service = CBMutableService(type: service.UUID, primary: true)
+        let service = CBMutableService(type: Service().UUID, primary: true)
         service.characteristics = [characteristic]
         
         // Add the service to the peripheral manager and start advertising
@@ -47,6 +47,7 @@ extension BluetoothManager {
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
+        
         // Start advertising if the central unsubs.
         startAdvertising(peripheralManager: peripheral)
         print("Central unsubscribed from characteristic")

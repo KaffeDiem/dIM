@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DiscoverView: View {
-    @EnvironmentObject var bluetoothManager: BluetoothManager
+    @EnvironmentObject var chatBrain: ChatBrain
     
     var body: some View {
         VStack {
@@ -17,10 +17,10 @@ struct DiscoverView: View {
                 .padding(.leading)
                 .padding(.trailing)
             
-            List(bluetoothManager.discoveredPeripherals, id: \.uuid) {device in
+            List(chatBrain.discoveredDevices, id: \.uuid) {device in
                 HStack {
                     Button(action: {
-                        bluetoothManager.sendData(message: "Has started a conversation!")
+                        chatBrain.sendData(message: "Has started a conversation!")
                     }, label: {
                         Text(device.name)
                             .padding()
@@ -32,6 +32,12 @@ struct DiscoverView: View {
                 }
             }
             .navigationBarTitle("Discover", displayMode: .inline)
+        }
+        .onAppear() {
+            // Update the RSSI of the discoveredDevices when the list appears.
+            for device in chatBrain.discoveredDevices {
+                device.peripheral.readRSSI()
+            }
         }
     }
 }

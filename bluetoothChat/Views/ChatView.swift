@@ -9,30 +9,49 @@ import Foundation
 import SwiftUI
 
 
+struct Bubble: Shape {
+    var chat: Bool
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+        return Path(path.cgPath)
+    }
+}
+
 struct ChatView: View {
     
-    @EnvironmentObject var bluetoothManager: BluetoothManager
+    @EnvironmentObject var bluetoothManager: ChatBrain
     var author: String
     
     @State var message: String = ""
+    let username: String = UserDefaults.standard.string(forKey: "Username")!
         
     var body: some View {
         
         VStack {
-            List (bluetoothManager.getConversation(author: author)) {message in
-                VStack {
-                    HStack {
-                        Text(message.text)
-                        Spacer()
+            ScrollView {
+                LazyVStack {
+                    ForEach(bluetoothManager.getConversation(author: author)) {message in
+                        VStack {
+                            HStack {
+                                if username == message.author {
+                                    Spacer()
+                                }
+                                Text(message.text).padding(12)
+                                    .foregroundColor(.white)
+                                    .background(username == message.author ? Color("dimOrangeLIGHT") : Color(.gray) )
+                                    .clipShape(Bubble(chat: username == message.author))
+                                if username != message.author {
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .clipShape(Bubble(chat: username == message.author))
+                        .padding(.leading)
+                        .padding(.trailing)
                     }
-                    HStack {
-                        Text(message.author)
-                            .font(.footnote)
-                        Spacer()
-                    }
+                        .navigationTitle(author)
                 }
-                    
-                .navigationTitle(author)
             }
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in

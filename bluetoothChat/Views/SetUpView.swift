@@ -116,10 +116,19 @@ struct SetUpView: View {
             .onAppear() {
                 // Check if the user already has a username.
                 if UserDefaults.standard.string(forKey: "Username") != nil {
-                    print("Username set -> Load ContentView")
+                    print("Username has been set -> Skip SetUpView")
                     self.hasUsername = true
                 } else {
                     self.hasUsername = false
+                }
+                
+                // Request permission to send notifications.
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                    if success {
+                        print("All set!")
+                    } else if let error = error {
+                        print(error.localizedDescription)
+                    }
                 }
             }
         }

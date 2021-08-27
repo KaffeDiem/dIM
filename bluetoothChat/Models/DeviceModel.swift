@@ -10,7 +10,11 @@ import CoreBluetooth
 
 struct Device {
     let uuid: String
-    let rssi: Int
+    var rssi: Int
     let name: String
     let peripheral: CBPeripheral
+    
+    mutating func updateRSSI(RSSI: Int) {
+        self.rssi = RSSI
+    }
 }

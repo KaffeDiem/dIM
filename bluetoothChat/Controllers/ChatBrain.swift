@@ -12,20 +12,14 @@ import UserNotifications
 // The Bluetooth Manager handles all searching for, creating connection to
 // and sending/receiving messages to/from other Bluetooth devices.
 
-class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
-    
-    // Published variables are used outside of this class.
-    @Published var isReady: Bool = false
-    
-    var discoveredPeripherals: [Device] = []
+        
+    var discoveredDevices: [Device] = []
     var connectedCharateristics: [CBCharacteristic] = []
     
     // Holds all messages received from all peripherals.
     @Published var conversations: [Conversation] = []
-    @Published var messages: [Message] = []
-    
-    let service = Service()
     
     var centralManager: CBCentralManager!
     var peripheralManager: CBPeripheralManager!
@@ -35,17 +29,16 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     override init() {
         super.init()
         
+        // Set up the central and peripheral manager objects to be used across the app.
         centralManager = CBCentralManager(delegate: self, queue: nil)
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         
         centralManager.delegate = self
     }
     
-    // MARK: Functions allowed to call from other classes.
     
     /*
-     Send data to all connected peripherals encoded as a JSON data stream.
-     It is then up to the receipent to decode the data.
+     Send a string to all connected devices.
      */
     func sendData(message: String) {
         
@@ -74,7 +67,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     
-    /* Get a conversation with some user. Used for displaying the chat */
+    /*
+     Get the exchanged messages with a given user.
+     Used when loading the ChatView()
+     */
     func getConversation(author: String) -> [Message] {
         for conversation in conversations {
             if conversation.author == author {
@@ -85,8 +81,15 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         return []
     }
     
-    /* Add a message to a conversation - used when sending messages*/
+    
+    /*
+     Add a sent message to the conversation. Used when sending a device a
+     new message.
+     */
     func addMessage(receipent: String, messageText: String) {
+        guard messageText != "" else { return } // Do not add empty messages.
+        
+        // Check which conversation to add the message to.
         for (index, conv) in conversations.enumerated() {
             if conv.author == receipent {
                 let message = Message(
@@ -98,8 +101,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
     
-    
-    // MARK: Helper functions.
     
     /*
      Add messages to the correct conversation or create a new one if the
@@ -138,18 +139,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request)
-    }
-    
-    
-    // MARK: TODO: Implement cleanup.
-    func cleanUp(_ device: Device) {
-//        discoveredPeripherals.removeAll() { device in
-//            return device == peripheral
-//        }
-//
-//        centralManager.cancelPeripheralConnection(peripheral)
-//        print(centralManager.retrieveConnectedPeripherals(withServices: [self.service.UUID]))
-//        print("Cleanup (on device: \(peripheral.name ?? "Unknown")")
     }
 }
 

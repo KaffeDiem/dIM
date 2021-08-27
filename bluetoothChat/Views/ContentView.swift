@@ -15,7 +15,7 @@ import SwiftUI
 struct ContentView: View {
     
     // Create a new Bluetooth Manager which handles the central and peripheral role.
-    @StateObject var bluetoothManager = BluetoothManager()
+    @StateObject var bluetoothManager = ChatBrain()
     
     var body: some View {
         List(bluetoothManager.conversations) {conversation in
@@ -44,14 +44,7 @@ struct ContentView: View {
             )
         }
         .onAppear() {
-            // Request user for permission to send notifications.
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                if success {
-                    print("All set!")
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
+            
         }
         
         .navigationTitle("Chat")

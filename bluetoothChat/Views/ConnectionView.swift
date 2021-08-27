@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ConnectionView: View {
-    @EnvironmentObject var bluetoothManager: BluetoothManager
+    @EnvironmentObject var bluetoothManager: ChatBrain
     
     var body: some View {
-        Text(bluetoothManager.discoveredPeripherals.count > 0 ? "\(bluetoothManager.discoveredPeripherals.count) connected device\(bluetoothManager.discoveredPeripherals.count > 1 ? "s" : ""). You should be connected to the outside world." : "No devices available.")
+        Text(bluetoothManager.discoveredDevices.count > 0 ? "\(bluetoothManager.discoveredDevices.count) connected device\(bluetoothManager.discoveredDevices.count > 1 ? "s" : ""). You should be connected to the outside world." : "No devices available.")
             .padding()
     }
 }

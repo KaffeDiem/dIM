@@ -9,7 +9,7 @@ import Foundation
 import CoreBluetooth
 
 // MARK: Bluetooth Central Manager
-extension BluetoothManager {
+extension ChatBrain {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         // MARK: TODO: Handle other states as well.
@@ -35,9 +35,8 @@ extension BluetoothManager {
               }
          */
         
-        isReady = true
-        // Start scanning for devices as soon as the state is on.
-        centralManager.scanForPeripherals(withServices: [self.service.UUID], options: nil)
+        // Scan for peripherals with our unique uuid.
+        centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
     }
     
     
@@ -47,13 +46,28 @@ extension BluetoothManager {
      Callback function activated whenever a peripheral is discovered.
      */
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        // Print the name of discovered peripherals.
+        
+        print(peripheral.identifier.uuidString)
+        
         if let safeName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
             print("Peripheral discovered: \(safeName)")
+            
+            // Check if we have already seen this device.
+            var peripheralIsNew: Bool = true
+            for device in discoveredDevices {
+                if device.name == safeName {
+                    peripheralIsNew = false
+                }
+            }
+            
+            guard peripheralIsNew else {
+                print("\t \(safeName) is already added.")
+                return
+            }
             // Connect to the newly discovered peripheral.
             centralManager.connect(peripheral, options: nil)
             // Save the connected peripheral in connectedPeripherals for later use.
-            discoveredPeripherals.append(
+            discoveredDevices.append(
                 Device(
                     uuid: peripheral.identifier.uuidString,
                     rssi: RSSI.intValue,
@@ -61,9 +75,10 @@ extension BluetoothManager {
                     peripheral: peripheral)
             )
         } else {
-            print("Error: Peripheral had no name and therefore could not connect.")
+            print("Peripheral discovered in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
         }
     }
+    
     
     // Check to make sure that the device we are connecting to is
     // broadcasting the correct characteristics.
@@ -72,8 +87,9 @@ extension BluetoothManager {
         // Set the delegate.
         peripheral.delegate = self
         // Discover services which the peripheral has to offer.
-        peripheral.discoverServices([self.service.UUID])
+        peripheral.discoverServices([Service().UUID])
     }
+    
     
     // MARK: TODO - delegate method if a peripheral fails to connect.
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -81,26 +97,42 @@ extension BluetoothManager {
     }
     
     
-    // MARK: TODO - this function, whatever it does.
-    // Whenever a peripheral disconnects we got to remove it from the
-    // list of connected peripherals.
+    /*
+     Removes peripheral devices when the lose connection to the central.
+     */
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Peripheral disconnected: \(peripheral.name ?? "Unknown")")
         
         central.cancelPeripheralConnection(peripheral)
-        centralManager.scanForPeripherals(withServices: [self.service.UUID], options: nil)
+        centralManager.scanForPeripherals(
+            withServices: [Service().UUID],
+            options: [
+                CBCentralManagerScanOptionAllowDuplicatesKey: true
+            ]
+        )
         
-        for (index, device) in discoveredPeripherals.enumerated() {
+        var removedDeviceCounter = 0  // Dont try to remove at an index no longer existing.
+        for (index, device) in discoveredDevices.enumerated() {
             if device.peripheral == peripheral {
-                discoveredPeripherals.remove(at: index)
+                discoveredDevices.remove(at: index - removedDeviceCounter)
                 print("^ And removed from the list of discovered devices.")
+                removedDeviceCounter += 1
             }
-            
         }
-//        cleanUp(peripheral)
     }
     
-    
+    /*
+     Callback function if 'peripheral.readRSSI()' is called on a peripheral.
+     */
+    func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+        // MARK: didReadRSSI to be implemented
+//        RSSI.intValue
+        for (index, device) in discoveredDevices.enumerated() {
+            if device.peripheral == peripheral {
+                discoveredDevices[index].rssi = RSSI.intValue
+            }
+        }
+    }
     
     // Discover characteristics if the correct service has been found.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -114,7 +146,7 @@ extension BluetoothManager {
         // Loop trough services in case there are multiple and
         // connect to our characteristic if it is found.
         peripheral.services?.forEach {service in
-            peripheral.discoverCharacteristics([self.service.charUUID], for: service)
+            peripheral.discoverCharacteristics([Service().charUUID], for: service)
         }
     }
     
@@ -127,7 +159,7 @@ extension BluetoothManager {
         }
         
         service.characteristics?.forEach { characteristic in
-            guard characteristic.uuid == self.service.charUUID else { return }
+            guard characteristic.uuid == Service().charUUID else { return }
             // Subsribe to all notifications made by the characteristic.
             peripheral.setNotifyValue(true, for: characteristic)
             // Save a reference of the characteristic to send back
@@ -139,7 +171,7 @@ extension BluetoothManager {
     // Error handling if we are receiving the wrong notifications.
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         // Only receive notifications from the characteristics that we expect.
-        guard characteristic.uuid == self.service.charUUID else { return }
+        guard characteristic.uuid == Service().charUUID else { return }
         
         if let error = error {
             print("Unable to get new notification: \(error.localizedDescription)")
