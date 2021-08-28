@@ -10,6 +10,10 @@ import SwiftUI
 struct DiscoverView: View {
     @EnvironmentObject var chatBrain: ChatBrain
     
+//    @State var isActivate = false
+    
+    let username = UserDefaults.standard.string(forKey: "Username")!
+    
     var body: some View {
         VStack {
             Text("Send a message to a nearby device.")
@@ -21,7 +25,9 @@ struct DiscoverView: View {
                 HStack {
                     Button(action: {
                         // Send a 'Hello' message to start a conversation.
+//                        chatBrain.addMessage(for: device.name, text: "New conversation.")
                         chatBrain.sendMessage(for: device.name, text: "Has started a conversation!")
+//                        isActivate = true
                         
                     }, label: {
                         Text(device.name)
@@ -32,8 +38,15 @@ struct DiscoverView: View {
                         .font(.footnote)
                         .padding()
                 }
+                
+//                NavigationLink(destination: ChatView(sender: device.name).environmentObject(chatBrain)
+//                               , isActive: $isActivate) {
+//                    EmptyView()
+//                }
             }
             .navigationBarTitle("Discover", displayMode: .inline)
+            
+
         }
         .onAppear() {
             // Update the RSSI of the discoveredDevices when the list appears.
@@ -43,6 +56,11 @@ struct DiscoverView: View {
         }
     }
     
+    
+    /*
+     Calculate the distance in meters based on an RSSI.
+     Very approximate value which may vary A LOT.
+     */
     func calculateDistance(_ rssi: Int) -> Int {
         let txPower = -59
         
