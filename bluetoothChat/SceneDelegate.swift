@@ -14,6 +14,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    
+    /*
+     openURLContexts handles deep links for the app. They allow users to easily share
+     contact information by scanning friends QR codes.
+     */
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url{
+            let urlStr = url.absoluteString
+            let component = urlStr.components(separatedBy: "//")
+            print(component)
+        }
+    }
+    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.

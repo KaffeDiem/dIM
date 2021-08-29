@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct DiscoverView: View {
     @EnvironmentObject var chatBrain: ChatBrain
     
@@ -20,15 +21,22 @@ struct DiscoverView: View {
                 .padding(.top)
                 .padding(.leading)
                 .padding(.trailing)
+            Text("You device is scanning: \(String(chatBrain.centralManager.isScanning))")
+            Text("\(chatBrain.centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID]).count)")
+            
+            NavigationLink(
+                destination: QRScreenView(),
+                label: {
+                    Text("Show QR code.")
+                })
+                
             
             List(chatBrain.discoveredDevices, id: \.uuid) {device in
                 HStack {
                     Button(action: {
                         // Send a 'Hello' message to start a conversation.
-//                        chatBrain.addMessage(for: device.name, text: "New conversation.")
                         chatBrain.sendMessage(for: device.name, text: "Has started a conversation!")
-//                        isActivate = true
-                        
+
                     }, label: {
                         Text(device.name)
                             .padding()
@@ -38,20 +46,21 @@ struct DiscoverView: View {
                         .font(.footnote)
                         .padding()
                 }
-                
-//                NavigationLink(destination: ChatView(sender: device.name).environmentObject(chatBrain)
-//                               , isActive: $isActivate) {
-//                    EmptyView()
-//                }
             }
             .navigationBarTitle("Discover", displayMode: .inline)
             
-
         }
         .onAppear() {
-            // Update the RSSI of the discoveredDevices when the list appears.
+            /*
+             If the device is in the connected state then read its RSSI.
+             If not connected the clean up the device.
+             */
             for device in chatBrain.discoveredDevices {
-                device.peripheral.readRSSI()
+                if device.peripheral.state != .connected {
+                    chatBrain.cleanUpPeripheral(device.peripheral)
+                } else {
+                    device.peripheral.readRSSI()
+                }
             }
         }
     }
@@ -76,4 +85,7 @@ struct DiscoverView: View {
         
         return Int((0.89976)*pow(ratio,7.709) + 0.111)
     }
+    
+    
+    
 }

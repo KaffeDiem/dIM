@@ -53,12 +53,15 @@ extension ChatBrain {
                 }
             }
             
-            guard peripheralIsNew else {
-                print("\t \(safeName) is already added.")
-                return
-            }
             // Connect to the newly discovered peripheral.
             centralManager.connect(peripheral, options: nil)
+            
+            guard peripheralIsNew else {
+                print("\t \(safeName) is already added.")
+                
+                return
+            }
+            
             // Save the connected peripheral in connectedPeripherals for later use.
             discoveredDevices.append(
                 Device(
@@ -68,7 +71,7 @@ extension ChatBrain {
                     peripheral: peripheral)
             )
         } else {
-            print("Peripheral discovered in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
+            print("Peripheral in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
         }
     }
     
@@ -91,7 +94,7 @@ extension ChatBrain {
     
     
     /*
-     Removes peripheral devices when the lose connection to the central.
+     Removes peripheral devices when they lose connection to the central.
      */
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Peripheral disconnected: \(peripheral.name ?? "Unknown")")
@@ -199,6 +202,7 @@ extension ChatBrain {
     
     // MARK: TODO - this function, whatever it does.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-//        cleanUp(peripheral)
+        print("Peripheral modified services: \(peripheral.name!) \n^ and is cleaned")
+        cleanUpPeripheral(peripheral)
     }
 }
