@@ -26,7 +26,7 @@ extension ChatBrain {
          */
         for seenMessageID in seenMessages {
             if seenMessageID == message.id {
-                print("A message has been seen before.")
+                print("Message seen before.")
                 return
             }
         }
@@ -39,7 +39,6 @@ extension ChatBrain {
         let username = UserDefaults.standard.string(forKey: "Username")
         
         let messageIsForMe: Bool = message.receiver == username
-        
         guard messageIsForMe else {
             relayMessage(message)
             return
@@ -49,7 +48,7 @@ extension ChatBrain {
          If message is for me execute below code.
          */
         var senderIsAdded = false
-        //  Loop trough conversations to find a match if possible.
+        
         for (index, conv) in conversations.enumerated() {
             
             if conv.author == message.sender {
@@ -60,7 +59,7 @@ extension ChatBrain {
                 conversations[index].updateLastMessage(new: message)
             }
         }
-        //  Create a new conversation if the sender has not been seen.
+        
         if !senderIsAdded {
             conversations.append(
                 Conversation(
@@ -72,7 +71,14 @@ extension ChatBrain {
             )
         }
         
-        /* Send a notification when we receive a message */
+        /*
+         Send a response to the sender that the message has been received.
+         */
+        
+        
+        /*
+         Send a notification if app is closed.
+         */
         let content = UNMutableNotificationContent()
         content.title = message.sender
         content.body = message.text

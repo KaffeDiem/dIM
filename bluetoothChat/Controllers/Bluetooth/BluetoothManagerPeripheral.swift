@@ -22,6 +22,7 @@ extension ChatBrain {
         ])
     }
     
+    
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         // Check that we only advertise if the state is on.
         guard peripheral.state == .poweredOn else {
@@ -45,6 +46,10 @@ extension ChatBrain {
         peripheralManager.add(service)
         startAdvertising(peripheralManager: peripheralManager)
     }
+    
+    
+    
+    
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         

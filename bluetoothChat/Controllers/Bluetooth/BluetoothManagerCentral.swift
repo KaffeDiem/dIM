@@ -8,29 +8,20 @@
 import Foundation
 import CoreBluetooth
 
-// MARK: Bluetooth Central Manager
+/*
+ Check the Bluetooth state of the device. If it is powered on and ready
+ then start searching for peripherals to connect to. 
+ */
 extension ChatBrain {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
         
-    switch central.state {
-        case .poweredOn:
-            centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
-//        case .poweredOff:
-//            // Alert user to turn on Bluetooth
-//        case .resetting:
-//            // Wait for next state update and consider logging interruption of Bluetooth service
-//        case .unauthorized:
-//            // Alert user to enable Bluetooth permission in app Settings
-//        case .unsupported:
-//            // Alert user their device does not support Bluetooth and app will not work as expected
-//        case .unknown:
-//            // Wait for next state update
-        default:
-            print("A default case was triggerd.")
-    }
-        
-        
+            case .poweredOn:
+                centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
+            default:
+                print("A default case was triggerd.")
+        }
     }
     
     
@@ -199,6 +190,7 @@ extension ChatBrain {
         // Decode the message received from a connected peripheral and save it.
         do {
             let message = try decoder.decode(Message.self, from: data)
+            // Handle decoded messages.
             retrieveMessage(message)
         } catch {
             print("Error decoding message: \(error)")
