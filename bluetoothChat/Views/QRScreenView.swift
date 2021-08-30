@@ -24,12 +24,18 @@ struct QRScreenView: View {
             
             Spacer()
             
-            Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//publickey"))
-                .interpolation(.none)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 200, height: 200, alignment: .center)
-            
+            ZStack {
+                RoundedRectangle(cornerRadius: 25, style: .continuous)
+                    .foregroundColor(.white)
+                    .frame(width: 225, height: 225)
+                
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//publickey"))
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200, alignment: .center)
+            }
+                
             Spacer()
             
             Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")

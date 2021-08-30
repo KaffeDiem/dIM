@@ -23,7 +23,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let url = URLContexts.first?.url{
             let urlStr = url.absoluteString
             let component = urlStr.components(separatedBy: "//")
-            print(component)
+            
+            // Check if link is valid.
+            guard component.count == 3 else { return }
+            
+            let name = component[1]
+            let publicKey = component[2]
+            
+            let defaults = UserDefaults.standard
+            
+            // Add new contact if list already exists.
+            // Also check that it is not a duplicate.
+            if var contacts = defaults.stringArray(forKey: "Contacts") {
+                if contacts.contains(name) && defaults.string(forKey: name) == publicKey {
+                    return
+                }
+                
+                contacts.append(name)
+                defaults.set(contacts, forKey: "Contacts")
+                
+            } else {
+                // Create a string list and save it.
+                let contacts = [name]
+                defaults.set(contacts, forKey: "Contacts")
+            }
+            
+            // Save the publicKey for a user under the users name.
+            defaults.set(publicKey, forKey: "\(name)")
+        }
+        
+        let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
+        
+        for contact in contacts! {
+            print("\(contact): \(UserDefaults.standard.string(forKey: contact)!)")
         }
     }
     
