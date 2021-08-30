@@ -90,8 +90,13 @@ struct SettingsView: View {
                         .foregroundColor(.accentColor)
                 } else {
                     Text("\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.")
+                        .font(.footnote)
                         .foregroundColor(.accentColor)
                 }
+                
+                Text("\(chatBrain.routedMessagesCounter) messages routed.")
+                    .font(.footnote)
+                    .foregroundColor(.accentColor)
             }
             .padding()
             .autocapitalization(.none)

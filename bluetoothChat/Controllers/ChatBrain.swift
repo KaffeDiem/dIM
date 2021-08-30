@@ -19,6 +19,8 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     
     // Holds all messages received from all peripherals.
     @Published var conversations: [Conversation] = []
+    @Published var routedMessagesCounter: Int = 0
+    
     
     @Published var centralManager: CBCentralManager!
     
