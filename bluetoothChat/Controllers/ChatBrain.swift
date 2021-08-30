@@ -58,31 +58,6 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     
     
     /*
-     Add a sent message to the conversation. Used when sending a device a
-     new message.
-     */
-    func addMessage(for receiver: String, text: String) {
-        guard text != "" else { return } // Do not add empty messages.
-        
-        let username = UserDefaults.standard.string(forKey: "Username")!
-        
-        // Check which conversation to add the message to.
-        for (index, conv) in conversations.enumerated() {
-            if conv.author == receiver {
-                
-                let message = Message(
-                    id: Int.random(in: 0...1000),
-                    sender: username,
-                    receiver: receiver,
-                    text: text
-                )
-                
-                conversations[index].addMessage(add: message)
-            }
-        }
-    }
-    
-    /*
      Remove a device from discoveredDevices and drop connection to it.
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {

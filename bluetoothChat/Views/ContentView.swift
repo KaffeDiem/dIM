@@ -17,46 +17,59 @@ struct ContentView: View {
     // Create a new Bluetooth Manager which handles the central and peripheral role.
     @StateObject var chatBrain = ChatBrain()
     
+    let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
+    
     var body: some View {
         VStack {
-            
-            if chatBrain.conversations.count < 1 {
-                Spacer()
-                Text("Add a contact to start chatting.")
-                    .padding()
-                Spacer()
+            if let safeContacts = contacts {
+                
+                List(safeContacts, id: \.self) {contact in
+                    NavigationLink(
+                        destination: ChatView(sender: contact)
+                            .environmentObject(chatBrain),
+                        label: {
+                            Text(contact)
+                        })
+                }
             } else {
+                Spacer()
+                
+                Text("Add a contact to start chatting. Do this by scanning their QR code.")
+                    .padding()
+                
+                Spacer()
+            }
             
             /*
              List of all conversations saved on device.
              */
             
-                List(chatBrain.conversations) {conversation in
-                    NavigationLink(
-                        destination: ChatView(sender: conversation.author)
-                            .environmentObject(chatBrain),
-                        label: {
-                            HStack {
-                                Image(systemName: "person")
-                                    .frame(width: 50, height: 50, alignment: .center)
-
-                                VStack {
-                                    HStack {
-                                        Text(conversation.author)
-                                        Spacer()
-                                    }
-                                    HStack {
-                                        Text(conversation.lastMessage.text)
-                                            .scaledToFit()
-                                            .font(.footnote)
-                                        Spacer()
-                                    }
-                                }
-                            }
-                        }
-                    )
-                }
-            }
+//                List(chatBrain.conversations) {conversation in
+//                    NavigationLink(
+//                        destination: ChatView(sender: conversation.author)
+//                            .environmentObject(chatBrain),
+//                        label: {
+//                            HStack {
+//                                Image(systemName: "person")
+//                                    .frame(width: 50, height: 50, alignment: .center)
+//
+//                                VStack {
+//                                    HStack {
+//                                        Text(conversation.author)
+//                                        Spacer()
+//                                    }
+//                                    HStack {
+//                                        Text(conversation.lastMessage.text)
+//                                            .scaledToFit()
+//                                            .font(.footnote)
+//                                        Spacer()
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    )
+//                }
+//            }
         }
         
         .navigationTitle("Chat")

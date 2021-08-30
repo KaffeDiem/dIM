@@ -56,7 +56,7 @@ struct ChatView: View {
                         .padding(.leading)
                         .padding(.trailing)
                     }
-                        .navigationTitle(sender)
+                        
                 }
             }
             
@@ -69,10 +69,8 @@ struct ChatView: View {
                     // Should anything go here?
                 }, onCommit: {
                     
-                    chatBrain.addMessage(for: sender, text: message)
                     chatBrain.sendMessage(for: sender, text: message)
                     
-//                    UIApplication.shared.endEditing()
                     message = ""
                 })
                 .padding()
@@ -80,10 +78,8 @@ struct ChatView: View {
                 
                 Button(action: {
                     
-                    chatBrain.addMessage(for: sender, text: message)
                     chatBrain.sendMessage(for: sender, text: message)
                     
-//                    UIApplication.shared.endEditing()
                     message = ""
                 }) {
                     Image(systemName: "chevron.forward.circle.fill")
@@ -93,6 +89,8 @@ struct ChatView: View {
                 .padding(.top)
                 .scaleEffect(1.8)
             }
+            
+            .navigationTitle(sender)
         }
     }
 }

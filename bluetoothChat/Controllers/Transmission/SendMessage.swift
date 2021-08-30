@@ -8,40 +8,61 @@
 import Foundation
 
 extension ChatBrain {
-    /*
-     Send a string to all connected devices.
-     */
-    func sendMessage(for receiver: String?, text message: String) {
-        
+    
+    func sendMessage(for receiver: String, text message: String) {
+        /*
+         Send a string to all connected devices.
+         */
         guard message != "" else { return }
         
+        let username = UserDefaults.standard.string(forKey: "Username")!
+        
+        let message = Message(
+            id: Int.random(in: 0...10000),
+            sender: username,
+            receiver: receiver,
+            text: message
+        )
+        
         if let characteristic = self.characteristic {
+    
+            seenMessages.append(message.id)
             
-            if let receiver = receiver {
-                
-                let username = UserDefaults.standard.string(forKey: "Username")!
-                
-                let packet = Message(
-                    id: Int.random(in: 0...1000),
-                    sender: username,
-                    receiver: receiver,
-                    text: message
-                )
-                
-                seenMessages.append(packet.id)
-                
-                do {
-                    let messageEncoded = try JSONEncoder().encode(packet)
+            do {
+                let messageEncoded = try JSONEncoder().encode(message)
 
-                    peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
-                } catch {
-                    print("Error encoding message: \(message) -> \(error)")
-                }
+                peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+            } catch {
+                print("Error encoding message: \(message) -> \(error)")
             }
-            
-            else {
-                print("Not yet implemented: Send message to all users.")
+        }
+        
+        /*
+         Add the message to the local conversation.
+         */
+        var conversationFound: Bool = false
+        
+        for (index, conv) in conversations.enumerated() {
+            if conv.author == receiver {
+                
+                conversations[index].addMessage(add: message)
+                conversationFound = true
+                print("Conversations was found")
+                
             }
+        }
+        
+        // If the conversation have not been found, create it.
+        if !conversationFound {
+            conversations.append(
+                Conversation(
+                    id: message.id,
+                    author: receiver,
+                    lastMessage: message,
+                    messages: [message]
+                )
+            )
+            print("Conversation NOT found: Added new.")
         }
     }
 }

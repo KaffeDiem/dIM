@@ -71,7 +71,7 @@ extension ChatBrain {
                     peripheral: peripheral)
             )
         } else {
-            print("Peripheral in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
+//            print("Peripheral in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
         }
     }
     
