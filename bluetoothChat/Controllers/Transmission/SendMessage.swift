@@ -47,7 +47,6 @@ extension ChatBrain {
                 
                 conversations[index].addMessage(add: message)
                 conversationFound = true
-                print("Conversations was found")
                 
             }
         }
@@ -62,7 +61,6 @@ extension ChatBrain {
                     messages: [message]
                 )
             )
-            print("Conversation NOT found: Added new.")
         }
     }
 }

@@ -16,7 +16,8 @@ extension ChatBrain {
      Function is only called if the message is properly decoded.
      
      This is also where we decided if the message was meant for us
-     or not.
+     or not. For it to be added we have to have each other added
+     as a contact. 
      */
     
     func retrieveMessage(_ message: Message) {
@@ -36,10 +37,11 @@ extension ChatBrain {
         /*
          Determine if the message is for me
          */
-        let username = UserDefaults.standard.string(forKey: "Username")
+        let defaults = UserDefaults.standard
+        let username = defaults.string(forKey: "Username")
         
         let messageIsForMe: Bool = message.receiver == username
-        guard messageIsForMe else {
+        guard messageIsForMe else { // If not for me, relay the message.
             relayMessage(message)
             return
         }
@@ -47,54 +49,47 @@ extension ChatBrain {
         /*
          If message is for me execute below code.
          */
-        var senderIsAdded = false
         
-        for (index, conv) in conversations.enumerated() {
+        // Check if you have added the person as a contact.
+        if let contacts = defaults.stringArray(forKey: "Contacts") {
+            let contactKnown = contacts.contains(message.sender)
             
-            if conv.author == message.sender {
-                
-                senderIsAdded = true
-                
-                conversations[index].addMessage(add: message)
-                conversations[index].updateLastMessage(new: message)
+            guard contactKnown else {
+                print("Message for me - but contact has not been added.")
+                return
             }
-        }
-        
-        if !senderIsAdded {
-            conversations.append(
-                Conversation(
-                    id: message.id,
-                    author: message.sender,
-                    lastMessage: message,
-                    messages: [message]
-                )
+            
+            for (index, conv) in conversations.enumerated() {
+                
+                if conv.author == message.sender {
+                    
+                    conversations[index].addMessage(add: message)
+                    conversations[index].updateLastMessage(new: message)
+                }
+            }
+            
+            /*
+             Send a notification if app is closed.
+             */
+            let content = UNMutableNotificationContent()
+            content.title = message.sender
+            content.body = message.text
+            content.sound = UNNotificationSound.default
+
+            let trigger = UNTimeIntervalNotificationTrigger(
+                timeInterval: 0.1,
+                repeats: false
             )
+            
+            let request = UNNotificationRequest(
+                identifier: UUID().uuidString,
+                content: content,
+                trigger: trigger
+            )
+
+            UNUserNotificationCenter.current().add(request)
+        } else {
+            print("Message for me - but NO contacts have been added.")
         }
-        
-        /*
-         Send a response to the sender that the message has been received.
-         */
-        
-        
-        /*
-         Send a notification if app is closed.
-         */
-        let content = UNMutableNotificationContent()
-        content.title = message.sender
-        content.body = message.text
-        content.sound = UNNotificationSound.default
-
-        let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: 0.1,
-            repeats: false
-        )
-        
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: trigger
-        )
-
-        UNUserNotificationCenter.current().add(request)
     }
 }

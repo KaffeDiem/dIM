@@ -14,22 +14,39 @@ import SwiftUI
  */
 struct ContentView: View {
     
-    // Create a new Bluetooth Manager which handles the central and peripheral role.
     @StateObject var chatBrain = ChatBrain()
     
-    let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
+    @State var contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
     
     var body: some View {
         VStack {
             if let safeContacts = contacts {
                 
                 List(safeContacts, id: \.self) {contact in
+                    
                     NavigationLink(
                         destination: ChatView(sender: contact)
                             .environmentObject(chatBrain),
                         label: {
-                            Text(contact)
+                            HStack {
+                                Image(systemName: "person")
+                                    .frame(width: 50, height: 50, alignment: .center)
+
+                                VStack {
+                                    HStack {
+                                        Text(contact)
+                                        Spacer()
+                                    }
+                                HStack {
+                                    Text(chatBrain.getLastMessage(contact) ?? "Start a conversation with \(contact).")
+                                        .scaledToFit()
+                                        .font(.footnote)
+                                    Spacer()
+                                }
+                                }
+                            }
                         })
+                    
                 }
             } else {
                 Spacer()
@@ -39,6 +56,7 @@ struct ContentView: View {
                 
                 Spacer()
             }
+        
             
             /*
              List of all conversations saved on device.
@@ -72,6 +90,8 @@ struct ContentView: View {
 //            }
         }
         
+        
+        
         .navigationTitle("Chat")
 
         .toolbar {
@@ -95,6 +115,11 @@ struct ContentView: View {
                         Image(systemName: "person.fill.badge.plus")
                     }
                 )
+            }
+        }
+        .onAppear() {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
+                contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
             }
         }
     }

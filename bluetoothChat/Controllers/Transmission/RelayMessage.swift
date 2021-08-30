@@ -21,8 +21,9 @@ extension ChatBrain {
             do {
                 
                 let encodedMessage = try JSONEncoder().encode(message)
-                print("Route message")
+                
                 peripheralManager.updateValue(encodedMessage, for: characteristic, onSubscribedCentrals: nil)
+                
                 routedMessagesCounter += 1
                 
             } catch {

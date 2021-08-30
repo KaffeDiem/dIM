@@ -41,9 +41,6 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     }
     
     
-
-    
-    
     /*
      Get the exchanged messages with a given user.
      Used when loading the ChatView()
@@ -56,6 +53,20 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
         }
         print("There was an error fetching conversation from \(author)")
         return []
+    }
+    
+    
+    /*
+     Get the last message of a conversation if there are any.
+     */
+    func getLastMessage(_ user: String) -> String? {
+        for conversation in conversations {
+            if conversation.author == user {
+                return conversation.lastMessage.text
+            }
+        }
+        
+        return nil
     }
     
     
