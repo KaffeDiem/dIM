@@ -51,7 +51,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
                 return conversation.messages
             }
         }
-        print("There was an error fetching conversation from \(author)")
+        
         return []
     }
     
@@ -75,11 +75,20 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
         print("Clean up: \(peripheral.name!)")
+        
+        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID])
+        
+        for device in connected {
+            if device == peripheral {
+                centralManager.cancelPeripheralConnection(peripheral)
+            }
+        }
+        
         for (index, device) in discoveredDevices.enumerated() {
             
             if device.peripheral == peripheral {
                 
-                centralManager.cancelPeripheralConnection(peripheral)
+        
                 
                 discoveredDevices.remove(at: index)
                 return

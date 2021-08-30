@@ -35,7 +35,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Add new contact if list already exists.
             // Also check that it is not a duplicate.
             if var contacts = defaults.stringArray(forKey: "Contacts") {
-                if contacts.contains(name) && defaults.string(forKey: name) == publicKey {
+                if contacts.contains(name) {
+                    print("Contact has already been added. ")
                     return
                 }
                 

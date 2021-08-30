@@ -132,6 +132,8 @@ struct SetUpView: View {
                 }
             }
         }
+        
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     /*

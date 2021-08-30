@@ -109,10 +109,10 @@ struct ContentView: View {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 // Discover button
                 NavigationLink(
-                    destination: DiscoverView()
+                    destination: QRScreenView()
                         .environmentObject(chatBrain),
                     label: {
-                        Image(systemName: "person.fill.badge.plus")
+                        Image(systemName: "qrcode")
                     }
                 )
             }

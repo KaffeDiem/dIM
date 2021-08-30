@@ -30,6 +30,8 @@ extension ChatBrain {
             
             do {
                 let messageEncoded = try JSONEncoder().encode(message)
+                
+                print("Messager \(message) was sent")
 
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {

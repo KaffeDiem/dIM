@@ -40,6 +40,7 @@ struct QRScreenView: View {
             
             Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
                 .font(.footnote)
+                .foregroundColor(.gray)
         }
         .padding()
         
