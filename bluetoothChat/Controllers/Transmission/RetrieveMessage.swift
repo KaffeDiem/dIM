@@ -17,7 +17,7 @@ extension ChatBrain {
      
      This is also where we decided if the message was meant for us
      or not. For it to be added we have to have each other added
-     as a contact. 
+     as a contact.
      */
     
     func retrieveMessage(_ message: Message) {

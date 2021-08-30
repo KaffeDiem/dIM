@@ -29,7 +29,7 @@ struct QRScreenView: View {
                     .foregroundColor(.white)
                     .frame(width: 225, height: 225)
                 
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//publickey"))
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
@@ -42,7 +42,7 @@ struct QRScreenView: View {
                 .font(.footnote)
         }
         .padding()
-//        )
+        
     }
     
     /*

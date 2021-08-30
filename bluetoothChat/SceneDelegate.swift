@@ -48,8 +48,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 defaults.set(contacts, forKey: "Contacts")
             }
             
-            // Save the publicKey for a user under the users name.
-            defaults.set(publicKey, forKey: "\(name)")
+            // Save the publicKey for a user under the username.
+            defaults.set(publicKey, forKey: name)
         }
         
         let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
