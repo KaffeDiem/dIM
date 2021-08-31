@@ -3,7 +3,7 @@
 
 A chat app for iOS which uses Bluetooth to send, receive and route messages.
 
-![icon](./bluetoothChat/Assets.xcassets/AppIcon.appiconset/icon_83.5@2x-1.png "dIM Icon")
+![icon](./bluetoothChat/Assets.xcassets/AppIcon.appiconset/icon_83.5@2x-1.png "dIM")
 
 
 dIM works by sending messages to nearby users using Bluetooth.
