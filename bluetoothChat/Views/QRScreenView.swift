@@ -18,51 +18,42 @@ struct QRScreenView: View {
     let filter = CIFilter.qrCodeGenerator()
     
     var body: some View {
-        ZStack {
+       
+    VStack {
             
-//            Image(colorScheme == .dark ? "darkDim" : "lightDim")
-//                .resizable(resizingMode: .tile)
-//                .edgesIgnoringSafeArea(.all)
-//                .aspectRatio(contentMode: .fill)
-//                .frame(minWidth: 0, maxWidth: .infinity, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .center)
-                
+            Spacer()
             
-            VStack {
+            Text("Scan the QR code")
+                .font(.title)
+                .padding()
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 25, style: .continuous)
+                    .foregroundColor(.white)
+                    .frame(width: 225, height: 225)
                 
-                
-                Spacer()
-                
-                Text("Scan the QR code.")
-                    .font(.title)
-                    .padding()
-                
-                ZStack {
-                    RoundedRectangle(cornerRadius: 25, style: .continuous)
-                        .foregroundColor(.white)
-                        .frame(width: 225, height: 225)
-                    
-                    Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
-                        .interpolation(.none)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200, alignment: .center)
-                }
-                    
-                Spacer()
-                
-                Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200, alignment: .center)
             }
-            .padding()
+                
+            Spacer()
             
+            Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
+                .font(.footnote)
+                .foregroundColor(.accentColor)
         }
+        .padding()
+    
         .background(
             Image(colorScheme == .dark ? "darkDim" : "lightDim")
                 .resizable(resizingMode: .tile)
                 .edgesIgnoringSafeArea(.all)
         )
     }
+    
     
     /*
      Generate QR codes on the fly to share your information
