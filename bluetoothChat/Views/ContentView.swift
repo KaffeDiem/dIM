@@ -22,6 +22,9 @@ struct ContentView: View {
         VStack {
             if let safeContacts = contacts {
                 
+                /*
+                 List of contacts and their last messages.
+                 */
                 List(safeContacts, id: \.self) {contact in
                     
                     NavigationLink(
@@ -56,40 +59,7 @@ struct ContentView: View {
                 
                 Spacer()
             }
-        
-            
-            /*
-             List of all conversations saved on device.
-             */
-            
-//                List(chatBrain.conversations) {conversation in
-//                    NavigationLink(
-//                        destination: ChatView(sender: conversation.author)
-//                            .environmentObject(chatBrain),
-//                        label: {
-//                            HStack {
-//                                Image(systemName: "person")
-//                                    .frame(width: 50, height: 50, alignment: .center)
-//
-//                                VStack {
-//                                    HStack {
-//                                        Text(conversation.author)
-//                                        Spacer()
-//                                    }
-//                                    HStack {
-//                                        Text(conversation.lastMessage.text)
-//                                            .scaledToFit()
-//                                            .font(.footnote)
-//                                        Spacer()
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    )
-//                }
-//            }
         }
-        
         
         
         .navigationTitle("Chat")
@@ -122,6 +92,8 @@ struct ContentView: View {
                 contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
             }
         }
+        
+        
     }
 }
 

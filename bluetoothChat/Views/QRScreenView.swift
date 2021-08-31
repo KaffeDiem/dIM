@@ -21,8 +21,7 @@ struct QRScreenView: View {
             Spacer()
             
             Text("Scan the QR code to become contacts.")
-            
-            Spacer()
+                .font(.headline)
             
             ZStack {
                 RoundedRectangle(cornerRadius: 25, style: .continuous)
