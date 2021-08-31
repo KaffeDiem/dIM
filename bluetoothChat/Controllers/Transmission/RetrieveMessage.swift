@@ -41,6 +41,7 @@ extension ChatBrain {
         let username = defaults.string(forKey: "Username")
         
         let messageIsForMe: Bool = message.receiver == username
+        
         guard messageIsForMe else { // If not for me, relay the message.
             relayMessage(message)
             return
@@ -52,6 +53,7 @@ extension ChatBrain {
         
         // Check if you have added the person as a contact.
         if let contacts = defaults.stringArray(forKey: "Contacts") {
+            
             let contactKnown = contacts.contains(message.sender)
             
             guard contactKnown else {
@@ -59,14 +61,30 @@ extension ChatBrain {
                 return
             }
             
+            var conversationFound = false
+            
             for (index, conv) in conversations.enumerated() {
                 
                 if conv.author == message.sender {
                     
                     conversations[index].addMessage(add: message)
                     conversations[index].updateLastMessage(new: message)
+                    conversationFound = true
                 }
             }
+            
+            // If the conversation have not been found, create it.
+            if !conversationFound {
+                conversations.append(
+                    Conversation(
+                        id: message.id,
+                        author: message.sender,
+                        lastMessage: message,
+                        messages: [message]
+                    )
+                )
+            }
+
             
             /*
              Send a notification if app is closed.
@@ -89,7 +107,7 @@ extension ChatBrain {
 
             UNUserNotificationCenter.current().add(request)
         } else {
-            print("Message for me - but NO contacts have been added.")
+            print("Message received. No contacts.")
         }
     }
 }

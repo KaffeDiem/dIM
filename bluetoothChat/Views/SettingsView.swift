@@ -87,11 +87,11 @@ struct SettingsView: View {
                 if chatBrain.discoveredDevices.count < 1 {
                     Text("Not connected to anyone.")
                         .font(.footnote)
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(.gray)
                 } else {
                     Text("\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.")
                         .font(.footnote)
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(.gray)
                 }
                 
                 Text("\(chatBrain.routedMessagesCounter) messages routed.")
