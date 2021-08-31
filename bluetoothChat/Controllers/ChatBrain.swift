@@ -74,7 +74,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      Remove a device from discoveredDevices and drop connection to it.
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
-        print("Clean up: \(peripheral.name!)")
+        print("Clean up: \(peripheral.name ?? "Unknown")")
         
         let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID])
         

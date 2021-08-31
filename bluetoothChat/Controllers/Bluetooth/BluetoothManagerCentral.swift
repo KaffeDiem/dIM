@@ -32,47 +32,43 @@ extension ChatBrain {
      */
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        // See if we can get the custom Username of the peripheral.
-        if let safeName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
-            print("Peripheral discovered: \(safeName)")
-            
-            
-            // Check if we have already seen this device.
-            var peripheralIsNew: Bool = true
-            for device in discoveredDevices {
-                
-                /*
-                 Check if devices are still connected at the same time.
-                 */
-                if device.peripheral.state != .connected {
-                    cleanUpPeripheral(device.peripheral)
-                }
-                
-                if device.name == safeName {
-                    peripheralIsNew = false
-                }
+        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "Unknown"
+        
+        print("Peripheral discovered: \(name)")
+        
+        // Check if we have already seen this device.
+        var peripheralIsNew: Bool = true
+        
+        for device in discoveredDevices {
+            /*
+             Check if devices are still connected at the same time.
+             */
+            if device.peripheral.state != .connected && device.peripheral.state != .connecting {
+                cleanUpPeripheral(device.peripheral)
             }
             
-            // Connect to the newly discovered peripheral.
-            centralManager.connect(peripheral, options: nil)
-            
-            guard peripheralIsNew else {
-                print("\t \(safeName) is already added.")
-                
-                return
+            if device.uuid == peripheral.identifier.uuidString {
+                peripheralIsNew = false
             }
-            
-            // Save the connected peripheral in connectedPeripherals for later use.
-            discoveredDevices.append(
-                Device(
-                    uuid: peripheral.identifier.uuidString,
-                    rssi: RSSI.intValue,
-                    name: safeName,
-                    peripheral: peripheral)
-            )
-        } else {
-//            print("Peripheral in overflow area: \n-\t\(peripheral.name ?? "Unknown")-\n-\t\(peripheral.identifier.uuidString)")
         }
+        
+        
+        guard peripheralIsNew else {
+            return
+        }
+        
+        // Connect to the newly discovered peripheral.
+        centralManager.connect(peripheral, options: nil)
+        
+    
+        // Save the connected peripheral in connectedPeripherals for later use.
+        discoveredDevices.append(
+            Device(
+                uuid: peripheral.identifier.uuidString,
+                rssi: RSSI.intValue,
+                name: name,
+                peripheral: peripheral)
+        )
     }
     
     
