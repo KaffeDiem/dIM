@@ -10,39 +10,58 @@ import CoreImage.CIFilterBuiltins
 
 struct QRScreenView: View {
 
+    @Environment(\.colorScheme) var colorScheme
+    
     let username = UserDefaults.standard.string(forKey: "Username")
     
     let context = CIContext()
     let filter = CIFilter.qrCodeGenerator()
     
     var body: some View {
-        VStack {
+        ZStack {
             
-            Spacer()
-            
-            Text("Scan the QR code to become contacts.")
-                .font(.headline)
-            
-            ZStack {
-                RoundedRectangle(cornerRadius: 25, style: .continuous)
-                    .foregroundColor(.white)
-                    .frame(width: 225, height: 225)
+//            Image(colorScheme == .dark ? "darkDim" : "lightDim")
+//                .resizable(resizingMode: .tile)
+//                .edgesIgnoringSafeArea(.all)
+//                .aspectRatio(contentMode: .fill)
+//                .frame(minWidth: 0, maxWidth: .infinity, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .center)
                 
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
-                    .interpolation(.none)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200, alignment: .center)
+            
+            VStack {
+                
+                
+                Spacer()
+                
+                Text("Scan the QR code.")
+                    .font(.title)
+                    .padding()
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 25, style: .continuous)
+                        .foregroundColor(.white)
+                        .frame(width: 225, height: 225)
+                    
+                    Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
+                        .interpolation(.none)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 200, height: 200, alignment: .center)
+                }
+                    
+                Spacer()
+                
+                Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
             }
-                
-            Spacer()
+            .padding()
             
-            Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
-                .font(.footnote)
-                .foregroundColor(.gray)
         }
-        .padding()
-        
+        .background(
+            Image(colorScheme == .dark ? "darkDim" : "lightDim")
+                .resizable(resizingMode: .tile)
+                .edgesIgnoringSafeArea(.all)
+        )
     }
     
     /*

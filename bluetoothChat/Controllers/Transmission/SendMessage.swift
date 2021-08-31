@@ -46,6 +46,8 @@ extension ChatBrain {
             if conv.author == receiver {
                 
                 conversations[index].addMessage(add: message)
+                conversations[index].lastMessage = message
+                
                 conversationFound = true
                 
             }
