@@ -43,18 +43,29 @@ struct ChatView: View {
                                 if username == message.sender {
                                     Spacer()
                                 }
-                                Text(message.text).padding(12)
-                                    .foregroundColor(.white)
-                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
-                                    .clipShape(Bubble(chat: username == message.sender))
+                                VStack {
+                                    Text(message.text).padding(12)
+                                        .foregroundColor(.white)
+                                        .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
+                                        .clipShape(Bubble(chat: username == message.sender))
+                                        .padding(.trailing)
+                                        .padding(.leading)
+                                }
                                 if username != message.sender {
                                     Spacer()
                                 }
                             }
+                            
+                            if message.sender == username {
+                                HStack {
+                                    Spacer()
+                                    Text("Sent")
+                                        .foregroundColor(.accentColor)
+                                        .font(.footnote)
+                                        .padding(.trailing)
+                                }
+                            }
                         }
-                        .clipShape(Bubble(chat: username == message.sender))
-                        .padding(.leading)
-                        .padding(.trailing)
                     }
                         
                 }

@@ -18,7 +18,7 @@ extension ChatBrain {
         let username = UserDefaults.standard.string(forKey: "Username")!
         
         let message = Message(
-            id: Int.random(in: 0...10000),
+            id: UInt16.random(in: 0...UInt16.max),
             sender: username,
             receiver: receiver,
             text: message

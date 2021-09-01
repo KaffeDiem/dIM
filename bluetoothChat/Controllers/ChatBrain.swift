@@ -12,23 +12,28 @@ import CoreBluetooth
 // and sending/receiving messages to/from other Bluetooth devices.
 
 class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
-    
+    /*
+     Hacky solution to solve a problem with ObservableObjects.
+     TO BE IMPLEMENTED.
+     */
+    private var isPaused: Bool = false
+    private var hasPendingUpdates: Bool = false
         
-    @Published var discoveredDevices: [Device] = []
+    var discoveredDevices: [Device] = []
     var connectedCharateristics: [CBCharacteristic] = []
     
     // Holds all messages received from all peripherals.
     @Published var conversations: [Conversation] = []
-    @Published var routedMessagesCounter: Int = 0
+    var routedMessagesCounter: Int = 0
     
     
-    @Published var centralManager: CBCentralManager!
+    var centralManager: CBCentralManager!
     
     var peripheralManager: CBPeripheralManager!
 
     var characteristic: CBMutableCharacteristic?
     
-    var seenMessages: [Int] = []
+    var seenMessages: [UInt16] = []
     
     override init() {
         super.init()

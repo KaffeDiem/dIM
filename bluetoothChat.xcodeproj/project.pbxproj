@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B0357C0B26DBEB950013CAF9 /* QRScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0357C0A26DBEB950013CAF9 /* QRScreenView.swift */; };
+		B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0357C0A26DBEB950013CAF9 /* QRView.swift */; };
 		B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */; };
 		B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */; };
 		B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3926D3B3A800AD9E65 /* ContentView.swift */; };
@@ -34,7 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B0357C0A26DBEB950013CAF9 /* QRScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScreenView.swift; sourceTree = "<group>"; };
+		B0357C0A26DBEB950013CAF9 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluetoothChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 				B074179C26D6276C00F9C649 /* SettingsView.swift */,
 				B07417A026D6342900F9C649 /* DiscoverView.swift */,
 				B064B43626D771F0005D6BFB /* SetUpView.swift */,
-				B0357C0A26DBEB950013CAF9 /* QRScreenView.swift */,
+				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -251,7 +251,7 @@
 				B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */,
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
-				B0357C0B26DBEB950013CAF9 /* QRScreenView.swift in Sources */,
+				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
 				B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */,
 				B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */,

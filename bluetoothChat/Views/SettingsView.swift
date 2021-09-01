@@ -17,6 +17,9 @@ struct SettingsView: View {
     @State var usernameTemp: String = ""
     @Environment(\.colorScheme) var colorScheme
     
+    @State private var connectedDevices = 0
+    @State private var routedMessages = 0
+    
     var body: some View {
         VStack {
             
@@ -24,6 +27,8 @@ struct SettingsView: View {
                 /*
                  dIM Icon in top of settings view.
                  */
+                Spacer()
+                
                 Image("appiconsvg")
                     .resizable()
                     .frame(width: 128, height: 128, alignment: .center)
@@ -84,25 +89,30 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                if chatBrain.discoveredDevices.count < 1 {
+                if connectedDevices < 1 {
                     Text("Not connected to anyone.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                 } else {
-                    Text("\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.")
+                    Text("\(connectedDevices) device\(connectedDevices == 1 ? "" : "s") connected.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                 }
                 
-                Text("\(chatBrain.routedMessagesCounter) messages routed.")
+                Text("\(routedMessages) messages routed.")
                     .font(.footnote)
                     .foregroundColor(.accentColor)
             }
             .padding()
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            
-            .navigationBarTitle("Settings")
+            .navigationBarTitle("Settings", displayMode: .inline)
+        }
+        .onAppear() {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
+                routedMessages = chatBrain.routedMessagesCounter
+                connectedDevices = chatBrain.discoveredDevices.count
+            }
         }
     }
     

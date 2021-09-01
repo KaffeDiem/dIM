@@ -25,7 +25,7 @@ struct DiscoverView: View {
             Text("\(chatBrain.centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID]).count)")
             
             NavigationLink(
-                destination: QRScreenView(),
+                destination: QRView(),
                 label: {
                     Text("Show QR code.")
                 })

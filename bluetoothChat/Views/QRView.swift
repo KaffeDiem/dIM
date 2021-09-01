@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
-struct QRScreenView: View {
+struct QRView: View {
 
     @Environment(\.colorScheme) var colorScheme
     
@@ -19,7 +19,7 @@ struct QRScreenView: View {
     
     var body: some View {
        
-    VStack {
+        VStack {
             
             Spacer()
             
@@ -39,19 +39,20 @@ struct QRScreenView: View {
                     .frame(width: 200, height: 200, alignment: .center)
             }
                 
-            Spacer()
+            Spacer(minLength: 150)
             
-            Text("Open the camera on an iPhone which has dIM installed and point the viewfinder on the QR code. Then tap the link. This will open dIM.")
+            Text("Open the camera on an iPhone which has dIM installed. Point the viewfinder to this QR code. This will open dIM and add this device as a contact.")
                 .font(.footnote)
                 .foregroundColor(.accentColor)
         }
         .padding()
     
         .background(
-            Image(colorScheme == .dark ? "darkDim" : "lightDim")
+            Image("bubbleBackground")
                 .resizable(resizingMode: .tile)
                 .edgesIgnoringSafeArea(.all)
         )
+        .navigationBarTitle("Add Contact", displayMode: .inline)
     }
     
     
@@ -75,6 +76,6 @@ struct QRScreenView: View {
 
 struct QRScreen_Previews: PreviewProvider {
     static var previews: some View {
-        QRScreenView()
+        QRView()
     }
 }

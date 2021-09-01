@@ -8,7 +8,7 @@
 import Foundation
 
 struct Conversation: Identifiable {
-    var id: Int
+    var id: UInt16
     var author: String
     var lastMessage: Message
     var messages: [Message]

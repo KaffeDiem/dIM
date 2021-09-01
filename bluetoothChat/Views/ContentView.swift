@@ -17,6 +17,10 @@ struct ContentView: View {
     @StateObject var chatBrain = ChatBrain()
     
     @State var contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
+
+    @State var QRViewActive = false
+    @State var SettingsViewActive = false
+    private var list = [0]
     
     var body: some View {
         VStack {
@@ -66,25 +70,25 @@ struct ContentView: View {
 
         .toolbar {
             // Settings button
-            ToolbarItemGroup(placement: .navigationBarLeading) {
-                NavigationLink(
-                    destination: SettingsView()
-                        .environmentObject(chatBrain),
-                    label: {
-                        Image(systemName: "gearshape.fill")
-                    }
-                )
+            ToolbarItem(placement: .navigationBarLeading) {
+//
+//                Button(action: {}, label: {})
+//                Image(systemName: "gearshape.fill")
+//List(safeContacts, id: \.self)
+                NavigationLink(destination: SettingsView().environmentObject(chatBrain), label: {
+                    Image(systemName: "gearshape.fill")
+                })
             }
             
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                // Discover button
-                NavigationLink(
-                    destination: QRScreenView()
-                        .environmentObject(chatBrain),
-                    label: {
-                        Image(systemName: "qrcode")
-                    }
-                )
+            ToolbarItem(placement: .navigationBarTrailing) {
+//
+//                Button(action: {}, label: {})
+//                Image(systemName: "qrcode")
+//
+                NavigationLink(destination: QRView(), label: {
+                    Image(systemName: "qrcode")
+                })
+                
             }
         }
         .onAppear() {
@@ -92,8 +96,6 @@ struct ContentView: View {
                 contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
             }
         }
-        
-        
     }
 }
 
