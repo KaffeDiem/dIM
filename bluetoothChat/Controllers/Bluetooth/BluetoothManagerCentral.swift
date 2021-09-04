@@ -34,8 +34,6 @@ extension ChatBrain {
         
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "Unknown"
         
-        print("Peripheral discovered: \(name)")
-        
         // Check if we have already seen this device.
         var peripheralIsNew: Bool = true
         
@@ -59,6 +57,8 @@ extension ChatBrain {
         
         // Connect to the newly discovered peripheral.
         centralManager.connect(peripheral, options: nil)
+        
+        print("Connecting to: \(name)")
         
     
         // Save the connected peripheral in connectedPeripherals for later use.
@@ -192,9 +192,10 @@ extension ChatBrain {
             // Handle decoded messages.
             retrieveMessage(message)
         } catch {
-            print("Error decoding message: \(error)")
+            print("JSON Error decoding message: \(error)")
         }
     }
+    
     
     // MARK: TODO - this function, whatever it does.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {

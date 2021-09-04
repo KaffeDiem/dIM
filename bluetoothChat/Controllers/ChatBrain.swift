@@ -24,8 +24,9 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     
     // Holds all messages received from all peripherals.
     @Published var conversations: [Conversation] = []
-    var routedMessagesCounter: Int = 0
+    @Published var deliveredMessages: [UInt16] = []
     
+    var routedMessagesCounter: Int = 0
     
     var centralManager: CBCentralManager!
     
@@ -92,9 +93,6 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
         for (index, device) in discoveredDevices.enumerated() {
             
             if device.peripheral == peripheral {
-                
-        
-                
                 discoveredDevices.remove(at: index)
                 return
             }

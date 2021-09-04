@@ -10,15 +10,50 @@ import Foundation
 extension ChatBrain {
     
     func sendMessage(for receiver: String, text message: String) {
+        
+        let defaults = UserDefaults.standard
+        
         /*
          Send a string to all connected devices.
          */
         guard message != "" else { return }
         
-        let username = UserDefaults.standard.string(forKey: "Username")!
+        let username = defaults.string(forKey: "Username")!
         
+        /*
+         Encrypt the message text.
+         */
+        let privateKey = getPrivateKey()
+        
+        let receiverPublicKeyString = defaults.string(forKey: receiver)
+        let receiverPublicKey = try! importPublicKey(receiverPublicKeyString!)
+        
+        let symmetricKey = try! deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+        
+        let encryptedData = try! encryptMessage(text: message, symmetricKey: symmetricKey)
+        
+        /*
+         The unique message ID.
+         */
+        let messageId = UInt16.random(in: 0...UInt16.max)
+        
+        
+        /*
+         The encrypted message which is sent to other users.
+         */
+        let encryptedMessage = Message(
+            id: messageId,
+            sender: username,
+            receiver: receiver,
+            text: encryptedData
+        )
+        
+        /*
+         The unencrypted message is used for local storage purposes
+         and has the same ID as the encrypted one.
+         */
         let message = Message(
-            id: UInt16.random(in: 0...UInt16.max),
+            id: messageId,
             sender: username,
             receiver: receiver,
             text: message
@@ -26,11 +61,12 @@ extension ChatBrain {
         
         if let characteristic = self.characteristic {
     
-            seenMessages.append(message.id)
+            seenMessages.append(encryptedMessage.id)
             
             do {
-                let messageEncoded = try JSONEncoder().encode(message)
+                let messageEncoded = try JSONEncoder().encode(encryptedMessage)
                 
+                print("Text: \(message.text)\nSent: \(encryptedData)")
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {
                 print("Error encoding message: \(message) -> \(error)")
@@ -63,6 +99,29 @@ extension ChatBrain {
                     messages: [message]
                 )
             )
+        }
+    }
+    
+    func sendAckMessage(_ message: Message) {
+        print("Send ACK msg")
+        let ackMessage = Message(
+            id: UInt16.random(in: 0...UInt16.max),
+            sender: UserDefaults.standard.string(forKey: "Username")!,
+            receiver: message.sender,
+            text: "ACK/\(message.id)"
+        )
+        
+        if let characteristic = self.characteristic {
+    
+            seenMessages.append(ackMessage.id)
+            
+            do {
+                let ackMessageEncoded = try JSONEncoder().encode(ackMessage)
+                
+                peripheralManager.updateValue(ackMessageEncoded, for: characteristic, onSubscribedCentrals: nil)
+            } catch {
+                print("Error encoding message: \(ackMessage) -> \(error)")
+            }
         }
     }
 }

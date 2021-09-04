@@ -17,14 +17,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     /*
      openURLContexts handles deep links for the app. They allow users to easily share
-     contact information by scanning friends QR codes.
+     contact information by scanning friends QR codes. This is the callback function
+     which is activated when a user clicks on the dIM-link in the camera app.
      */
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url{
             let urlStr = url.absoluteString
+            
+            /*
+             Seperate the URL of the type dim//username//publickey
+             into components which are then handled.
+             */
             let component = urlStr.components(separatedBy: "//")
             
-            // Check if link is valid.
             guard component.count == 3 else { return }
             
             let name = component[1]
@@ -32,8 +37,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let defaults = UserDefaults.standard
             
-            // Add new contact if list already exists.
-            // Also check that it is not a duplicate.
+            /*
+             If a contact list exists already then add the new contact to it.
+             */
             if var contacts = defaults.stringArray(forKey: "Contacts") {
                 if contacts.contains(name) {
                     print("Contact has already been added. ")
@@ -43,18 +49,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 contacts.append(name)
                 defaults.set(contacts, forKey: "Contacts")
                 
-            } else {
-                // Create a string list and save it.
+            } else { // Otherwise create a new contact list.
                 let contacts = [name]
+                
                 defaults.set(contacts, forKey: "Contacts")
             }
             
-            // Save the publicKey for a user under the username.
+            /*
+             Save the new public key received from the user.
+             */
             defaults.set(publicKey, forKey: name)
         }
         
         let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
         
+        /*
+         Print all contacts and their public keys.
+         */
         for contact in contacts! {
             print("\(contact): \(UserDefaults.standard.string(forKey: contact)!)")
         }

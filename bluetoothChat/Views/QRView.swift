@@ -32,7 +32,7 @@ struct QRView: View {
                     .foregroundColor(.white)
                     .frame(width: 225, height: 225)
                 
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "unknown")//\(getPublicKey())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()

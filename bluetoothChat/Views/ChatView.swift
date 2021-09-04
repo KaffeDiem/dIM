@@ -47,10 +47,11 @@ struct ChatView: View {
                                     Text(message.text).padding(12)
                                         .foregroundColor(.white)
                                         .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
-                                        .clipShape(Bubble(chat: username == message.sender))
-                                        .padding(.trailing)
-                                        .padding(.leading)
+                                        
                                 }
+                                .clipShape(Bubble(chat: username == message.sender))
+                                .padding(.trailing)
+                                .padding(.leading)
                                 if username != message.sender {
                                     Spacer()
                                 }
@@ -59,7 +60,7 @@ struct ChatView: View {
                             if message.sender == username {
                                 HStack {
                                     Spacer()
-                                    Text("Sent")
+                                    Text(chatBrain.deliveredMessages.contains(message.id) ? "Delivered" : "Sent")
                                         .foregroundColor(.accentColor)
                                         .font(.footnote)
                                         .padding(.trailing)
