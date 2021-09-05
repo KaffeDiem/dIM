@@ -30,7 +30,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
              */
             let component = urlStr.components(separatedBy: "//")
             
-            guard component.count == 3 else { return }
+            guard component.count == 3 else {
+                print("QR code error: Format of scanned QR code is wrong.")
+                return
+            }
             
             let name = component[1]
             let publicKey = component[2]
@@ -42,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
              */
             if var contacts = defaults.stringArray(forKey: "Contacts") {
                 if contacts.contains(name) {
-                    print("Contact has already been added. ")
+                    print("Contact has already been added.")
                     return
                 }
                 

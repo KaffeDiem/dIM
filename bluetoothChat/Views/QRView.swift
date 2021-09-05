@@ -32,6 +32,11 @@ struct QRView: View {
                     .foregroundColor(.white)
                     .frame(width: 225, height: 225)
                 
+                /*
+                 Show the QR code which can be scanned to add you as a contact.
+                 The form of the QR code is:
+                 dim://username//publickey
+                 */
                 Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
@@ -41,7 +46,7 @@ struct QRView: View {
                 
             Spacer(minLength: 150)
             
-            Text("Open the camera on an iPhone which has dIM installed. Point the viewfinder to this QR code. This will open dIM and add this device as a contact.")
+            Text("Scan the QR code by pointing the camera at it. It is required that dIM is installed on the phone. You have to add each other to become contacts.")
                 .font(.footnote)
                 .foregroundColor(.accentColor)
         }

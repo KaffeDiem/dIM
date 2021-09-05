@@ -61,12 +61,15 @@ extension ChatBrain {
         
         if let characteristic = self.characteristic {
     
+            /*
+             Append the sent message to the list of seen messages
+             to avoid sending it again if it loops.
+             */
             seenMessages.append(encryptedMessage.id)
             
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
                 
-                print("Text: \(message.text)\nSent: \(encryptedData)")
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {
                 print("Error encoding message: \(message) -> \(error)")
