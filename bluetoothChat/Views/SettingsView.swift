@@ -42,10 +42,7 @@ struct ReadToggle: View {
     
     var body: some View {
         VStack {
-            Text("Allow people to see that you have read their message.")
-                .font(.footnote)
-                .foregroundColor(.gray)
-            Toggle("Read messages.", isOn: $readStatusToggle)
+            Toggle("Read receipts", isOn: $readStatusToggle)
                 .onChange(of: readStatusToggle, perform: {value in
                     if value {
                         defaults.setValue(readStatusToggle, forKey: "settings.readmessages")
@@ -73,81 +70,89 @@ struct SettingsView: View {
     @State private var connectedDevices = 0
     
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             
-            VStack {
+            ScrollView {
                 /*
                  dIM Icon in top of settings view.
                  */
-                Spacer()
-                
-                Image("appiconsvg")
-                    .resizable()
-                    .frame(width: 128, height: 128, alignment: .center)
-                    .aspectRatio(contentMode: .fit)
-                    .scaledToFit()
-                
-                DeviceInformationView(connectedDevices: connectedDevices)
-                
-                Spacer()
-                
-                ReadToggle()
-                
-                Spacer()
-                
-                HStack {
-                    Text("Change username")
-                        .padding(.leading)
-                }
-                
-                /*
-                 Text field to input new username
-                 */
-                TextField(
-                    defaults.string(forKey: "Username")!,
-                    text: $usernameTemp,
-                    onCommit: {
-                            
-                        UIApplication.shared.endEditing()
-                        
-                        if checkValidUsername(username: usernameTemp) {
-                            defaults.set(usernameTemp, forKey: "Username")
-                        } else {
-                            usernameTemp = ""
-                        }
+                GroupBox(label: Text("Decentralized Instant Messenger"), content: {
+                    Divider().padding(.vertical, 4)
+                    HStack {
+                        Image("appiconsvg")
+                            .resizable()
+                            .frame(width: 128, height: 128, alignment: .leading)
+                            .aspectRatio(contentMode: .fit)
+                            .scaledToFit()
+                        Spacer()
+                        DeviceInformationView(connectedDevices: connectedDevices)
                     }
-                )
-                .keyboardType(.namePhonePad)
-                .padding()
-                .background(
-                    colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
-                )
-                .cornerRadius(10.0)
+                })
                 
-                /*
-                 Text below textfield.
-                 */
+                Spacer()
                 
-                if usernameTemp.count < 4 {
-                    Text("Minimum 4 characters.")
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                } else if usernameTemp.count > 16 {
-                    Text("Maximum 16 characters.")
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                } else if usernameTemp.contains(" ") {
-                    Text("No spaces in username.")
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                } else {
-                    Text("")
-                }
+                GroupBox(label: Text("Allow people to see that you have read their messages."), content: {
+                    Divider().padding(.vertical, 4)
+                    ReadToggle()
+                })
+                
+                
+                Spacer()
+                
+                GroupBox(label: Text("Change username"), content: {
+                    Divider().padding(.vertical, 4)
+                    /*
+                     Text field to input new username
+                     */
+                    Text("Notice: If you change your username you and your contacts will have to add each other again.")
+                        .foregroundColor(.gray)
+                    TextField(
+                        defaults.string(forKey: "Username")!,
+                        text: $usernameTemp,
+                        onCommit: {
+                                
+                            UIApplication.shared.endEditing()
+                            
+                            if checkValidUsername(username: usernameTemp) {
+                                defaults.set(usernameTemp, forKey: "Username")
+                            } else {
+                                usernameTemp = ""
+                            }
+                        }
+                    )
+                    .keyboardType(.namePhonePad)
+                    .padding()
+                    .background(
+                        colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                    )
+                    .cornerRadius(10.0)
+                    
+                    /*
+                     Text below textfield.
+                     */
+                    if usernameTemp.count < 4 {
+                        Text("Minimum 4 characters.")
+                            .font(.footnote)
+                            .foregroundColor(.accentColor)
+                    } else if usernameTemp.count > 16 {
+                        Text("Maximum 16 characters.")
+                            .font(.footnote)
+                            .foregroundColor(.accentColor)
+                    } else if usernameTemp.contains(" ") {
+                        Text("No spaces in username.")
+                            .font(.footnote)
+                            .foregroundColor(.accentColor)
+                    } else {
+                        Text(" ")
+                    }
+                })
+                
+                
             }
             .padding()
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            .navigationBarTitle("Settings", displayMode: .inline)
+            .navigationBarTitle("Settings", displayMode: .large)
         }
         .onAppear() {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
