@@ -59,16 +59,37 @@ extension ChatBrain {
          */
         if let contacts = defaults.stringArray(forKey: "Contacts") {
             
+            /*
+             If the message is for us, but we have not added said person
+             as a contact, therefore we drop it.
+             */
             let contactKnown = contacts.contains(messageEncrypted.sender)
-            
             guard contactKnown else {
-                print("Message for me - but contact has not been added.")
                 return
             }
             
             /*
-             The message is for us. Therefore we have to decrypt it for it to be
-             readable.
+             Check if the message is an ACK message.
+             receivedAck handles the ACK message for us.
+             There is no reason to decrypt if the message is not an
+             ACK message either. Therefore we just return
+             */
+            let ack = receivedAck(messageEncrypted)
+            
+            guard !ack else {
+                return
+            }
+            
+            let read = receivedRead(messageEncrypted)
+            
+            guard !read else {
+                return
+            }
+            
+            
+            /*
+             The message is for us and the sender is in our contact book.
+             Therefore we have to decrypt it for it to be readable.
              */
             let messageText = messageEncrypted.text
             
@@ -101,40 +122,25 @@ extension ChatBrain {
                      */
                     
                     conversationFound = true
-                    
-                    /*
-                     Check if the message we received was an ACK message.
-                     */
-                    let ack = receivedAck(messageEncrypted)
-                    
-                    if !ack {
                         
-                        conversations[index].addMessage(add: messageDecrypted)
-                        conversations[index].updateLastMessage(new: messageDecrypted)
-                        
-                        sendAckMessage(messageDecrypted)
-                    }
+                    conversations[index].addMessage(add: messageDecrypted)
+                    conversations[index].updateLastMessage(new: messageDecrypted)
                     
+                    sendAckMessage(messageDecrypted)
                 }
             }
             
             // If the conversation have not been found, create it.
             if !conversationFound {
-                let ack = receivedAck(messageEncrypted)
-                
-                if !ack {
-                    conversations.append(
-                        Conversation(
-                            id: messageDecrypted.id,
-                            author: messageDecrypted.sender,
-                            lastMessage: messageDecrypted,
-                            messages: [messageDecrypted]
-                        )
+                conversations.append(
+                    Conversation(
+                        id: messageDecrypted.id,
+                        author: messageDecrypted.sender,
+                        lastMessage: messageDecrypted,
+                        messages: [messageDecrypted]
                     )
-                    sendAckMessage(messageDecrypted)
-                }
-                
-                
+                )
+                sendAckMessage(messageDecrypted)
             }
 
             
@@ -158,14 +164,43 @@ extension ChatBrain {
             )
 
             UNUserNotificationCenter.current().add(request)
-        } else {
-            print("Message received. No contacts.")
         }
     }
     
     
+    func receivedRead(_ message: Message) -> Bool {
+        var components = message.text.components(separatedBy: "/")
+        
+        guard components.first == "READ" && components.count > 1 else {
+            return false
+        }
+        
+        /*
+         Remove first element as it is then just an array of
+         message IDs which has been read.
+         */
+        components.removeFirst()
+        components.removeLast()
+        print(components)
+        let intComponents = components.map {UInt16($0)!}
+        
+        for (i, conversation) in conversations.enumerated() {
+            if conversation.author == message.sender {
+                for (j, storedMessage) in conversation.messages.enumerated() {
+                    if intComponents.contains(storedMessage.id) {
+                        conversations[i].messages[j].messageRead()
+                    }
+                }
+                break
+            }
+        }
+        
+        return true
+    }
+    
+    
     /*
-     The function which handles received ACK messages.
+     Handle received ACK messages.
      */
     func receivedAck(_ message: Message) -> Bool {
         

@@ -12,6 +12,7 @@ enum Status {
     case delivered
     case read
     case received
+    case receivedReadSent
     case failed
 }
 
@@ -64,5 +65,9 @@ struct LocalMessage: Identifiable {
     
     mutating func messageFailed() {
         status = .failed
+    }
+    
+    mutating func messageReceivedReadSent() {
+        status = .receivedReadSent
     }
 }

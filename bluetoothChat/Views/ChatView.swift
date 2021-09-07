@@ -22,10 +22,14 @@ struct Bubble: Shape {
 struct MessageStatus: View {
     let message: LocalMessage
     var body: some View {
-        if message.status == .delivered {
-            Image(systemName: "arrow.up.arrow.down.circle.fill")
-        } else {
+        if message.status == .sent {
             Image(systemName: "arrow.up.arrow.down.circle")
+        } else if message.status == .delivered {
+            Image(systemName: "arrow.up.arrow.down.circle.fill")
+        } else if message.status == .read {
+            Image(systemName: "eye.circle.fill")
+        } else if message.status == .failed {
+            Image(systemName: "wifi.slash")
         }
     }
 }
@@ -121,6 +125,15 @@ struct ChatView: View {
             }
             
             .navigationTitle(sender)
+        }
+        .onAppear() {
+            /*
+             Send READ acknowledgements messages if the user has enabled
+             it in settings.
+             */
+            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
+                chatBrain.sendReadMessage(sender)
+            }
         }
     }
 }
