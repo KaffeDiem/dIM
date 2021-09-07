@@ -12,24 +12,31 @@ import CoreBluetooth
 // and sending/receiving messages to/from other Bluetooth devices.
 
 class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+    
     /*
-     Hacky solution to solve a problem with ObservableObjects.
-     TO BE IMPLEMENTED.
+     Holds all messages in conversations. Thus a conversation also
+     consist of a list of messages.
+     See: ConversationModel and MessageModel
      */
-    private var isPaused: Bool = false
-    private var hasPendingUpdates: Bool = false
-        
+    @Published var conversations: [Conversation] = []
+    
     var discoveredDevices: [Device] = []
     var connectedCharateristics: [CBCharacteristic] = []
     
-    // Holds all messages received from all peripherals.
-    @Published var conversations: [Conversation] = []
-    
+    /*
+     The central and peripheral managers act as a client/server on the
+     device. Therefore all devices act as clients and servers
+     simutaniously.
+     */
     var centralManager: CBCentralManager!
     var peripheralManager: CBPeripheralManager!
 
     var characteristic: CBMutableCharacteristic?
     
+    /*
+     A list which holds message IDs which we have seen before.
+     This prevents looping them in the network for ages.
+     */
     var seenMessages: [UInt16] = []
     
     override init() {
@@ -76,16 +83,21 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      Remove a device from discoveredDevices and drop connection to it.
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
-        print("Clean up: \(peripheral.name ?? "Unknown")")
         
         let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID])
         
+        /*
+         Cancel the connection from the central manager.
+         */
         for device in connected {
             if device == peripheral {
                 centralManager.cancelPeripheralConnection(peripheral)
             }
         }
         
+        /*
+         Remove all references to the the peripheral.
+         */
         for (index, device) in discoveredDevices.enumerated() {
             
             if device.peripheral == peripheral {

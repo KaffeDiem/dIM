@@ -144,8 +144,6 @@ extension ChatBrain {
             text = text + String(message.id) + "/"
         }
         
-        print(text)
-        
         let readMessage = Message(
             id: UInt16.random(in: 0...UInt16.max),
             sender: UserDefaults.standard.string(forKey: "Username")!,

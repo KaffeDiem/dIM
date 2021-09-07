@@ -181,7 +181,7 @@ extension ChatBrain {
          */
         components.removeFirst()
         components.removeLast()
-        print(components)
+        
         let intComponents = components.map {UInt16($0)!}
         
         for (i, conversation) in conversations.enumerated() {
