@@ -82,11 +82,12 @@ extension ChatBrain {
             let decryptedText = decryptMessage(text: messageText, symmetricKey: symmetricKey)
             
             
-            let messageDecrypted = Message(
+            let messageDecrypted = LocalMessage(
                 id: messageEncrypted.id,
                 sender: messageEncrypted.sender,
                 receiver: messageEncrypted.receiver,
-                text: decryptedText
+                text: decryptedText,
+                status: .received
             )
             
             
@@ -119,7 +120,7 @@ extension ChatBrain {
             
             // If the conversation have not been found, create it.
             if !conversationFound {
-                let ack = receivedAck(messageDecrypted)
+                let ack = receivedAck(messageEncrypted)
                 
                 if !ack {
                     conversations.append(
@@ -178,9 +179,19 @@ extension ChatBrain {
         }
         
         /*
-         Add the ACK message to the list of previously seen messages.
+         Change the status of the delivered message from sent -> delivered.
+         TODO: Work a bit more on this. There must be a cleaner way.
          */
-        deliveredMessages.append(UInt16(components.last!)!)
+        for (i, conversation) in conversations.enumerated() {
+            if conversation.author == message.sender {
+                for (j, storedMessage) in conversation.messages.enumerated() {
+                    if storedMessage.id == Int(components[1])! {
+                        conversations[i].messages[j].messageDelivered()
+                    }
+                }
+            }
+        }
+        
         return true
     }
 }

@@ -24,12 +24,8 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     
     // Holds all messages received from all peripherals.
     @Published var conversations: [Conversation] = []
-    @Published var deliveredMessages: [UInt16] = []
-    
-    var routedMessagesCounter: Int = 0
     
     var centralManager: CBCentralManager!
-    
     var peripheralManager: CBPeripheralManager!
 
     var characteristic: CBMutableCharacteristic?
@@ -51,7 +47,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      Get the exchanged messages with a given user.
      Used when loading the ChatView()
      */
-    func getConversation(sender author: String) -> [Message] {
+    func getConversation(sender author: String) -> [LocalMessage] {
         for conversation in conversations {
             if conversation.author == author {
                 return conversation.messages

@@ -10,14 +10,14 @@ import Foundation
 struct Conversation: Identifiable {
     var id: UInt16
     var author: String
-    var lastMessage: Message
-    var messages: [Message]
+    var lastMessage: LocalMessage
+    var messages: [LocalMessage]
     
-    mutating func addMessage(add message: Message) {
+    mutating func addMessage(add message: LocalMessage) {
         messages.append(message)
     }
     
-    mutating func updateLastMessage(new message: Message) {
+    mutating func updateLastMessage(new message: LocalMessage) {
         lastMessage = message
     }
 }

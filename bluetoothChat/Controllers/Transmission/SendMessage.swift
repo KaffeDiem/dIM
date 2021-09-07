@@ -49,27 +49,25 @@ extension ChatBrain {
         )
         
         /*
-         The unencrypted message is used for local storage purposes
-         and has the same ID as the encrypted one.
+         The unencrypted message is used for local storage purposes. It is
+         of the type LocalMessage which allows for more information to be
+         stored in the message. It has the same ID as the one sent.
          */
-        let message = Message(
+        let localMessage = LocalMessage(
             id: messageId,
             sender: username,
             receiver: receiver,
-            text: message
+            text: message,
+            status: .sent
         )
         
         if let characteristic = self.characteristic {
-    
-            /*
-             Append the sent message to the list of seen messages
-             to avoid sending it again if it loops.
-             */
-            seenMessages.append(encryptedMessage.id)
-            
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
                 
+                /*
+                 Send the message to all connected peripherals.
+                 */
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {
                 print("Error encoding message: \(message) -> \(error)")
@@ -84,8 +82,8 @@ extension ChatBrain {
         for (index, conv) in conversations.enumerated() {
             if conv.author == receiver {
                 
-                conversations[index].addMessage(add: message)
-                conversations[index].lastMessage = message
+                conversations[index].addMessage(add: localMessage)
+                conversations[index].lastMessage = localMessage
                 
                 conversationFound = true
                 
@@ -96,16 +94,16 @@ extension ChatBrain {
         if !conversationFound {
             conversations.append(
                 Conversation(
-                    id: message.id,
+                    id: localMessage.id,
                     author: receiver,
-                    lastMessage: message,
-                    messages: [message]
+                    lastMessage: localMessage,
+                    messages: [localMessage]
                 )
             )
         }
     }
     
-    func sendAckMessage(_ message: Message) {
+    func sendAckMessage(_ message: LocalMessage) {
         print("Send ACK msg")
         let ackMessage = Message(
             id: UInt16.random(in: 0...UInt16.max),

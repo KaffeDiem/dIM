@@ -18,10 +18,27 @@ struct Bubble: Shape {
     }
 }
 
+
+struct MessageStatus: View {
+    let message: LocalMessage
+    var body: some View {
+        if message.status == .delivered {
+            Image(systemName: "arrow.up.arrow.down.circle.fill")
+        } else {
+            Image(systemName: "arrow.up.arrow.down.circle")
+        }
+    }
+}
+
+
 struct ChatView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var chatBrain: ChatBrain
+    
+    /*
+     Sender is the person whose conversation we are looking at.
+     */
     var sender: String
     
     @State var message: String = ""
@@ -38,44 +55,45 @@ struct ChatView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(chatBrain.getConversation(sender: sender)) {message in
-                        VStack {
-                            HStack {
-                                if username == message.sender {
-                                    Spacer()
-                                }
-                                VStack {
-                                    Text(message.text).padding(12)
-                                        .foregroundColor(.white)
-                                        .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
-                                        
-                                }
-                                .clipShape(Bubble(chat: username == message.sender))
-                                .padding(.trailing)
-                                .padding(.leading)
-                                if username != message.sender {
-                                    Spacer()
-                                }
+                        HStack {
+                            
+                            /*
+                             Place your messages on the right side of the screen.
+                             */
+                            if username == message.sender {
+                                Spacer()
+                            }
+                            
+                            VStack {
+                                Text(message.text).padding(12)
+                                    .foregroundColor(.white)
+                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
+                                    
+                            }
+                            .clipShape(Bubble(chat: username == message.sender))
+                            .padding(.leading)
+                            
+                            /*
+                             Place receivers message on the left side of the screen.
+                             */
+                            if username != message.sender {
+                                Spacer()
                             }
                             
                             if message.sender == username {
-                                HStack {
-                                    Spacer()
-                                    Text(chatBrain.deliveredMessages.contains(message.id) ? "Delivered" : "Sent")
-                                        .foregroundColor(.accentColor)
-                                        .font(.footnote)
-                                        .padding(.trailing)
-                                }
+                                MessageStatus(message: message)
+                                    .foregroundColor(.accentColor)
+                                    .padding(.trailing)
                             }
                         }
+                        .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                     }
-                        
                 }
             }
             
             /*
              Send message part
              */
-            
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in
                     // Should anything go here?

@@ -19,12 +19,9 @@ extension ChatBrain {
         if let characteristic = self.characteristic {
             
             do {
-                
                 let encodedMessage = try JSONEncoder().encode(message)
                 
                 peripheralManager.updateValue(encodedMessage, for: characteristic, onSubscribedCentrals: nil)
-                
-                routedMessagesCounter += 1
                 
             } catch {
                 print("Error encoding message: \(error)")

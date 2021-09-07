@@ -8,6 +8,59 @@
 import SwiftUI
 
 
+/*
+ Device Information view in bottom of screen.
+ */
+struct DeviceInformationView: View {
+    
+    var connectedDevices: Int
+    
+    var body: some View {
+        if connectedDevices < 1 {
+            Label("Not connected.", systemImage: "figure.stand")
+                .font(.footnote)
+                .foregroundColor(.gray)
+        } else {
+            Label(
+                "\(connectedDevices) device\(connectedDevices == 1 ? "" : "s") connected.",
+                systemImage: "figure.stand.line.dotted.figure.stand"
+            )
+            .font(.footnote)
+            .foregroundColor(.gray)
+        }
+    }
+}
+
+
+/*
+ Read message toggle.
+ */
+struct ReadToggle: View {
+    
+    let defaults = UserDefaults.standard
+    @State var readStatusToggle: Bool = UserDefaults.standard.bool(forKey: "settings.readmessages")
+    
+    var body: some View {
+        VStack {
+            Text("Allow people to see that you have read their message.")
+                .font(.footnote)
+                .foregroundColor(.gray)
+            Toggle("Read messages.", isOn: $readStatusToggle)
+                .onChange(of: readStatusToggle, perform: {value in
+                    if value {
+                        defaults.setValue(readStatusToggle, forKey: "settings.readmessages")
+                        print("toggle on")
+                    } else {
+                        defaults.setValue(readStatusToggle, forKey: "settings.readmessages")
+                        print("toggle off")
+                    }
+                })
+                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+        }
+    }
+}
+
+
 struct SettingsView: View {
     
     let defaults = UserDefaults.standard
@@ -18,7 +71,6 @@ struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var connectedDevices = 0
-    @State private var routedMessages = 0
     
     var body: some View {
         VStack {
@@ -35,11 +87,16 @@ struct SettingsView: View {
                     .aspectRatio(contentMode: .fit)
                     .scaledToFit()
                 
+                DeviceInformationView(connectedDevices: connectedDevices)
+                
+                Spacer()
+                
+                ReadToggle()
+                
                 Spacer()
                 
                 HStack {
-                    Text("Set a new username")
-//                        .foregroundColor(.accentColor)
+                    Text("Change username")
                         .padding(.leading)
                 }
                 
@@ -86,22 +143,6 @@ struct SettingsView: View {
                 } else {
                     Text("")
                 }
-                
-                Spacer()
-                
-                if connectedDevices < 1 {
-                    Text("Not connected to anyone.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                } else {
-                    Text("\(connectedDevices) device\(connectedDevices == 1 ? "" : "s") connected.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                }
-                
-                Text("\(routedMessages) messages routed.")
-                    .font(.footnote)
-                    .foregroundColor(.accentColor)
             }
             .padding()
             .autocapitalization(.none)
@@ -109,8 +150,7 @@ struct SettingsView: View {
             .navigationBarTitle("Settings", displayMode: .inline)
         }
         .onAppear() {
-            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
-                routedMessages = chatBrain.routedMessagesCounter
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 connectedDevices = chatBrain.discoveredDevices.count
             }
         }
