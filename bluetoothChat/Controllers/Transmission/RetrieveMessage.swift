@@ -108,6 +108,7 @@ extension ChatBrain {
                 sender: messageEncrypted.sender,
                 receiver: messageEncrypted.receiver,
                 text: decryptedText,
+                date: Date(),
                 status: .received
             )
             

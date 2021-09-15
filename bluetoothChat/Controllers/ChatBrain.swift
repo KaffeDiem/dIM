@@ -20,7 +20,25 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      */
     @Published var conversations: [Conversation] = []
     
-    var discoveredDevices: [Device] = []
+    
+    /*
+     A simple counter for showing statistics in the Settings View.
+     */
+    @Published var routedCounter: Int = 0
+    
+    
+    /*
+     Holds an array of messages to be delivered at a later point.
+     */
+    @Published var messageQueue: [LocalMessage] = []
+    
+    
+    /*
+     Holds a reference to all devices discovered. If no reference
+     is held then the Bluetooth connection may be dropped.
+     */
+    @Published var discoveredDevices: [Device] = []
+    
     var connectedCharateristics: [CBCharacteristic] = []
     
     /*
@@ -49,6 +67,10 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
         centralManager.delegate = self
     }
     
+    
+    func CheckQueueNewConnection() {
+        
+    }
     
     /*
      Get the exchanged messages with a given user.

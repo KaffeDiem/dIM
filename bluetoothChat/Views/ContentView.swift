@@ -71,20 +71,12 @@ struct ContentView: View {
         .toolbar {
             // Settings button
             ToolbarItem(placement: .navigationBarLeading) {
-//
-//                Button(action: {}, label: {})
-//                Image(systemName: "gearshape.fill")
-//List(safeContacts, id: \.self)
                 NavigationLink(destination: SettingsView().environmentObject(chatBrain), label: {
                     Image(systemName: "gearshape.fill")
                 })
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-//
-//                Button(action: {}, label: {})
-//                Image(systemName: "qrcode")
-//
                 NavigationLink(destination: QRView(), label: {
                     Image(systemName: "qrcode")
                 })

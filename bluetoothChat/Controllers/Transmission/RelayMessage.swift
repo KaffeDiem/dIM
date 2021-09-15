@@ -22,6 +22,7 @@ extension ChatBrain {
                 let encodedMessage = try JSONEncoder().encode(message)
                 
                 peripheralManager.updateValue(encodedMessage, for: characteristic, onSubscribedCentrals: nil)
+                routedCounter += 1
                 
             } catch {
                 print("Error encoding message: \(error)")

@@ -59,6 +59,7 @@
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
+		B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bluetoothChat.entitlements; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
@@ -94,6 +95,7 @@
 		B05E1F3426D3B3A800AD9E65 /* bluetoothChat */ = {
 			isa = PBXGroup;
 			children = (
+				B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */,
 				B05E1F4926D3B42400AD9E65 /* Views */,
 				B05E1F4C26D3C7F200AD9E65 /* Models */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
@@ -206,7 +208,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B05E1F2D26D3B3A800AD9E65 /* Build configuration list for PBXProject "bluetoothChat" */;
+			buildConfigurationList = B05E1F2D26D3B3A800AD9E65 /* Build configuration list for PBXProject "dIM" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -402,6 +404,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
@@ -411,8 +414,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -423,6 +428,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
@@ -432,8 +438,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -442,7 +450,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B05E1F2D26D3B3A800AD9E65 /* Build configuration list for PBXProject "bluetoothChat" */ = {
+		B05E1F2D26D3B3A800AD9E65 /* Build configuration list for PBXProject "dIM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B05E1F4426D3B3AB00AD9E65 /* Debug */,

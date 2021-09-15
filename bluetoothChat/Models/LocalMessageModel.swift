@@ -47,6 +47,11 @@ struct LocalMessage: Identifiable {
     var text: String
     
     /*
+     The time of receival
+     */
+    var date: Date
+    
+    /*
      The current status of the message.
      */
     var status: Status = .sent

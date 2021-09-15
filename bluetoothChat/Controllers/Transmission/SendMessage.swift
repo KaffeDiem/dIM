@@ -58,6 +58,7 @@ extension ChatBrain {
             sender: username,
             receiver: receiver,
             text: message,
+            date: Date(),
             status: .sent
         )
         

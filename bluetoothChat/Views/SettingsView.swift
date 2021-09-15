@@ -9,30 +9,6 @@ import SwiftUI
 
 
 /*
- Device Information view in bottom of screen.
- */
-struct DeviceInformationView: View {
-    
-    var connectedDevices: Int
-    
-    var body: some View {
-        if connectedDevices < 1 {
-            Label("Not connected.", systemImage: "figure.stand")
-                .font(.footnote)
-                .foregroundColor(.gray)
-        } else {
-            Label(
-                "\(connectedDevices) device\(connectedDevices == 1 ? "" : "s") connected.",
-                systemImage: "figure.stand.line.dotted.figure.stand"
-            )
-            .font(.footnote)
-            .foregroundColor(.gray)
-        }
-    }
-}
-
-
-/*
  Read message toggle.
  */
 struct ReadToggle: View {
@@ -58,6 +34,44 @@ struct ReadToggle: View {
 }
 
 
+/*
+ A connectivity view for device information
+ */
+struct ConnectivityView: View {
+    
+    @EnvironmentObject var chatBrain: ChatBrain
+    
+    var body: some View {
+        GroupBox(label: Text("Connectivity"), content: {
+            
+            Divider().padding(.vertical, 4)
+            
+            Text("At least one device connected is needed to send messages.")
+                .font(.footnote)
+                .foregroundColor(.gray)
+            
+            if chatBrain.discoveredDevices.count < 1 {
+                Label("Not connected.", systemImage: "figure.stand")
+            
+            } else {
+                Label(
+                    "\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.",
+                    systemImage: "figure.stand.line.dotted.figure.stand"
+                )
+            
+            }
+            
+            Text("Messages sent trough your phone to be delivered to others.")
+                .font(.footnote)
+                .foregroundColor(.gray)
+            
+            Label("\(chatBrain.routedCounter) messages routed.", systemImage: "network")
+            
+        })
+    }
+}
+
+
 struct SettingsView: View {
     
     let defaults = UserDefaults.standard
@@ -73,6 +87,11 @@ struct SettingsView: View {
         VStack(spacing: 20) {
             
             ScrollView {
+                
+                
+                ConnectivityView()
+                    .environmentObject(chatBrain)
+                
                 /*
                  dIM Icon in top of settings view.
                  */
@@ -81,23 +100,29 @@ struct SettingsView: View {
                     HStack {
                         Image("appiconsvg")
                             .resizable()
-                            .frame(width: 128, height: 128, alignment: .leading)
+                            .frame(width: 96, height: 96, alignment: .leading)
                             .aspectRatio(contentMode: .fit)
                             .scaledToFit()
                         Spacer()
-                        DeviceInformationView(connectedDevices: connectedDevices)
+                        
+                            
+                        Text("""
+                            dIM is a decentralized chat app based on Bluetooth. If you send a contact a message it will be sent on the Bluetooth peer-to-peer network. Messages are encrypted such that only you and the receiver can read the content.
+                            """
+                        )
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .padding(.leading)
                     }
                 })
                 
-                Spacer()
-                
-                GroupBox(label: Text("Allow people to see that you have read their messages."), content: {
+                GroupBox(label: Text("Send read receipts"), content: {
                     Divider().padding(.vertical, 4)
+                    Text("Read receipts allow your contacts to known when you have seen their messages.")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
                     ReadToggle()
                 })
-                
-                
-                Spacer()
                 
                 GroupBox(label: Text("Change username"), content: {
                     Divider().padding(.vertical, 4)
@@ -106,6 +131,7 @@ struct SettingsView: View {
                      */
                     Text("Notice: If you change your username you and your contacts will have to add each other again.")
                         .foregroundColor(.gray)
+                        .font(.footnote)
                     TextField(
                         defaults.string(forKey: "Username")!,
                         text: $usernameTemp,
@@ -149,15 +175,9 @@ struct SettingsView: View {
                 
                 
             }
-            .padding()
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            .navigationBarTitle("Settings", displayMode: .large)
-        }
-        .onAppear() {
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-                connectedDevices = chatBrain.discoveredDevices.count
-            }
+            .navigationBarTitle("Settings", displayMode: .automatic)
         }
     }
     

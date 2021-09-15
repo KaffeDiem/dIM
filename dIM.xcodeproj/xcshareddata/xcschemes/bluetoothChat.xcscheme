@@ -17,7 +17,7 @@
                BlueprintIdentifier = "B05E1F3126D3B3A800AD9E65"
                BuildableName = "bluetoothChat.app"
                BlueprintName = "bluetoothChat"
-               ReferencedContainer = "container:bluetoothChat.xcodeproj">
+               ReferencedContainer = "container:dIM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "B05E1F3126D3B3A800AD9E65"
             BuildableName = "bluetoothChat.app"
             BlueprintName = "bluetoothChat"
-            ReferencedContainer = "container:bluetoothChat.xcodeproj">
+            ReferencedContainer = "container:dIM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -64,7 +64,7 @@
             BlueprintIdentifier = "B05E1F3126D3B3A800AD9E65"
             BuildableName = "bluetoothChat.app"
             BlueprintName = "bluetoothChat"
-            ReferencedContainer = "container:bluetoothChat.xcodeproj">
+            ReferencedContainer = "container:dIM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
