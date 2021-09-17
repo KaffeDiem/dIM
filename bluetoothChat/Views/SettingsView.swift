@@ -49,6 +49,7 @@ struct ConnectivityView: View {
             Text("At least one device connected is needed to send messages.")
                 .font(.footnote)
                 .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             if chatBrain.discoveredDevices.count < 1 {
                 Label("Not connected.", systemImage: "figure.stand")
@@ -64,6 +65,7 @@ struct ConnectivityView: View {
             Text("Messages sent trough your phone to be delivered to others.")
                 .font(.footnote)
                 .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Label("\(chatBrain.routedCounter) messages routed.", systemImage: "network")
             
@@ -113,6 +115,8 @@ struct SettingsView: View {
                             .foregroundColor(.gray)
                             .font(.footnote)
                             .padding(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 })
                 
@@ -121,6 +125,7 @@ struct SettingsView: View {
                     Text("Read receipts allow your contacts to known when you have seen their messages.")
                         .font(.footnote)
                         .foregroundColor(.gray)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     ReadToggle()
                 })
                 
@@ -132,6 +137,9 @@ struct SettingsView: View {
                     Text("Notice: If you change your username you and your contacts will have to add each other again.")
                         .foregroundColor(.gray)
                         .font(.footnote)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
                     TextField(
                         defaults.string(forKey: "Username")!,
                         text: $usernameTemp,

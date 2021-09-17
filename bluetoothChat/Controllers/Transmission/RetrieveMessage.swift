@@ -149,7 +149,7 @@ extension ChatBrain {
              Send a notification if app is closed.
              */
             let content = UNMutableNotificationContent()
-            content.title = messageDecrypted.sender
+            content.title = messageDecrypted.sender.components(separatedBy: "#").first ?? "Unknown"
             content.body = messageDecrypted.text
             content.sound = UNNotificationSound.default
 
