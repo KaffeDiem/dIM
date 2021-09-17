@@ -85,7 +85,8 @@ struct SetUpView: View {
                         let usernameValid: Bool = checkUsername(username: username)
                         //  If the username is accepted then save it to persistent memory.
                         if usernameValid {
-                            UserDefaults.standard.set(username, forKey: "Username")
+                            let usernameDigits = username + "#" + String(Int.random(in: 100000...999999))
+                            UserDefaults.standard.set(usernameDigits, forKey: "Username")
                         }
                         
                         hasUsername = usernameValid

@@ -124,7 +124,7 @@ struct ChatView: View {
                 .scaleEffect(1.8)
             }
             
-            .navigationTitle(sender)
+            .navigationTitle((sender.components(separatedBy: "#")).first ?? "Unknown")
         }
         .onAppear() {
             /*

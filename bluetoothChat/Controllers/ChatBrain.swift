@@ -30,7 +30,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     /*
      Holds an array of messages to be delivered at a later point.
      */
-    @Published var messageQueue: [LocalMessage] = []
+    @Published var messageQueue: [queuedMessage] = []
     
     
     /*

@@ -41,15 +41,15 @@ struct ContentView: View {
 
                                 VStack {
                                     HStack {
-                                        Text(contact)
+                                        Text((contact.components(separatedBy: "#")).first ?? "Unknown")
                                         Spacer()
                                     }
-                                HStack {
-                                    Text(chatBrain.getLastMessage(contact) ?? "Start a conversation with \(contact).")
-                                        .scaledToFit()
-                                        .font(.footnote)
-                                    Spacer()
-                                }
+                                    HStack {
+                                        Text(chatBrain.getLastMessage(contact) ?? "Start a new conversation.")
+                                            .scaledToFit()
+                                            .font(.footnote)
+                                        Spacer()
+                                    }
                                 }
                             }
                         })

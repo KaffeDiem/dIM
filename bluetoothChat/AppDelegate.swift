@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /*
          Show notifications while in app as well.
          */
-        configureUserNotifications()
+//        configureUserNotifications()
         return true
     }
 
@@ -36,17 +36,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    private func configureUserNotifications() {
-      UNUserNotificationCenter.current().delegate = self
-    }
+//    private func configureUserNotifications() {
+//      UNUserNotificationCenter.current().delegate = self
+//    }
 }
 
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void
-      ) {
-        completionHandler(.banner)
-    }
-}
+//extension AppDelegate: UNUserNotificationCenterDelegate {
+//    func userNotificationCenter(
+//        _ center: UNUserNotificationCenter,
+//        willPresent notification: UNNotification,
+//        withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void
+//      ) {
+//        completionHandler(.banner)
+//    }
+//}

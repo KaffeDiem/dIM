@@ -13,6 +13,7 @@ enum Status {
     case read
     case received
     case receivedReadSent
+    case unknown
     case failed
 }
 

@@ -32,6 +32,7 @@
 		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
+		B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
+		B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */,
 				B0D15B6B26D9138E0099F8F5 /* Transmission */,
 				B05E1F4E26D3C9C100AD9E65 /* ChatBrain.swift */,
+				B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */,
 				B06E299E26D5358000FBB67E /* Bluetooth */,
 			);
 			path = Controllers;
@@ -252,6 +255,7 @@
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
+				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
 				B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */,
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,

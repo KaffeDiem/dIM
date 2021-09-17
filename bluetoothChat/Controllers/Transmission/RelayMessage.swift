@@ -22,6 +22,13 @@ extension ChatBrain {
                 let encodedMessage = try JSONEncoder().encode(message)
                 
                 peripheralManager.updateValue(encodedMessage, for: characteristic, onSubscribedCentrals: nil)
+                
+                /*
+                 Add messages that we relay to the queue of messages
+                 for later delivery.
+                 */
+                messageQueueAdd(message)
+                
                 routedCounter += 1
                 
             } catch {

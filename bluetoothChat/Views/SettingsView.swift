@@ -140,7 +140,8 @@ struct SettingsView: View {
                             UIApplication.shared.endEditing()
                             
                             if checkValidUsername(username: usernameTemp) {
-                                defaults.set(usernameTemp, forKey: "Username")
+                                let usernameDigits = usernameTemp + "#" + String(Int.random(in: 100000...999999))
+                                defaults.set(usernameDigits, forKey: "Username")
                             } else {
                                 usernameTemp = ""
                             }

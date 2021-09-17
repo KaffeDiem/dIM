@@ -18,7 +18,7 @@ extension ChatBrain {
         peripheralManager.startAdvertising([
             CBAdvertisementDataServiceUUIDsKey: [Service().UUID],
             //  Advertise either the set username or the default name of the device.
-            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username")!
+            CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username") ?? "Unknown"
         ])
     }
     
@@ -48,13 +48,30 @@ extension ChatBrain {
     }
     
     
-    
+    /*
+     Called when a new central subscribes to our peripheral manager.
+     */
+    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        
+        /*
+         Make sure that the central manager subscribed to the correct peripheral.
+         */
+        guard characteristic == self.characteristic else {
+            print("Error: \(central.identifier.uuidString) subscribed to wrong charateristic")
+            return
+        }
+        
+        print("A new central subscribed")
+        
+        /*
+         Send the messages in the message queue to newly connected device.
+         */
+        messageQueueNewConnection(central)
+    }
     
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         
-        // Start advertising if the central unsubs.
-//        startAdvertising(peripheralManager: peripheral)
         print("Central unsubscribed from characteristic")
     }
 }
