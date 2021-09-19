@@ -68,10 +68,6 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     }
     
     
-    func CheckQueueNewConnection() {
-        
-    }
-    
     /*
      Get the exchanged messages with a given user.
      Used when loading the ChatView()

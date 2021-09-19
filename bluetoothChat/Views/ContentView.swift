@@ -35,23 +35,22 @@ struct ContentView: View {
                         destination: ChatView(sender: contact)
                             .environmentObject(chatBrain),
                         label: {
-                            HStack {
-                                Image(systemName: "person")
-                                    .frame(width: 50, height: 50, alignment: .center)
+//                            HStack {
+//                                Image(systemName: "person")
+//                                    .frame(width: 50, height: 50, alignment: .center)
 
                                 VStack {
-                                    HStack {
-                                        Text((contact.components(separatedBy: "#")).first ?? "Unknown")
-                                        Spacer()
-                                    }
-                                    HStack {
-                                        Text(chatBrain.getLastMessage(contact) ?? "Start a new conversation.")
-                                            .scaledToFit()
-                                            .font(.footnote)
-                                        Spacer()
-                                    }
+                                    Text((contact.components(separatedBy: "#")).first ?? "Unknown")
+                                        .foregroundColor(.accentColor)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                    Text(chatBrain.getLastMessage(contact) ?? "Start a new conversation.")
+                                        .scaledToFit()
+                                        .font(.footnote)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                            }
+                                .padding()
+//                            }
                         })
                         /*
                          TODO: Update as a sliding gesture for iOS13

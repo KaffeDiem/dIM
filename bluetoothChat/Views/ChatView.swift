@@ -57,42 +57,52 @@ struct ChatView: View {
             /*
              Listing all chat messages.
              */
-            
-            ScrollView {
-                LazyVStack {
-                    ForEach(chatBrain.getConversation(sender: sender)) {message in
-                        HStack {
-                            
-                            /*
-                             Place your messages on the right side of the screen.
-                             */
-                            if username == message.sender {
-                                Spacer()
+            ScrollViewReader { proxy in
+                ScrollView(.vertical) {
+                    LazyVStack {
+                        ForEach(chatBrain.getConversation(sender: sender), id: \.self) {message in
+                            HStack {
+                                
+                                /*
+                                 Place your messages on the right side of the screen.
+                                 */
+                                if username == message.sender {
+                                    Spacer()
+                                }
+                                
+                                VStack {
+                                    Text(message.text).padding(12)
+                                        .foregroundColor(.white)
+                                        .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
+                                        
+                                }
+                                .clipShape(Bubble(chat: username == message.sender))
+                                .padding(.leading)
+                                
+                                /*
+                                 Place receivers message on the left side of the screen.
+                                 */
+                                if username != message.sender {
+                                    Spacer()
+                                }
+                                
+                                if message.sender == username {
+                                    MessageStatus(message: message)
+                                        .foregroundColor(.accentColor)
+                                        .padding(.trailing)
+                                }
                             }
-                            
-                            VStack {
-                                Text(message.text).padding(12)
-                                    .foregroundColor(.white)
-                                    .background(username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK"))
-                                    
-                            }
-                            .clipShape(Bubble(chat: username == message.sender))
-                            .padding(.leading)
-                            
-                            /*
-                             Place receivers message on the left side of the screen.
-                             */
-                            if username != message.sender {
-                                Spacer()
-                            }
-                            
-                            if message.sender == username {
-                                MessageStatus(message: message)
-                                    .foregroundColor(.accentColor)
-                                    .padding(.trailing)
-                            }
+                            .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                         }
-                        .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
+                    }
+                    .onAppear {
+                        /*
+                         Scroll to bottom of chat list automatically
+                         */
+                        if chatBrain.getConversation(sender: sender).count > 1 {
+                            proxy.scrollTo(chatBrain.getConversation(sender: sender)[chatBrain.getConversation(sender: sender).endIndex-1])
+                        }
+                        
                     }
                 }
             }

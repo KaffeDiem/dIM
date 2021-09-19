@@ -26,7 +26,7 @@ enum Status {
  
  See MessageModel.swift
  */
-struct LocalMessage: Identifiable {
+struct LocalMessage: Identifiable, Hashable {
     /*
      Some id which uniquely identifies the message.
      */
