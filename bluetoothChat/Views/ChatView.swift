@@ -46,6 +46,8 @@ struct ChatView: View {
     var sender: String
     
     @State var message: String = ""
+    @State var messagePrev: String = ""
+    
     let username: String = UserDefaults.standard.string(forKey: "Username")!
         
     var body: some View {
@@ -100,19 +102,31 @@ struct ChatView: View {
              */
             HStack {
                 TextField("Aa", text: $message, onEditingChanged: {changed in
-                    // Should anything go here?
                 }, onCommit: {
                     
-                    chatBrain.sendMessage(for: sender, text: message)
-                    
+                    if message.count < 261 {
+                        chatBrain.sendMessage(for: sender, text: message)
+                    }
+                        
                     message = ""
                 })
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 
+                if message.count > 260 {
+                    Text("\(message.count)/260")
+                        .padding(.trailing)
+                        .foregroundColor(.red)
+                } else {
+                    Text("\(message.count)/260")
+                        .padding(.trailing)
+                }
+                
                 Button(action: {
                     
-                    chatBrain.sendMessage(for: sender, text: message)
+                    if message.count < 261 {
+                        chatBrain.sendMessage(for: sender, text: message)
+                    }
                     
                     message = ""
                 }) {
@@ -131,6 +145,11 @@ struct ChatView: View {
              Send READ acknowledgements messages if the user has enabled
              it in settings.
              */
+            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
+                chatBrain.sendReadMessage(sender)
+            }
+        }
+        .onDisappear() {
             if UserDefaults.standard.bool(forKey: "settings.readmessages") {
                 chatBrain.sendReadMessage(sender)
             }
