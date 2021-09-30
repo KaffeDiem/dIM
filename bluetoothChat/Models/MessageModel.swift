@@ -15,7 +15,7 @@ struct Message: Codable, Identifiable {
     /*
      Some id which uniquely identifies the message.
      */
-    var id: UInt16
+    var id: Int32
     
     /*
      The author who wrote the message.

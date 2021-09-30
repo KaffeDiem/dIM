@@ -14,6 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    // MARK: Handle adding a new contact when scanning their QR code
     
     /*
      openURLContexts handles deep links for the app. They allow users to easily share
@@ -23,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url{
             let urlStr = url.absoluteString
+            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
             
             /*
              Seperate the URL of the type dim//username//publickey
@@ -38,39 +40,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let name = component[1]
             let publicKey = component[2]
             
-            let defaults = UserDefaults.standard
+            let fetchRequest: NSFetchRequest<ConversationEntity>
+            fetchRequest = ConversationEntity.fetchRequest()
             
-            /*
-             If a contact list exists already then add the new contact to it.
-             */
-            if var contacts = defaults.stringArray(forKey: "Contacts") {
-                if contacts.contains(name) {
-                    print("Contact has already been added.")
-                    return
+            do {
+                /*
+                 Get existing conversations from Core Data.
+                 */
+                let conversations = try context.fetch(fetchRequest)
+                
+                /*
+                 Check if a contact with that username already exists.
+                 */
+                for c in conversations {
+                    if c.author == name {
+                        print("ERROR: Contact has been added already.")
+                        return
+                    }
                 }
-                
-                contacts.append(name)
-                defaults.set(contacts, forKey: "Contacts")
-                
-            } else { // Otherwise create a new contact list.
-                let contacts = [name]
-                
-                defaults.set(contacts, forKey: "Contacts")
+            } catch {
+                print("No previously added contacts. Adding first.")
             }
             
             /*
-             Save the new public key received from the user.
+             Create the new conversation to be added and saved to Core Data.
              */
-            defaults.set(publicKey, forKey: name)
-        }
-        
-        let contacts = UserDefaults.standard.stringArray(forKey: "Contacts")
-        
-        /*
-         Print all contacts and their public keys.
-         */
-        for contact in contacts! {
-            print("\(contact): \(UserDefaults.standard.string(forKey: contact)!)")
+            let conversation = ConversationEntity(context: context)
+            conversation.author = name
+            conversation.publicKey = publicKey
+            
+            print("Added new contact to conversation: \(name)")
+            
+            do {
+                try context.save()
+            } catch {
+                print("Error: Could not save context while adding new contact.")
+            }
         }
     }
     
@@ -80,12 +85,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
+        // Get the managed object context from the shared persistent container.
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
         // Create the SwiftUI view that provides the window contents.
-        
-//        let context = persistentContainer.viewContext
-//        let contentView = SetUpView().environment(\.managedObjectContext, context)
-        
         let contentView = SetUpView()
+            .environment(\.managedObjectContext, context)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
@@ -123,32 +128,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
 
-//        saveContext()
-//        print("Save context is called.")
-    }
-
-    lazy var persistentContainer: NSPersistentContainer = {
-          let container = NSPersistentContainer(name: "Conversations")
-          container.loadPersistentStores { _, error in
-                if let error = error as NSError? {
-                    // MARK: TODO - You should add your own error handling code here.
-                    fatalError("Unresolved error \(error), \(error.userInfo)")
-                }
-          }
-      return container
-    }()
-    
-    func saveContext() {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // MARK: TODO - You should add your own error handling code here.
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
+        // Save changes in the application's managed object context when the application transitions to the background.
+        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 }
 

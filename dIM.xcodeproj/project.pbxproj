@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
 		B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0357C0A26DBEB950013CAF9 /* QRView.swift */; };
 		B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */; };
 		B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */; };
-		B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3926D3B3A800AD9E65 /* ContentView.swift */; };
+		B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3926D3B3A800AD9E65 /* HomeView.swift */; };
 		B05E1F3C26D3B3AB00AD9E65 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */; };
 		B05E1F3F26D3B3AB00AD9E65 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B05E1F3E26D3B3AB00AD9E65 /* Preview Assets.xcassets */; };
 		B05E1F4226D3B3AB00AD9E65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */; };
@@ -25,9 +26,10 @@
 		B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetUpView.swift */; };
 		B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179C26D6276C00F9C649 /* SettingsView.swift */; };
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
-		B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A026D6342900F9C649 /* DiscoverView.swift */; };
 		B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A226D6CB0800F9C649 /* DeviceModel.swift */; };
 		B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */; };
+		B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */; };
+		B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatus.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
 		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
@@ -36,11 +38,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		B0357C0A26DBEB950013CAF9 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluetoothChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B05E1F3926D3B3A800AD9E65 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B05E1F3926D3B3A800AD9E65 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B05E1F3E26D3B3AB00AD9E65 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B05E1F4126D3B3AB00AD9E65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -56,9 +59,10 @@
 		B064B43626D771F0005D6BFB /* SetUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpView.swift; sourceTree = "<group>"; };
 		B074179C26D6276C00F9C649 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		B07417A026D6342900F9C649 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
+		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
+		B0B0D06926FCFD4200E2512B /* MessageStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatus.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bluetoothChat.entitlements; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
 				B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */,
 				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
+				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
 				B05E1F3D26D3B3AB00AD9E65 /* Preview Content */,
 			);
 			path = bluetoothChat;
@@ -123,11 +128,10 @@
 		B05E1F4926D3B42400AD9E65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				B05E1F3926D3B3A800AD9E65 /* ContentView.swift */,
+				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
 				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
-				B05E1F4A26D3B44300AD9E65 /* ChatView.swift */,
+				B0B0D06826FCFD2E00E2512B /* ChatView */,
 				B074179C26D6276C00F9C649 /* SettingsView.swift */,
-				B07417A026D6342900F9C649 /* DiscoverView.swift */,
 				B064B43626D771F0005D6BFB /* SetUpView.swift */,
 				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
 			);
@@ -140,6 +144,7 @@
 				B05E1F5026D3CADC00AD9E65 /* ServiceModel.swift */,
 				B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */,
 				B0C6896826E5410D004937D5 /* LocalMessageModel.swift */,
+				B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */,
 				B06079B326D54F54007B4DF6 /* ConversationModel.swift */,
 				B07417A226D6CB0800F9C649 /* DeviceModel.swift */,
 			);
@@ -165,6 +170,15 @@
 				B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */,
 			);
 			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		B0B0D06826FCFD2E00E2512B /* ChatView */ = {
+			isa = PBXGroup;
+			children = (
+				B05E1F4A26D3B44300AD9E65 /* ChatView.swift */,
+				B0B0D06926FCFD4200E2512B /* MessageStatus.swift */,
+			);
+			path = ChatView;
 			sourceTree = "<group>";
 		};
 		B0D15B6B26D9138E0099F8F5 /* Transmission */ = {
@@ -256,18 +270,20 @@
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
 				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
+				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
-				B05E1F3A26D3B3A800AD9E65 /* ContentView.swift in Sources */,
+				B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */,
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,
+				B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
+				B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */,
 				B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */,
 				B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */,
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
 				B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */,
-				B07417A126D6342900F9C649 /* DiscoverView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* ChatBrain.swift in Sources */,
 			);
@@ -338,7 +354,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -393,7 +409,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -475,6 +491,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */,
+			);
+			currentVersion = B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B05E1F2A26D3B3A800AD9E65 /* Project object */;
 }

@@ -7,19 +7,16 @@
 
 import Foundation
 import CoreBluetooth
+import SwiftUI
+import CoreData
 
 // The Bluetooth Manager handles all searching for, creating connection to
 // and sending/receiving messages to/from other Bluetooth devices.
 
 class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
-    /*
-     Holds all messages in conversations. Thus a conversation also
-     consist of a list of messages.
-     See: ConversationModel and MessageModel
-     */
-    @Published var conversations: [Conversation] = []
     
+    var context: NSManagedObjectContext
     
     /*
      A simple counter for showing statistics in the Settings View.
@@ -55,9 +52,11 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      A list which holds message IDs which we have seen before.
      This prevents looping them in the network for ages.
      */
-    var seenMessages: [UInt16] = []
+    var seenMessages: [Int32] = []
     
-    override init() {
+    init(context: NSManagedObjectContext) {
+        self.context = context
+        
         super.init()
         
         // Set up the central and peripheral manager objects to be used across the app.
@@ -65,35 +64,6 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         
         centralManager.delegate = self
-    }
-    
-    
-    /*
-     Get the exchanged messages with a given user.
-     Used when loading the ChatView()
-     */
-    func getConversation(sender author: String) -> [LocalMessage] {
-        for conversation in conversations {
-            if conversation.author == author {
-                return conversation.messages
-            }
-        }
-        
-        return []
-    }
-    
-    
-    /*
-     Get the last message of a conversation if there are any.
-     */
-    func getLastMessage(_ user: String) -> String? {
-        for conversation in conversations {
-            if conversation.author == user {
-                return conversation.lastMessage.text
-            }
-        }
-        
-        return nil
     }
     
     

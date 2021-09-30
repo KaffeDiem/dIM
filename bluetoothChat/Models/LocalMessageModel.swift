@@ -7,15 +7,7 @@
 
 import Foundation
 
-enum Status {
-    case sent
-    case delivered
-    case read
-    case received
-    case receivedReadSent
-    case unknown
-    case failed
-}
+
 
 /*
  Local messages are messages meant to be stored on device.
@@ -30,7 +22,7 @@ struct LocalMessage: Identifiable, Hashable {
     /*
      Some id which uniquely identifies the message.
      */
-    var id: UInt16
+    var id: Int32
     
     /*
      The author who wrote the message.

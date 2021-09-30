@@ -19,6 +19,7 @@ struct SetUpView: View {
     @State var hasUsername: Bool = false
     
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.managedObjectContext) var context
     
     init() {
         
@@ -107,7 +108,7 @@ struct SetUpView: View {
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(destination: ContentView()
+                NavigationLink(destination: HomeView(chatBrain: ChatBrain(context: context))
                                 .navigationBarTitle("")
                                 .navigationBarBackButtonHidden(true),
                                isActive: $hasUsername) {

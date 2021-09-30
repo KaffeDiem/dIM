@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import CoreData
 
 extension ChatBrain {
     
-    func sendMessage(for receiver: String, text message: String) {
+    func sendMessage(for conversation: ConversationEntity, text message: String, context: NSManagedObjectContext) {
         
         let defaults = UserDefaults.standard
         
@@ -24,18 +25,14 @@ extension ChatBrain {
          Encrypt the message text.
          */
         let privateKey = getPrivateKey()
-        
-        let receiverPublicKeyString = defaults.string(forKey: receiver)
-        let receiverPublicKey = try! importPublicKey(receiverPublicKeyString!)
-        
+        let receiverPublicKey = try! importPublicKey(conversation.publicKey!)
         let symmetricKey = try! deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
-        
         let encryptedData = try! encryptMessage(text: message, symmetricKey: symmetricKey)
         
         /*
          The unique message ID.
          */
-        let messageId = UInt16.random(in: 0...UInt16.max)
+        let messageId = Int32.random(in: 0...Int32.max)
         
         
         /*
@@ -44,22 +41,8 @@ extension ChatBrain {
         let encryptedMessage = Message(
             id: messageId,
             sender: username,
-            receiver: receiver,
+            receiver: conversation.author!,
             text: encryptedData
-        )
-        
-        /*
-         The unencrypted message is used for local storage purposes. It is
-         of the type LocalMessage which allows for more information to be
-         stored in the message. It has the same ID as the one sent.
-         */
-        let localMessage = LocalMessage(
-            id: messageId,
-            sender: username,
-            receiver: receiver,
-            text: message,
-            date: Date(),
-            status: .sent
         )
         
         if let characteristic = self.characteristic {
@@ -76,32 +59,21 @@ extension ChatBrain {
         }
         
         /*
-         Add the message to the local conversation.
+         Add the message to local storage
          */
-        var conversationFound: Bool = false
+        let localMessage = MessageEntity(context: context)
         
-        for (index, conv) in conversations.enumerated() {
-            if conv.author == receiver {
-                
-                conversations[index].addMessage(add: localMessage)
-                conversations[index].lastMessage = localMessage
-                
-                conversationFound = true
-                
-            }
-        }
+        localMessage.receiver = conversation.author
+        localMessage.status = Status.sent.rawValue
+        localMessage.text = message
+        localMessage.date = Date()
+        localMessage.id = messageId
+        localMessage.sender = username
         
-        // If the conversation have not been found, create it.
-        if !conversationFound {
-            conversations.append(
-                Conversation(
-                    id: localMessage.id,
-                    author: receiver,
-                    lastMessage: localMessage,
-                    messages: [localMessage]
-                )
-            )
-        }
+        conversation.lastMessage = message
+        conversation.addToMessages(localMessage)
+        
+        try? context.save()
     }
     
     
@@ -110,22 +82,20 @@ extension ChatBrain {
      received messages.
      This is only done if the setting has been enabled in settings.
      */
-    func sendReadMessage(_ sender: String) {
+    func sendReadMessage(_ conversation: ConversationEntity) {
+        guard conversation.messages != nil else { return }
         /*
          Create a list of messages which has been received but
          no read status has been sent yet.
          */
-        var received: [LocalMessage] = []
+        var received: [MessageEntity] = []
         
-        for (i, conversation) in conversations.enumerated() {
-            if conversation.author == sender {
-                for (j, message) in conversation.messages.enumerated() {
-                    if message.status == .received {
-                        received.append(message)
-                        conversations[i].messages[j].messageReceivedReadSent()
-                    }
-                }
-                break
+        let messages: [MessageEntity] = conversation.messages!.allObjects as! [MessageEntity]
+        
+        for message in messages {
+            if Status(rawValue: message.status) == Status.received {
+                received.append(message)
+                message.status = Status.receivedReadSent.rawValue
             }
         }
         
@@ -146,16 +116,15 @@ extension ChatBrain {
         }
         
         let readMessage = Message(
-            id: UInt16.random(in: 0...UInt16.max),
+            id: Int32.random(in: 0...Int32.max),
             sender: UserDefaults.standard.string(forKey: "Username")!,
-            receiver: sender,
+            receiver: conversation.author ?? "Unknown",
             text: text
         )
         
         if let characteristic = self.characteristic {
     
             seenMessages.append(readMessage.id)
-            
             do {
                 let readMessageEncoded = try JSONEncoder().encode(readMessage)
                 
@@ -167,11 +136,11 @@ extension ChatBrain {
     }
     
     
-    func sendAckMessage(_ message: LocalMessage) {
+    func sendAckMessage(_ message: MessageEntity) {
         let ackMessage = Message(
-            id: UInt16.random(in: 0...UInt16.max),
+            id: Int32.random(in: 0...Int32.max),
             sender: UserDefaults.standard.string(forKey: "Username")!,
-            receiver: message.sender,
+            receiver: message.sender!,
             text: "ACK/\(message.id)"
         )
         

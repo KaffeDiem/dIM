@@ -7,6 +7,8 @@
 
 import Foundation
 import UserNotifications
+import SwiftUI
+import CoreData
 
 
 extension ChatBrain {
@@ -23,14 +25,12 @@ extension ChatBrain {
     
     func retrieveMessage(_ messageEncrypted: Message) {
         
+        // MARK: Check for concatted bits to check type of message.
+        
         /*
-         Return if the message has been seen before.
+         Check if the message has been seen before
          */
-        for seenMessageID in seenMessages {
-            if seenMessageID == messageEncrypted.id {
-                return
-            }
-        }
+        guard !seenMessages.contains(messageEncrypted.id) else { return }
         
         /*
          Add message to list of previously seen messages.
@@ -53,123 +53,70 @@ extension ChatBrain {
             return
         }
         
+        var conversations: [ConversationEntity] = []
+        
         /*
-         Check if the sender of the message is added as one of your
-         contacts. If sender is not a contact then drop the message.
+         Fetch conversations from CoreData and save them to the conversations
+         variable such that we can add and save the received message.
          */
-        if let contacts = defaults.stringArray(forKey: "Contacts") {
-            
-            /*
-             If the message is for us, but we have not added said person
-             as a contact, therefore we drop it.
-             */
-            let contactKnown = contacts.contains(messageEncrypted.sender)
-            guard contactKnown else {
-                return
-            }
-            
-            /*
-             Check if the message is an ACK message.
-             receivedAck handles the ACK message for us.
-             There is no reason to decrypt if the message is not an
-             ACK message either. Therefore we just return
-             */
-            let ack = receivedAck(messageEncrypted)
-            
-            guard !ack else {
-                return
-            }
-            
-            let read = receivedRead(messageEncrypted)
-            
-            guard !read else {
-                return
-            }
-            
-            
-            /*
-             The message is for us and the sender is in our contact book.
-             Therefore we have to decrypt it for it to be readable.
-             */
-            let messageText = messageEncrypted.text
-            
-            let senderPublicKeyString = defaults.string(forKey: messageEncrypted.sender)
-            let senderPublicKey = try! importPublicKey(senderPublicKeyString!)
-            
-            let privateKey = getPrivateKey()
-            
-            let symmetricKey = try! deriveSymmetricKey(privateKey: privateKey, publicKey: senderPublicKey)
-            
-            let decryptedText = decryptMessage(text: messageText, symmetricKey: symmetricKey)
-            
-            
-            let messageDecrypted = LocalMessage(
-                id: messageEncrypted.id,
-                sender: messageEncrypted.sender,
-                receiver: messageEncrypted.receiver,
-                text: decryptedText,
-                date: Date(),
-                status: .received
-            )
-            
-            
-            var conversationFound = false
-            
-            for (index, conv) in conversations.enumerated() {
+        context.perform {
+            do {
+                let fetchRequest: NSFetchRequest<ConversationEntity> = ConversationEntity.fetchRequest()
+                conversations = try fetchRequest.execute()
+               
+                var currentConversation: ConversationEntity? = nil
                 
-                if conv.author == messageDecrypted.sender {
-                    /*
-                     If the message is for us and the contact has been added.
-                     */
-                    
-                    conversationFound = true
-                        
-                    conversations[index].addMessage(add: messageDecrypted)
-                    conversations[index].updateLastMessage(new: messageDecrypted)
-                    
-                    sendAckMessage(messageDecrypted)
+                // Get the conversation where this message belong
+                for c in conversations {
+                    if c.author == messageEncrypted.sender {
+                        currentConversation = c
+                        break
+                    }
                 }
-            }
-            
-            // If the conversation have not been found, create it.
-            if !conversationFound {
-                conversations.append(
-                    Conversation(
-                        id: messageDecrypted.id,
-                        author: messageDecrypted.sender,
-                        lastMessage: messageDecrypted,
-                        messages: [messageDecrypted]
-                    )
+                
+                guard currentConversation != nil else {
+                    print("Error: Received message but could not find sender in contacts.");
+                    return
+                }
+                
+                let decryptedText = self.decryptRetrievedMessageToString(
+                    message: messageEncrypted,
+                    conversation: currentConversation!
                 )
-                sendAckMessage(messageDecrypted)
+                
+                let localMessage = MessageEntity(context: self.context)
+                localMessage.id = messageEncrypted.id
+                localMessage.receiver = username
+                localMessage.sender = messageEncrypted.sender
+                localMessage.status = Status.received.rawValue
+                localMessage.text = decryptedText
+                localMessage.date = Date()
+                    
+                let ack = self.receivedAck(message: messageEncrypted, conversation: currentConversation!)
+                guard !ack else {
+                    return
+                }
+                
+                let read = self.receivedRead(message: messageEncrypted, conversation: currentConversation!)
+                guard !read else {
+                    return
+                }
+                    
+                currentConversation!.addToMessages(localMessage)
+                currentConversation!.lastMessage = localMessage.sender!.components(separatedBy: "#").first! + ": " + localMessage.text!
+                self.sendAckMessage(localMessage)
+                
+                self.sendNotification(what: localMessage)
+                
+                try? self.context.save()
+            } catch let error as NSError {
+                print("Error fetching conversations from CoreData: \(error)")
             }
-
-            
-            /*
-             Send a notification if app is closed.
-             */
-            let content = UNMutableNotificationContent()
-            content.title = messageDecrypted.sender.components(separatedBy: "#").first ?? "Unknown"
-            content.body = messageDecrypted.text
-            content.sound = UNNotificationSound.default
-
-            let trigger = UNTimeIntervalNotificationTrigger(
-                timeInterval: 0.1,
-                repeats: false
-            )
-            
-            let request = UNNotificationRequest(
-                identifier: UUID().uuidString,
-                content: content,
-                trigger: trigger
-            )
-
-            UNUserNotificationCenter.current().add(request)
         }
     }
     
     
-    func receivedRead(_ message: Message) -> Bool {
+    func receivedRead(message: Message, conversation: ConversationEntity) -> Bool {
         var components = message.text.components(separatedBy: "/")
         
         guard components.first == "READ" && components.count > 1 else {
@@ -183,18 +130,17 @@ extension ChatBrain {
         components.removeFirst()
         components.removeLast()
         
-        let intComponents = components.map {UInt16($0)!}
+        let intComponents = components.map {Int32($0)!}
         
-        for (i, conversation) in conversations.enumerated() {
-            if conversation.author == message.sender {
-                for (j, storedMessage) in conversation.messages.enumerated() {
-                    if intComponents.contains(storedMessage.id) {
-                        conversations[i].messages[j].messageRead()
-                    }
-                }
-                break
+        let messages = conversation.messages?.allObjects as! [MessageEntity]
+        
+        for message in messages {
+            if intComponents.contains(message.id) {
+                message.status = Status.read.rawValue
             }
         }
+        
+        try? context.save()
         
         return true
     }
@@ -203,7 +149,7 @@ extension ChatBrain {
     /*
      Handle received ACK messages.
      */
-    func receivedAck(_ message: Message) -> Bool {
+    func receivedAck(message: Message, conversation: ConversationEntity) -> Bool {
         
         let components = message.text.components(separatedBy: "/")
         
@@ -214,20 +160,54 @@ extension ChatBrain {
             return false
         }
         
-        /*
-         Change the status of the delivered message from sent -> delivered.
-         TODO: Work a bit more on this. There must be a cleaner way.
-         */
-        for (i, conversation) in conversations.enumerated() {
-            if conversation.author == message.sender {
-                for (j, storedMessage) in conversation.messages.enumerated() {
-                    if storedMessage.id == Int(components[1])! {
-                        conversations[i].messages[j].messageDelivered()
-                    }
-                }
+        let messages = conversation.messages?.allObjects as! [MessageEntity]
+        
+        for message in messages {
+            if message.id == Int(components[1])! {
+                message.status = Status.delivered.rawValue
             }
         }
         
+        try? context.save()
+        
         return true
     }
+    
+    
+    // MARK: Helper functions
+    
+    /*
+     Given a message and a conversation, decrypt the text and send it back.
+     */
+    func decryptRetrievedMessageToString(message: Message, conversation: ConversationEntity) -> String? {
+        
+        let senderPublicKey = try! importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! deriveSymmetricKey(privateKey: getPrivateKey(), publicKey: senderPublicKey)
+        
+        return decryptMessage(text: message.text, symmetricKey: symmetricKey)
+    }
+    
+    /*
+     Send a notification if app is closed.
+     */
+    func sendNotification(what message: MessageEntity) {
+        let content = UNMutableNotificationContent()
+        content.title = message.sender!.components(separatedBy: "#").first ?? "Unknown"
+        content.body = message.text!
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: 0.1,
+            repeats: false
+        )
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+
+        UNUserNotificationCenter.current().add(request)
+    }
+    
 }
