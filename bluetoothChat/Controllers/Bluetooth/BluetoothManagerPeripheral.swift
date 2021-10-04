@@ -72,7 +72,7 @@ extension ChatBrain {
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         
-        print("Central unsubscribed from characteristic")
+        print("Central unsubscribed from characteristic: Nothing is done yet")
     }
 }
 

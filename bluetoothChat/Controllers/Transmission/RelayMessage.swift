@@ -13,29 +13,23 @@ import Foundation
  */
 
 extension ChatBrain {
-
+    
     func relayMessage(_ message: Message) {
         
         if let characteristic = self.characteristic {
-            
             do {
                 let encodedMessage = try JSONEncoder().encode(message)
-                
                 peripheralManager.updateValue(encodedMessage, for: characteristic, onSubscribedCentrals: nil)
                 
                 /*
-                 Add messages that we relay to the queue of messages
-                 for later delivery.
+                 Add to message queue for later delivery.
                  */
                 messageQueueAdd(message)
                 
                 routedCounter += 1
-                
             } catch {
                 print("Error encoding message: \(error)")
             }
         }
-        
     }
-
 }

@@ -15,11 +15,9 @@ import SwiftUI
  */
 struct HomeView: View {
     
-    
     /*
      Get the contact list saved to UserDefaults as a String array
      */
-//    @State var contacts: [String]? = UserDefaults.standard.stringArray(forKey: "Contacts")
     
     /*
      Get the environment object context
@@ -43,11 +41,8 @@ struct HomeView: View {
     ) var conversations: FetchedResults<ConversationEntity>
     
     /*
-     Holds the text searched
+     The actual body of the HomeView
      */
-    @State var tempSearchText: String = ""
-    
-    
     var body: some View {
         
         VStack {
@@ -107,9 +102,6 @@ struct HomeView: View {
                     .padding()
             }
         }
-        
-        .searchable(text: $tempSearchText, prompt: "Search for contact")
-        
         .navigationTitle("Chat")
         
         /*

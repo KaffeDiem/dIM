@@ -157,7 +157,6 @@
 				B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */,
 				B0D15B6B26D9138E0099F8F5 /* Transmission */,
 				B05E1F4E26D3C9C100AD9E65 /* ChatBrain.swift */,
-				B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */,
 				B06E299E26D5358000FBB67E /* Bluetooth */,
 			);
 			path = Controllers;
@@ -187,6 +186,7 @@
 				B0D15B6C26D913A40099F8F5 /* SendMessage.swift */,
 				B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */,
 				B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */,
+				B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */,
 			);
 			path = Transmission;
 			sourceTree = "<group>";

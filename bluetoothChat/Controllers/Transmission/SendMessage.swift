@@ -53,6 +53,7 @@ extension ChatBrain {
                  Send the message to all connected peripherals.
                  */
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+                messageQueueAdd(encryptedMessage)
             } catch {
                 print("Error encoding message: \(message) -> \(error)")
             }
@@ -129,6 +130,7 @@ extension ChatBrain {
                 let readMessageEncoded = try JSONEncoder().encode(readMessage)
                 
                 peripheralManager.updateValue(readMessageEncoded, for: characteristic, onSubscribedCentrals: nil)
+                
             } catch {
                 print("Error encoding message: \(readMessage) -> \(error)")
             }

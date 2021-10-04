@@ -19,7 +19,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     var context: NSManagedObjectContext
     
     /*
-     A simple counter for showing statistics in the Settings View.
+     A simple counter to show amount of relayed messages this session.
      */
     @Published var routedCounter: Int = 0
     

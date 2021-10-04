@@ -17,32 +17,30 @@ extension ChatBrain {
     
     /*
      Add a new message to the queue of messages for later delivery.
+     Messages are stored for 24h.
      */
     func messageQueueAdd(_ message: Message) {
         let queuedMessage = queuedMessage(message: message, date: Date())
-        
         messageQueue.append(queuedMessage)
     }
     
     /*
-     Check if there are messages in the queue older than 24 hours which
-     needs to be removed from the queue.
+     Remove messages older than 24h from the queue.
      */
     func checkMessageQueue() {
+        var removedMessages: Int = 0
         /*
-         Check if the message exists
+         Loop trough messages in the messageQueue removing those
+         older than 15 minutes.
+         Once we hit a message less than 15 minutes we break the loop
+         as there are no reason to continue then.
          */
-        if let safeFirst = messageQueue.first {
-            let timePassed = safeFirst.date.timeIntervalSinceNow
-            print("Time since first message was added to queue: \(timePassed)")
-            
-            /*
-             If the oldest message in the queue is older than 24 hours we
-             have to clean up the queue.
-             */
-            // seconds in 24 hours 86400
-            if timePassed < -86400 {
-                // MARK: TODO clean up of message queue.
+        for (index, message) in messageQueue.enumerated() {
+            if message.date.timeIntervalSinceNow < -900 {
+                messageQueue.remove(at: index-removedMessages)
+                removedMessages += 1
+            } else {
+                break
             }
         }
     }
@@ -52,12 +50,10 @@ extension ChatBrain {
      between the devices.
      */
     func messageQueueNewConnection(_ central: CBCentral) {
+        // Update message queue and remove old messages. 
+        checkMessageQueue()
+        
         for message in messageQueue {
-            
-            guard message.date.timeIntervalSinceNow < -86400 else {
-                continue
-            }
-            
             do {
                 let encoded = try JSONEncoder().encode(message.message)
                 
@@ -65,8 +61,6 @@ extension ChatBrain {
                  Send all messages which are queued again when a new device connects.
                  */
                 peripheralManager.updateValue(encoded, for: characteristic!, onSubscribedCentrals: [central])
-                messageQueue = []
-                // MARK: TODO - figure out how to remove messages from the queue
             } catch {
                 print("Error encoding queued message: \(error)")
             }
