@@ -9,16 +9,6 @@ import Foundation
 import SwiftUI
 
 
-struct Bubble: Shape {
-    var chat: Bool
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        return Path(path.cgPath)
-    }
-}
-
-
 struct ChatView: View {
     
     @Environment(\.managedObjectContext) var context
@@ -57,12 +47,11 @@ struct ChatView: View {
     }
     
     var body: some View {
-        
         VStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical) {
                     LazyVStack {
-                        ForEach(messages, id: \.id) { message in
+                        ForEach(messages, id: \.self) { message in
                             HStack {
                                 if username == message.sender! {
                                     Spacer()
@@ -92,7 +81,6 @@ struct ChatView: View {
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                         }
                     }
-                    
                 }
                 .onAppear {
                     /*
@@ -109,19 +97,16 @@ struct ChatView: View {
              Send message part
              */
             HStack {
-                TextField("Aa", text: $message, onEditingChanged: {changed in
-                    
-                }, onCommit: {
-
-                    if message.count < 261 {
-                        chatBrain.sendMessage(for: conversation, text: message, context: context)
-                    }
-
-                    message = ""
-                })
+                TextField("Aa", text: $message)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .submitLabel(.send)
+                .onSubmit({
+                    if message.count < 261 {
+                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        message = ""
+                    }
+                })
 
                 if message.count > 260 {
                     Text("\(message.count)/260")
@@ -131,6 +116,16 @@ struct ChatView: View {
                     Text("\(message.count)/260")
                         .padding(.trailing)
                 }
+                
+                Button(action: {
+                    if message.count < 261 {
+                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        message = ""
+                    }
+                }, label: {
+                    Image(systemName: "paperplane.circle.fill")
+                        .padding(.trailing)
+                })
             }
         }
         .navigationTitle((conversation.author!.components(separatedBy: "#")).first ?? "Unknown")
@@ -149,5 +144,14 @@ struct ChatView: View {
                 chatBrain.sendReadMessage(conversation)
             }
         }
+    }
+}
+
+
+struct Bubble: Shape {
+    var chat: Bool
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+        return Path(path.cgPath)
     }
 }

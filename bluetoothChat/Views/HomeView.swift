@@ -41,6 +41,12 @@ struct HomeView: View {
     ) var conversations: FetchedResults<ConversationEntity>
     
     /*
+     Used for confirmation dialog when deleting a contact
+     */
+    @State var confirmationShown: Bool = false
+    
+    
+    /*
      The actual body of the HomeView
      */
     var body: some View {
@@ -85,15 +91,23 @@ struct HomeView: View {
                             }
                             .tint(.accentColor)
                             // Deleting a contact.
-                            Button(role: .destructive) {
-                                context.delete(conversation)
-                                do {
-                                    try context.save()
-                                } catch {
-                                    print("Context could not be saved.")
-                                }
-                            } label: {
+                            Button(role: .destructive, action: {confirmationShown = true}) {
                                 Label("Delete Contact", systemImage: "person.fill.xmark")
+                            }
+                        }
+                        .confirmationDialog(
+                            "Are you sure?",
+                            isPresented: $confirmationShown
+                        ) {
+                            Button("Delete contact", role: .destructive) {
+                                withAnimation {
+                                    context.delete(conversation)
+                                    do {
+                                        try context.save()
+                                    } catch {
+                                        print("Context could not be saved.")
+                                    }
+                                }
                             }
                         }
                 }

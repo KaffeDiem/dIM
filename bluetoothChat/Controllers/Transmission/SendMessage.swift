@@ -34,7 +34,6 @@ extension ChatBrain {
          */
         let messageId = Int32.random(in: 0...Int32.max)
         
-        
         /*
          The encrypted message which is sent to other users.
          */

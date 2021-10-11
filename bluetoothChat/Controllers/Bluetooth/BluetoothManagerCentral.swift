@@ -185,6 +185,35 @@ extension ChatBrain {
         
         guard let data = characteristic.value else { return }
         
+        /*
+         Check that no more than 60 messages have been received
+         by this peripheral in the last minute. If more than 60 messages
+         are received in the last minute then block messages for now.
+         */
+        if peripheralMessages[peripheral.identifier.uuidString]?.count ?? 0 > 60 {
+            if let safeDates = peripheralMessages[peripheral.identifier.uuidString] {
+                
+                var newDates: [Date] = []
+                
+                for safeDate in safeDates {
+                    if safeDate.timeIntervalSinceNow < 60 {
+                        newDates.append(safeDate)
+                    }
+                }
+                
+                guard newDates.count <= 60 else {
+                    print("Error: Received more than 10 messages from user this past minute.")
+                    return
+                }
+            }
+        }
+        if peripheralMessages[peripheral.identifier.uuidString] != nil {
+            peripheralMessages[peripheral.identifier.uuidString]!.append(Date())
+        } else {
+            peripheralMessages[peripheral.identifier.uuidString] = [Date()]
+        }
+        
+        
         let decoder = JSONDecoder()
         // Decode the message received from a connected peripheral and save it.
         do {

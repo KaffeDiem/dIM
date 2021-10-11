@@ -15,7 +15,9 @@ import CoreData
 
 class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
-    
+    /*
+     Context for CoreData storage
+     */
     var context: NSManagedObjectContext
     
     /*
@@ -53,6 +55,8 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      This prevents looping them in the network for ages.
      */
     var seenMessages: [Int32] = []
+    
+    var peripheralMessages: [String : [Date]] = [:]
     
     init(context: NSManagedObjectContext) {
         self.context = context
