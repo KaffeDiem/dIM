@@ -187,6 +187,7 @@ struct SettingsView: View {
             .autocapitalization(.none)
             .disableAutocorrection(true)
             .navigationBarTitle("Settings", displayMode: .automatic)
+            .padding()
         }
     }
     
