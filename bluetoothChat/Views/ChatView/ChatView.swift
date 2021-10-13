@@ -18,7 +18,7 @@ struct ChatView: View {
     /*
      The current conversation that the user is in.
      */
-    var conversation: ConversationEntity
+    @ObservedObject var conversation: ConversationEntity
     
     /*
      Fetch requests belonging to this conversation from the database.
@@ -91,7 +91,6 @@ struct ChatView: View {
                     }
                 }
             }
-            
             
             /*
              Send message part

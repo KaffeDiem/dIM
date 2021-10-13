@@ -99,7 +99,7 @@ struct HomeView: View {
                             "Are you sure?",
                             isPresented: $confirmationShown
                         ) {
-                            Button("Delete contact", role: .destructive) {
+                            Button("Delete Contact", role: .destructive) {
                                 withAnimation {
                                     context.delete(conversation)
                                     do {

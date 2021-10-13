@@ -70,7 +70,7 @@ extension ChatBrain {
         localMessage.id = messageId
         localMessage.sender = username
         
-        conversation.lastMessage = message
+        conversation.lastMessage = "You: " + message
         conversation.addToMessages(localMessage)
         
         try? context.save()

@@ -17,7 +17,7 @@ extension ChatBrain {
     
     /*
      Add a new message to the queue of messages for later delivery.
-     Messages are stored for 24h.
+     Messages are stored for 15m.
      */
     func messageQueueAdd(_ message: Message) {
         let queuedMessage = queuedMessage(message: message, date: Date())

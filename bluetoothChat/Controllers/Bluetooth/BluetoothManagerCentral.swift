@@ -190,28 +190,32 @@ extension ChatBrain {
          by this peripheral in the last minute. If more than 60 messages
          are received in the last minute then block messages for now.
          */
-        if peripheralMessages[peripheral.identifier.uuidString]?.count ?? 0 > 60 {
-            if let safeDates = peripheralMessages[peripheral.identifier.uuidString] {
-                
+        let uuid = peripheral.identifier.uuidString
+        if let safeDates = peripheralMessages[uuid] {
+            if safeDates.count > 60 {
+                //cleanup
                 var newDates: [Date] = []
                 
-                for safeDate in safeDates {
-                    if safeDate.timeIntervalSinceNow < 60 {
-                        newDates.append(safeDate)
+                for date in safeDates {
+                    print("\(date.timeIntervalSinceNow) date")
+                    if date.timeIntervalSinceNow > -60 {
+                        newDates.append(date)
                     }
                 }
                 
-                guard newDates.count <= 60 else {
-                    print("Error: Received more than 10 messages from user this past minute.")
+                guard newDates.count < 60 else {
+                    print("Error: More than 60 messages received this past minute.")
                     return
                 }
+                
+                peripheralMessages[uuid] = newDates
             }
-        }
-        if peripheralMessages[peripheral.identifier.uuidString] != nil {
-            peripheralMessages[peripheral.identifier.uuidString]!.append(Date())
         } else {
-            peripheralMessages[peripheral.identifier.uuidString] = [Date()]
+            peripheralMessages[uuid] = [Date()]
         }
+        
+        peripheralMessages[uuid]!.append(Date())
+        print(peripheralMessages[uuid]!.count, peripheral.identifier.uuidString)
         
         
         let decoder = JSONDecoder()

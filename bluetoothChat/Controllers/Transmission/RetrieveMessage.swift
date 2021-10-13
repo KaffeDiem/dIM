@@ -103,7 +103,7 @@ extension ChatBrain {
                 }
                     
                 currentConversation!.addToMessages(localMessage)
-                currentConversation!.lastMessage = localMessage.sender!.components(separatedBy: "#").first! + ": " + localMessage.text!
+                currentConversation!.lastMessage = localMessage.text!
                 self.sendAckMessage(localMessage)
                 
                 self.sendNotification(what: localMessage)
