@@ -16,10 +16,6 @@ import SwiftUI
 struct HomeView: View {
     
     /*
-     Get the contact list saved to UserDefaults as a String array
-     */
-    
-    /*
      Get the environment object context
      */
     @Environment(\.managedObjectContext) var context
