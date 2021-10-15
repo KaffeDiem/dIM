@@ -93,6 +93,7 @@ struct SettingsView: View {
                 
                 ConnectivityView()
                     .environmentObject(chatBrain)
+                    .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 
                 /*
                  dIM Icon in top of settings view.
@@ -119,6 +120,7 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 })
+                    .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 
                 GroupBox(label: Text("Send read receipts"), content: {
                     Divider().padding(.vertical, 4)
@@ -128,7 +130,8 @@ struct SettingsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     ReadToggle()
                 })
-                
+                    .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
+
                 GroupBox(label: Text("Change username"), content: {
                     Divider().padding(.vertical, 4)
                     /*
@@ -181,13 +184,11 @@ struct SettingsView: View {
                         Text(" ")
                     }
                 })
-                
-                
+                    .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
             }
             .autocapitalization(.none)
             .disableAutocorrection(true)
             .navigationBarTitle("Settings", displayMode: .automatic)
-            .padding()
         }
     }
     

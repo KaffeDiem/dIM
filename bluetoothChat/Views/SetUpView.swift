@@ -81,31 +81,31 @@ struct SetUpView: View {
                 /*
                  Enter button which handles setting the username if valid.
                  */
-                VStack {
-                    Button("Enter", action: {
-                        let usernameValid: Bool = checkUsername(username: username)
-                        //  If the username is accepted then save it to persistent memory.
-                        if usernameValid {
-                            let usernameDigits = username + "#" + String(Int.random(in: 100000...999999))
-                            UserDefaults.standard.set(usernameDigits, forKey: "Username")
-                        }
-                        
-                        hasUsername = usernameValid
-                        }
-                    )
+                Button(action: {
+                    let usernameValid: Bool = checkUsername(username: username)
+                    //  If the username is accepted then save it to persistent memory.
+                    if usernameValid {
+                        let usernameDigits = username + "#" + String(Int.random(in: 100000...999999))
+                        UserDefaults.standard.set(usernameDigits, forKey: "Username")
+                    }
+                    
+                    hasUsername = usernameValid
+                    
+                }, label: {
+                    Text("Set Username")
                     .padding()
                     .foregroundColor(.white)
-                }
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
-                        startPoint: .leading,
-                        endPoint: .trailing
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                )
-                .cornerRadius(10.0)
-                .padding()
+                    .cornerRadius(10.0)
+                    .padding()
+                })
                 
                 // Empty link which takes the user to the main screen if username has been set.
                 NavigationLink(destination: HomeView(chatBrain: ChatBrain(context: context))
@@ -142,7 +142,10 @@ struct SetUpView: View {
      Check if the username is 4-12 chars and does not include space
      */
     func checkUsername(username: String) -> Bool{
-        if username.count < 4 {
+        if username == "DEMOAPPLETESTUSERNAME" {
+            activateDemoMode()
+            return true
+        } else if username.count < 4 {
             return false
         } else if username.count > 16 {
             return false
@@ -151,11 +154,44 @@ struct SetUpView: View {
         }
         return true
     }
-}
-
-
-struct SetUpVoew_Previews: PreviewProvider {
-    static var previews: some View {
-        SetUpView()
+    
+    func activateDemoMode() {
+        let _ = getPublicKey()
+        /*
+         Add a test conversation
+         */
+        let conversation = ConversationEntity(context: context)
+        conversation.author = "SteveJobs#123456"
+        let prkey = generatePrivateKey()
+        let pukey = prkey.publicKey
+        let pukeyStr = exportPublicKey(pukey)
+        conversation.publicKey = pukeyStr
+        
+        let firstMessage = MessageEntity(context: context)
+        firstMessage.id = 123456
+        firstMessage.receiver = "DEMOAPPLETESTUSERNAME"
+        firstMessage.sender = conversation.author
+        firstMessage.status = Status.received.rawValue
+        firstMessage.text = "Hi there, how are you?"
+        firstMessage.date = Date()
+        
+//        let secondMessage = MessageEntity(context: context)
+//        secondMessage.id = 654321
+//        secondMessage.receiver = conversation.author
+//        secondMessage.sender = "DEMOAPPLETESTUSERNAME"
+//        secondMessage.status = Status.delivered.rawValue
+//        secondMessage.text = "I am great, thanks."
+//        secondMessage.date = Date()
+        
+        conversation.addToMessages(firstMessage)
+//        conversation.addToMessages(secondMessage)
+        
+        conversation.lastMessage = firstMessage.text
+        
+        do {
+            try context.save()
+        } catch {
+            print("Demo user activated but could not save context.")
+        }
     }
 }
