@@ -78,6 +78,10 @@ struct SetUpView: View {
                 
                 Spacer()
                 
+                HStack {
+                    Text("By continuing you agree to the")
+                    Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
+                }
                 /*
                  Enter button which handles setting the username if valid.
                  */

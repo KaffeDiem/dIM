@@ -33,47 +33,6 @@ struct ReadToggle: View {
     }
 }
 
-
-/*
- A connectivity view for device information
- */
-struct ConnectivityView: View {
-    
-    @EnvironmentObject var chatBrain: ChatBrain
-    
-    var body: some View {
-        GroupBox(label: Text("Connectivity"), content: {
-            
-            Divider().padding(.vertical, 4)
-            
-            Text("At least one device connected is needed to send messages.")
-                .font(.footnote)
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            if chatBrain.discoveredDevices.count < 1 {
-                Label("Not connected.", systemImage: "figure.stand")
-            
-            } else {
-                Label(
-                    "\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.",
-                    systemImage: "figure.stand.line.dotted.figure.stand"
-                )
-            
-            }
-            
-            Text("Messages sent trough your phone to be delivered to others.")
-                .font(.footnote)
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Label("\(chatBrain.routedCounter) messages routed.", systemImage: "network")
-            
-        })
-    }
-}
-
-
 struct SettingsView: View {
     
     let defaults = UserDefaults.standard
@@ -90,36 +49,16 @@ struct SettingsView: View {
             
             ScrollView {
                 
-                
-                ConnectivityView()
-                    .environmentObject(chatBrain)
-                    .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
+                /*
+                 About dIM
+                 */
+                AboutView()
                 
                 /*
-                 dIM Icon in top of settings view.
+                 Current connections
                  */
-                GroupBox(label: Text("Decentralized Instant Messenger"), content: {
-                    Divider().padding(.vertical, 4)
-                    HStack {
-                        Image("appiconsvg")
-                            .resizable()
-                            .frame(width: 96, height: 96, alignment: .leading)
-                            .aspectRatio(contentMode: .fit)
-                            .scaledToFit()
-                        Spacer()
-                        
-                            
-                        Text("""
-                            dIM is a decentralized chat app based on Bluetooth. If you send a contact a message it will be sent on the Bluetooth peer-to-peer network. Messages are encrypted such that only you and the receiver can read the content.
-                            """
-                        )
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .padding(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                })
+                ConnectivityView()
+                    .environmentObject(chatBrain)
                     .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 
                 GroupBox(label: Text("Send read receipts"), content: {
@@ -185,6 +124,8 @@ struct SettingsView: View {
                     }
                 })
                     .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
+                
+                SupportView()
             }
             .autocapitalization(.none)
             .disableAutocorrection(true)

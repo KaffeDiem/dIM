@@ -4,7 +4,7 @@
 //
 //  Created by Kasper Munch on 23/08/2021.
 //
-
+import MobileCoreServices
 import Foundation
 import SwiftUI
 
@@ -79,6 +79,24 @@ struct ChatView: View {
                                 }
                             }
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
+                            .contextMenu {
+                                Button(role: .none, action: {
+                                    UIPasteboard.general.setValue(message.text ?? "Something went wrong copying from dIM",
+                                        forPasteboardType: kUTTypePlainText as String)
+                                }, label: {
+                                    Label("Copy", systemImage: "doc.on.doc")
+                                })
+                                Button(role: .destructive, action: {
+                                    context.delete(message)
+                                    do {
+                                        try context.save()
+                                    } catch {
+                                        print("Error: Saving the context after deleting a message went wrong.")
+                                    }
+                                }, label: {
+                                    Label("Delete", systemImage: "minus.square")
+                                })
+                            }
                         }
                     }
                 }
