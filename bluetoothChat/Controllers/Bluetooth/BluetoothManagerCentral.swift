@@ -215,8 +215,6 @@ extension ChatBrain {
         }
         
         peripheralMessages[uuid]!.append(Date())
-        print(peripheralMessages[uuid]!.count, peripheral.identifier.uuidString)
-        
         
         let decoder = JSONDecoder()
         // Decode the message received from a connected peripheral and save it.

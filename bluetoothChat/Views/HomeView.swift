@@ -107,12 +107,6 @@ struct HomeView: View {
                             }
                         }
                 }
-                .onAppear {
-                    
-                }
-                .refreshable {
-                    print("This is where we refresh")
-                }
             } else {
                 Image("QRHowTo")
                     .resizable()

@@ -94,13 +94,13 @@ extension ChatBrain {
                     
                 let ack = self.receivedAck(message: messageEncrypted, conversation: currentConversation!)
                 guard !ack else {
-                    self.objectWillChange.send()
+                    try? self.context.save()
                     return
                 }
                 
                 let read = self.receivedRead(message: messageEncrypted, conversation: currentConversation!)
                 guard !read else {
-                    self.objectWillChange.send()
+                    try? self.context.save()
                     return
                 }
                     
