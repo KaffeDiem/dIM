@@ -29,6 +29,7 @@ struct HomeView: View {
     /*
      Get conversations saved to Core Data
      */
+    
     @FetchRequest(
         entity: ConversationEntity.entity(),
         sortDescriptors: [
@@ -40,7 +41,6 @@ struct HomeView: View {
      Used for confirmation dialog when deleting a contact
      */
     @State var confirmationShown: Bool = false
-    
     
     /*
      The actual body of the HomeView
@@ -107,6 +107,12 @@ struct HomeView: View {
                             }
                         }
                 }
+                .onAppear {
+                    
+                }
+                .refreshable {
+                    print("This is where we refresh")
+                }
             } else {
                 Image("QRHowTo")
                     .resizable()
@@ -118,6 +124,9 @@ struct HomeView: View {
             }
         }
         .navigationTitle("Chat")
+        
+        .onAppear() {
+        }
         
         /*
          Toolbar in the navigation header for SettingsView and ChatView.

@@ -31,6 +31,8 @@ struct ChatView: View {
     @State var tempTextField: String = ""
     @State var message: String = ""
     
+    @State var showingReportAlert = false
+    
     let username: String = UserDefaults.standard.string(forKey: "Username")!
         
     init(conversation: ConversationEntity) {
@@ -96,6 +98,17 @@ struct ChatView: View {
                                 }, label: {
                                     Label("Delete", systemImage: "minus.square")
                                 })
+                                Button(role: .destructive, action: {
+                                    showingReportAlert = true
+                                    print("Alert should be shown")
+                                }, label: {
+                                    Label("Report", systemImage: "exclamationmark.bubble")
+                                })
+                            }
+                            .alert("Report Message", isPresented: $showingReportAlert) {
+                                Button("OK", role: .cancel) {}
+                            } message: {
+                                Text("dIM stores all data on yours and the senders device. Therefore you should block the user who has sent this message to you if you deem it inappropriate.\nIllegal content should be reported to the authorities.")
                             }
                         }
                     }

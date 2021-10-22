@@ -21,6 +21,13 @@ struct SetUpView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.managedObjectContext) var context
     
+    @FetchRequest(
+        entity: ConversationEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \ConversationEntity.author, ascending: true)
+        ]
+    ) var conversations: FetchedResults<ConversationEntity>
+    
     init() {
         
     }
@@ -78,10 +85,14 @@ struct SetUpView: View {
                 
                 Spacer()
                 
+                /*
+                 EULA part.
+                 */
                 HStack {
                     Text("By continuing you agree to the")
                     Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
                 }
+                
                 /*
                  Enter button which handles setting the username if valid.
                  */
