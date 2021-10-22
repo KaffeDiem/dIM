@@ -16,7 +16,7 @@ struct SupportView: View {
         GroupBox(label: Text("Support and Feedback"), content: {
             Divider().padding(.vertical, 4)
             
-            Text("Feel free to send me a mail if you have any feedback on the app. As dIM is an Open Source project you may create an issue on Github if you have found any bugs. Find the Github repository on the website. Feedback emails can be sent to support@dimchat.org.")
+            Text("Contact us by sending an email.")
                 .font(.footnote)
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -25,12 +25,12 @@ struct SupportView: View {
                 Link("Website", destination: URL(string: "https://www.dimchat.org")!)
                 Spacer()
                 Button(action: {
-                    if !EmailHelper.shared.sendEmail(subject: "dIM Support and Feedback", body: "", to: "support@dimchat.org") {
+                    if !EmailHelper.shared.sendEmail(subject: "dIM Support or Feedback", body: "", to: "support@dimchat.org") {
                         showingAlert = true
                     }
                 }, label: {
-                    Text("Support")
-                        .alert("You must configure a default mailbox to send mails.", isPresented: $showingAlert) {
+                    Text("Email")
+                        .alert("You must set up a default mailbox to send emails. Otherwise emails can be sent to support@dimchat.org", isPresented: $showingAlert) {
                             Button("OK", role: .cancel) {}
                         }
                 })
