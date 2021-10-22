@@ -55,39 +55,28 @@ struct ChatView: View {
                     LazyVStack {
                         ForEach(messages, id: \.self) { message in
                             HStack {
-                                if username == message.sender! {
-                                    Spacer()
-                                }
                                 
-                                VStack {
-                                    Text(message.text ?? "Error: Message text was nil.")
-                                        .padding(12)
-                                        .foregroundColor(.white)
-                                        .background(
-                                            username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK")
-                                        )
-                                        .clipShape(Bubble(chat: username == message.sender!))
-                                        .padding(.leading)
-                                }
+                                MessageBubble(username: username, message: message)
                                 
-                                if username != message.sender! {
-                                    Spacer()
-                                }
-                            
-                                if username == message.sender! {
-                                    MessageStatus(message: message)
-                                        .foregroundColor(.accentColor)
-                                        .padding(.trailing)
-                                }
                             }
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                             .contextMenu {
+                                /* Copy button */
                                 Button(role: .none, action: {
                                     UIPasteboard.general.setValue(message.text ?? "Something went wrong copying from dIM",
                                         forPasteboardType: kUTTypePlainText as String)
                                 }, label: {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 })
+                                /* Resend button (for users own messages) */
+                                if message.sender! == username {
+                                    Button(role: .none, action: {
+                                        chatBrain.sendMessage(for: conversation, text: message.text!, context: context)
+                                    }, label: {
+                                        Label("Resend", systemImage: "arrow.uturn.left.circle")
+                                    })
+                                    }
+                                /* Delete button*/
                                 Button(role: .destructive, action: {
                                     context.delete(message)
                                     do {
@@ -98,6 +87,7 @@ struct ChatView: View {
                                 }, label: {
                                     Label("Delete", systemImage: "minus.square")
                                 })
+                                /* Report button */
                                 Button(role: .destructive, action: {
                                     showingReportAlert = true
                                     print("Alert should be shown")
