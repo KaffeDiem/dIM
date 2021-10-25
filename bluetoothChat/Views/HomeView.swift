@@ -113,7 +113,7 @@ struct HomeView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 192, alignment: .center)
                     .padding()
-                Text("Add a new contact by scanning their QR code and by letting them scan yours.")
+                Text("Add a new contact by scanning their QR code with your phones camera and by letting them scan yours.")
                     .padding()
             }
         }
