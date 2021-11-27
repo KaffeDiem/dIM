@@ -32,6 +32,8 @@
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
 		B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A226D6CB0800F9C649 /* DeviceModel.swift */; };
 		B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */; };
+		B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81027511A0400EC3299 /* GLOBALS.swift */; };
+		B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */; };
 		B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */; };
 		B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatus.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
@@ -69,6 +71,8 @@
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
+		B0A2B81027511A0400EC3299 /* GLOBALS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLOBALS.swift; sourceTree = "<group>"; };
+		B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRRoutingHandler.swift; sourceTree = "<group>"; };
 		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
 		B0B0D06926FCFD4200E2512B /* MessageStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatus.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
@@ -121,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */,
+				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
 				B05E1F4926D3B42400AD9E65 /* Views */,
 				B05E1F4C26D3C7F200AD9E65 /* Models */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
@@ -207,6 +212,7 @@
 				B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */,
 				B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */,
 				B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */,
+				B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */,
 			);
 			path = Transmission;
 			sourceTree = "<group>";
@@ -282,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */,
+				B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */,
 				B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */,
 				B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */,
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
@@ -307,6 +314,7 @@
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
 				B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */,
 				B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */,
+				B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* ChatBrain.swift in Sources */,
@@ -450,7 +458,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
@@ -459,7 +467,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -475,7 +483,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
@@ -484,7 +492,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

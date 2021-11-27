@@ -222,6 +222,19 @@ extension ChatBrain {
             let message = try decoder.decode(Message.self, from: data)
             // Handle decoded messages.
             retrieveMessage(message)
+            
+            // If we use the DSR algorithm then save message id and sender.
+            if useDSRAlgorithm {
+                // Only save normal messages as these are the only ones
+                // we are interested in.
+                if message.type == 0 {
+                    addMessageToDSRTable(
+                        messageID: message.id,
+                        bluetoothID: peripheral.identifier.uuidString
+                    )
+                }
+            }
+            
         } catch {
             print("JSON Error decoding message: \(error)")
         }

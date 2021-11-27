@@ -66,7 +66,11 @@ extension ChatBrain {
         /*
          Send the messages in the message queue to newly connected device.
          */
-        messageQueueNewConnection(central)
+        if enableMessageQueue { messageQueueNewConnection(central) }
+        
+        if useDSRAlgorithm {
+            seenCBCentral.append(central)
+        }
     }
     
     

@@ -39,6 +39,7 @@ extension ChatBrain {
          */
         let encryptedMessage = Message(
             id: messageId,
+            type: 0,
             sender: username,
             receiver: conversation.author!,
             text: encryptedData
@@ -117,6 +118,7 @@ extension ChatBrain {
         
         let readMessage = Message(
             id: Int32.random(in: 0...Int32.max),
+            type: 2,
             sender: UserDefaults.standard.string(forKey: "Username")!,
             receiver: conversation.author ?? "Unknown",
             text: text
@@ -140,6 +142,7 @@ extension ChatBrain {
     func sendAckMessage(_ message: MessageEntity) {
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
+            type: 1,
             sender: UserDefaults.standard.string(forKey: "Username")!,
             receiver: message.sender!,
             text: "ACK/\(message.id)"

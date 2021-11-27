@@ -131,12 +131,10 @@ struct HomeView: View {
                     Image(systemName: "gearshape.fill")
                 })
             }
-            
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: QRView(), label: {
                     Image(systemName: "qrcode")
                 })
-                
             }
         }
     }

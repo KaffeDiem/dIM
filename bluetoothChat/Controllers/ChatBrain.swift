@@ -58,6 +58,17 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
     
     var peripheralMessages: [String : [Date]] = [:]
     
+    /*
+     A dict which holds the ids of messages relayed and the corresponding sender
+     of said messages. This is used for DSR.
+     */
+    var senderOfMessageID: [Int32 : String] = [:]
+    
+    /*
+     Seen CBCentrals / This is used for DSR algorithm.
+     */
+    var seenCBCentral: [CBCentral] = []
+    
     init(context: NSManagedObjectContext) {
         self.context = context
         

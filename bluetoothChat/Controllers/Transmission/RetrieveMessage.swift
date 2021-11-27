@@ -22,10 +22,8 @@ extension ChatBrain {
      as a contact. If the message is not for us then relay it and
      add it to the list of seen messages.
      */
-    
     func retrieveMessage(_ messageEncrypted: Message) {
-        
-        // MARK: Check for concatted bits to check type of message.
+        // MARK: Check for concatted bits to check type of message instead.
         
         /*
          Check if the message has been seen before
@@ -49,6 +47,26 @@ extension ChatBrain {
          If the message is not for me then relay it.
          */
         guard MessageForMe else {
+            
+            if useDSRAlgorithm {
+                // If the message type is an ACK message.
+                if messageEncrypted.type == 1 {
+                    // Get the ID from the ACK message
+                    let components = messageEncrypted.text.components(separatedBy: "/")
+                    let messageID = Int32(components[1])!
+                    
+                    if checkMessageSeenBefore(messageID: messageID) {
+                        /*
+                         The Bluetooth UUID of the original sender of the message.
+                         */
+                        let senderBluetoothID = getSenderOfMessage(messageID: messageID)
+                        relayMessage(messageEncrypted, senderBluetoothID)
+                        
+                        return
+                    }
+                }
+            }
+            
             relayMessage(messageEncrypted)
             return
         }

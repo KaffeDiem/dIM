@@ -18,6 +18,14 @@ struct Message: Codable, Identifiable {
     var id: Int32
     
     /*
+     Some type of message.
+     0: A normal message
+     1: An ACK message
+     2: A READ message
+     */
+    var type: Int
+    
+    /*
      The author who wrote the message.
      */
     var sender: String
