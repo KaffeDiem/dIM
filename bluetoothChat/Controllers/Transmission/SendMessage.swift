@@ -10,6 +10,17 @@ import CoreData
 
 extension ChatBrain {
     
+    // MARK: Sending messages.
+    
+    /// Sends a message to a specific user.
+    ///
+    /// This is done by encrypting the content of the message, generating new id's
+    /// and passing it along to the peripheral manager to send out to connected
+    /// central managers.
+    /// - Parameters:
+    ///   - conversation: The conversation for whom we want to send a message.
+    ///   - message: The message that we want to send. It is encrypted in this function.
+    ///   - context: The context which we save the message. Used for persistent storage to CoreData.
     func sendMessage(for conversation: ConversationEntity, text message: String, context: NSManagedObjectContext) {
         
         let defaults = UserDefaults.standard
@@ -24,10 +35,10 @@ extension ChatBrain {
         /*
          Encrypt the message text.
          */
-        let privateKey = getPrivateKey()
-        let receiverPublicKey = try! importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
-        let encryptedData = try! encryptMessage(text: message, symmetricKey: symmetricKey)
+        let privateKey = CryptoHandler().getPrivateKey()
+        let receiverPublicKey = try! CryptoHandler().importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler().deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+        let encryptedData = try! CryptoHandler().encryptMessage(text: message, symmetricKey: symmetricKey)
         
         /*
          The unique message ID.
@@ -83,6 +94,15 @@ extension ChatBrain {
      received messages.
      This is only done if the setting has been enabled in settings.
      */
+    /// Sends a message of id's which confirms that we have read the
+    /// received messages.
+    ///
+    /// This function is only called if we have enabled the `read` functionality
+    /// in the settings menu.
+    ///
+    /// We send a message with all the id's of the messages that we have read
+    /// formatted as `READ/id1/id2/id2...`.
+    /// - Parameter conversation: The conversation which we have recently opened.
     func sendReadMessage(_ conversation: ConversationEntity) {
         guard conversation.messages != nil else { return }
         /*
@@ -139,6 +159,10 @@ extension ChatBrain {
     }
     
     
+    /// Sends an `ACK` message to confirm that we have received a message.
+    /// If we use DSR (Dynamic Source Routing) this messages is sent on the
+    /// shortest route possible.
+    /// - Parameter message: The message which we want to send an ACK message for.
     func sendAckMessage(_ message: MessageEntity) {
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
@@ -149,9 +173,7 @@ extension ChatBrain {
         )
         
         if let characteristic = self.characteristic {
-    
             seenMessages.append(ackMessage.id)
-            
             do {
                 let ackMessageEncoded = try JSONEncoder().encode(ackMessage)
                 

@@ -7,7 +7,11 @@
 
 import SwiftUI
 
+/// The connectivityView is used for showing the user current connections.
+///
+/// It also shows a few statistics for this session.
 struct ConnectivityView: View {
+    /// The ChatBrain object is used to get statistics and current connections.
     @EnvironmentObject var chatBrain: ChatBrain
     
     var body: some View {

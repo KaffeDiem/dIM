@@ -12,18 +12,17 @@ import CoreData
 
 
 extension ChatBrain {
+    
+    // MARK: Receiving messages.
 
-    /*
-    Retrieve a message from sender and handle it appropriately.
-     Function is only called if the message is properly decoded.
-     
-     This is also where we decided if the message was meant for us
-     or not. For it to be added we have to have each other added
-     as a contact. If the message is not for us then relay it and
-     add it to the list of seen messages.
-     */
+    /// Retrieve a message from a sender and handle it accordingly.
+    ///
+    /// If the message is not for us we relay it to connected Bluetooth
+    /// centrals. Otherwise, if it is for us, we start decrypting it and
+    /// adding it to the correct conversation. Then we send an `ACK` message
+    /// to confirm that we have received it.
+    /// - Parameter messageEncrypted: The message that we have received. Then we determine if it is for us.
     func retrieveMessage(_ messageEncrypted: Message) {
-        // MARK: Check for concatted bits to check type of message instead.
         
         /*
          Check if the message has been seen before
@@ -136,6 +135,14 @@ extension ChatBrain {
     }
     
     
+    /// Called if we have received a `READ` message type. This is to handle
+    /// that type of messages correctly.
+    ///
+    /// Also confirms that the message is formatted correctly.
+    /// - Parameters:
+    ///   - message: The `READ` message that we have received.
+    ///   - conversation: The conversation in which the message is to be handled.
+    /// - Returns: A boolean that confirms that the type of message is a `READ` type.
     func receivedRead(message: Message, conversation: ConversationEntity) -> Bool {
         var components = message.text.components(separatedBy: "/")
         
@@ -165,10 +172,12 @@ extension ChatBrain {
         return true
     }
     
-    
-    /*
-     Handle received ACK messages.
-     */
+    /// Handles `ACK` message types. Also confirms that the message is correctly
+    /// formatted and updates the conversation.
+    /// - Parameters:
+    ///   - message: The `ACK` message we have received.
+    ///   - conversation: The conversation in which it is handled.
+    /// - Returns: A boolean confirming that it is or is not an `ACK` message.
     func receivedAck(message: Message, conversation: ConversationEntity) -> Bool {
         
         let components = message.text.components(separatedBy: "/")
@@ -199,17 +208,21 @@ extension ChatBrain {
     /*
      Given a message and a conversation, decrypt the text and send it back.
      */
+    /// A helper function to decrypt a message to a string.
+    /// - Parameters:
+    ///   - message: The message to decrypt.
+    ///   - conversation: The conversation to decrypt the message for.
+    /// - Returns: The decrypted content of the message or nil if it cannot be decrypted.
     func decryptRetrievedMessageToString(message: Message, conversation: ConversationEntity) -> String? {
         
-        let senderPublicKey = try! importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! deriveSymmetricKey(privateKey: getPrivateKey(), publicKey: senderPublicKey)
+        let senderPublicKey = try! CryptoHandler().importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler().deriveSymmetricKey(privateKey: CryptoHandler().getPrivateKey(), publicKey: senderPublicKey)
         
-        return decryptMessage(text: message.text, symmetricKey: symmetricKey)
+        return CryptoHandler().decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }
     
-    /*
-     Send a notification if app is closed.
-     */
+    /// Send a notification to the user if the app is closed and and we retrieve a message.
+    /// - Parameter message: The message that the user has received.
     func sendNotification(what message: MessageEntity) {
         let content = UNMutableNotificationContent()
         content.title = message.sender!.components(separatedBy: "#").first ?? "Unknown"

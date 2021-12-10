@@ -9,7 +9,12 @@ import SwiftUI
 import Foundation
 import MessageUI
 
+/// The support view which contains contact information for dIM.
+///
+/// This is a subview of the `SettingsView.swift` view.
 struct SupportView: View {
+    /// A simple alert showing if the user has not set up a default email address in the
+    /// default mail app.
     @State var showingAlert = false
     
     var body: some View {
@@ -42,24 +47,25 @@ struct SupportView: View {
     }
 }
 
-struct SupportView_Previews: PreviewProvider {
-    static var previews: some View {
-        SupportView()
-    }
-}
-
-
+/// An email helper class which allows us to send emails in the support section of
+/// the settings view.
 class EmailHelper: NSObject, MFMailComposeViewControllerDelegate {
+    /// The EmailHelper static object.
     public static let shared = EmailHelper()
     private override init() {
-        //
     }
     
+    /// Send an email by using the built in email app in iOS.
+    ///
+    /// Should show a pop-up in the future if the default mail has not been set.
+    /// - Parameters:
+    ///   - subject: The subject field for the email.
+    ///   - body: The text in the body of the email.
+    ///   - to: The receiving email address.
+    /// - Returns: A boolean confirming that a default email has been set up.
     func sendEmail(subject:String, body:String, to:String) -> Bool {
         if !MFMailComposeViewController.canSendMail() {
             print("No mail account found")
-            // Todo: Add a way to show banner to user about no mail app found or configured
-            // Utilities.showErrorBanner(title: "No mail account found", subtitle: "Please setup a mail account")
             return false
         }
         
@@ -80,8 +86,5 @@ class EmailHelper: NSObject, MFMailComposeViewControllerDelegate {
     
     static func getRootViewController() -> UIViewController? {
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController
-        
-        // OR If you use SwiftUI 2.0 based WindowGroup try this one
-        // UIApplication.shared.windows.first?.rootViewController
     }
 }

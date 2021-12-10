@@ -10,17 +10,19 @@ import SwiftUI
 import CoreData
 import UserNotifications
 
+/// Default class generated for iOS apps.
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     // MARK: Handle adding a new contact when scanning their QR code
     
-    /*
-     openURLContexts handles deep links for the app. They allow users to easily share
-     contact information by scanning friends QR codes. This is the callback function
-     which is activated when a user clicks on the dIM-link in the camera app.
-     */
+    /// openURLContexts handles deep links for the app. They allow users to easily share
+    /// contact information by scanning friends QR codes. This is the callback function
+    /// which is activated when a user clicks on the dIM-link in the camera app.
+    /// - Parameters:
+    ///   - scene: The current scene that we are on. For some reason always load `HomeView`.
+    ///   - URLContexts: The URL contexts formatted as dim://username//publickey
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url{
             let urlStr = url.absoluteString
@@ -79,7 +81,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-
+    
+    /// Set up the scene and connect it to our `SetupView`.
+    /// - Parameters:
+    ///   - scene: The scene to set up.
+    ///   - session: This current UISession.
+    ///   - connectionOptions: Not in use.
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -101,6 +108,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
+    /// Not used but must be supported according to the protocol.
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -108,21 +116,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
 
+    /// Not used but must be supported according to the protocol.
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
     }
 
+    /// Not used but must be supported according to the protocol.
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
     }
 
+    /// Not used but must be supported according to the protocol.
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
     }
 
+    /// Saves the current context to `CoreData` if the app is backgrounded (the user returns to the homescreen.).
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information

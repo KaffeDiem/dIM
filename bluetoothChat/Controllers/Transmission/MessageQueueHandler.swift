@@ -10,6 +10,10 @@ import CoreBluetooth
 
 extension ChatBrain {
     
+    // MARK: Message queue functionality.
+    
+    
+    /// A message stored together with a date for queue.
     struct queuedMessage {
         let message: Message
         let date: Date
@@ -19,14 +23,17 @@ extension ChatBrain {
      Add a new message to the queue of messages for later delivery.
      Messages are stored for 15m.
      */
+    /// Add a message to the message queue.
+    ///
+    /// This function is used to deliver messages over long distances.
+    /// - Parameter message: The message to add to the queue of messages.
     func messageQueueAdd(_ message: Message) {
         let queuedMessage = queuedMessage(message: message, date: Date())
         messageQueue.append(queuedMessage)
     }
     
-    /*
-     Remove messages older than 24h from the queue.
-     */
+    /// Remove old messages from the message queue such that
+    /// we do not deliver messages older than a set amount.
     func checkMessageQueue() {
         var removedMessages: Int = 0
         /*
@@ -45,10 +52,10 @@ extension ChatBrain {
         }
     }
     
-    /*
-     When a new device is connected to ours we sync the message queue
-     between the devices.
-     */
+    /// Called when we establish a new connection to a central manager.
+    /// This sends over all the queued messages but clean up first
+    /// such that no old messages are sent.
+    /// - Parameter central: The newly connected central device.
     func messageQueueNewConnection(_ central: CBCentral) {
         // Update message queue and remove old messages. 
         checkMessageQueue()

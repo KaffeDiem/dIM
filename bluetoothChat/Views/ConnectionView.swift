@@ -15,10 +15,3 @@ struct ConnectionView: View {
             .padding()
     }
 }
-
-
-struct ConnectionView_Previews: PreviewProvider {
-    static var previews: some View {
-        ConnectionView()
-    }
-}

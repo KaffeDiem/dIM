@@ -8,17 +8,20 @@
 import SwiftUI
 import UIKit
 
-/*
+/**
  SetUpView handles all initial first logins where users choose a username
  and are then redirected to ContentView which is the main View of the app.
  */
-
-
 struct SetUpView: View {
+    /// The `username` field stores the currently entered username from the user.
     @State var username: String = ""
+    /// Checks if the user has set a username already. If yes we redirect to the `HomeView` instantly.
     @State var hasUsername: Bool = false
     
+    /// The current colorscheme of the phone for displaying different visuals depending on light
+    /// or dark mode.
     @Environment(\.colorScheme) var colorScheme
+    /// The CoreData context object which we save to persistent storage to.
     @Environment(\.managedObjectContext) var context
     
     @FetchRequest(
@@ -26,6 +29,7 @@ struct SetUpView: View {
         sortDescriptors: [
             NSSortDescriptor(keyPath: \ConversationEntity.author, ascending: true)
         ]
+        /// The saved conversations of the current user. Passed to the `HomeView`.
     ) var conversations: FetchedResults<ConversationEntity>
     
     init() {
@@ -153,9 +157,9 @@ struct SetUpView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    /*
-     Check if the username is 4-12 chars and does not include space
-     */
+    /// Checks if a username is valid
+    /// - Parameter username: The string which a user types in a textfield.
+    /// - Returns: Returns a boolean stating if the username is valid or not.
     func checkUsername(username: String) -> Bool{
         if username == "DEMOAPPLETESTUSERNAME" {
             activateDemoMode()
@@ -170,16 +174,17 @@ struct SetUpView: View {
         return true
     }
     
+    /// Activate demo mode for Apple where a conversation is automatically added as an example.
     func activateDemoMode() {
-        let _ = getPublicKey()
+        let _ = CryptoHandler().getPublicKey()
         /*
          Add a test conversation
          */
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
-        let prkey = generatePrivateKey()
+        let prkey = CryptoHandler().generatePrivateKey()
         let pukey = prkey.publicKey
-        let pukeyStr = exportPublicKey(pukey)
+        let pukeyStr = CryptoHandler().exportPublicKey(pukey)
         conversation.publicKey = pukeyStr
         
         let firstMessage = MessageEntity(context: context)
@@ -190,16 +195,7 @@ struct SetUpView: View {
         firstMessage.text = "Hi there, how are you?"
         firstMessage.date = Date()
         
-//        let secondMessage = MessageEntity(context: context)
-//        secondMessage.id = 654321
-//        secondMessage.receiver = conversation.author
-//        secondMessage.sender = "DEMOAPPLETESTUSERNAME"
-//        secondMessage.status = Status.delivered.rawValue
-//        secondMessage.text = "I am great, thanks."
-//        secondMessage.date = Date()
-        
         conversation.addToMessages(firstMessage)
-//        conversation.addToMessages(secondMessage)
         
         conversation.lastMessage = firstMessage.text
         

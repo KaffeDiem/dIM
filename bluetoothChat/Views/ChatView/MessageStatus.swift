@@ -7,9 +7,18 @@
 
 import SwiftUI
 
+/// The small status image of a message. An eye for example means that the
+/// receiver of the message has seen it.
 struct MessageStatus: View {
+    /// The message entity to add a status image to.
     let message: MessageEntity
     
+    /// Get the `enum` status type of a message.
+    ///
+    /// This is done by convertung the raw value of a `message.status` to a
+    /// `Status` type.
+    /// - Parameter message: The message to get the status from.
+    /// - Returns: The actual status of the message. `Status.unknown` if it fails.
     func messageStatusEnum(message: MessageEntity) -> Status {
         return Status(rawValue: message.status) ?? Status.unknown
     }

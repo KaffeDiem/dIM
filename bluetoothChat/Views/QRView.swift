@@ -8,13 +8,20 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
+/// The `QRView` gets the users public key in a string format,
+/// then generates a QR code and displays it nicely.
 struct QRView: View {
-
+    
+    /// The colorscheme of the current users device. Used for displaying
+    /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
+    /// The username fetched from `UserDefaults`
     let username = UserDefaults.standard.string(forKey: "Username")
     
+    /// Contect for drawing of the QR code.
     let context = CIContext()
+    /// Filter for drawing the QR code. Built-in function.
     let filter = CIFilter.qrCodeGenerator()
     
     var body: some View {
@@ -37,7 +44,7 @@ struct QRView: View {
                  The form of the QR code is:
                  dim://username//publickey
                  */
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(getPublicKey())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(CryptoHandler().getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
@@ -60,11 +67,9 @@ struct QRView: View {
         .navigationBarTitle("Add Contact", displayMode: .inline)
     }
     
-    
-    /*
-     Generate QR codes on the fly to share your information
-     with whoever scans your QR code.
-     */
+    /// Generates a QR code given some string as an input.
+    /// - Parameter string: The string to generate a QR code from. Formatted as dim://username//publickey
+    /// - Returns: A UIImage for displaying on the phone.
     func generateQRCode(from string: String) -> UIImage {
         let data = Data(string.utf8)
         filter.setValue(data, forKey: "inputMessage")
@@ -76,11 +81,5 @@ struct QRView: View {
         }
 
         return UIImage(systemName: "xmark.circle") ?? UIImage()
-    }
-}
-
-struct QRScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        QRView()
     }
 }

@@ -9,30 +9,34 @@ import Foundation
 import SwiftUI
 
 
+/// The `ChatView` displays a conversation and all the messages that have been sent and
+/// received in said conversation.
+///
+/// It is also here that we send new messages.
 struct ChatView: View {
     
+    /// The `CoreData` object context to which we save messages to persistent storage.
     @Environment(\.managedObjectContext) var context
+    /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
+    /// The `ChatBrain` object is used to send and receive messages.
+    /// It handles the logic behind this view.
     @EnvironmentObject var chatBrain: ChatBrain
     
-    /*
-     The current conversation that the user is in.
-     */
+    /// The current conversation that the user is in.
     @ObservedObject var conversation: ConversationEntity
     
-    /*
-     Fetch requests belonging to this conversation from the database.
-     */
+    /// Fetched results of the messages for this conversation.
     @FetchRequest var messages: FetchedResults<MessageEntity>
     
-    /*
-     Used for temporary storage when typing in text fields.
-     */
-    @State var tempTextField: String = ""
+    /// Temporary storage of the textfield entry.
     @State var message: String = ""
     
+    /// A boolean for showing the report alert or not. Showed if we press
+    /// the report button after a longpress on a message.
     @State var showingReportAlert = false
     
+    /// Our username for comparisons to the username of the conversation.
     let username: String = UserDefaults.standard.string(forKey: "Username")!
         
     init(conversation: ConversationEntity) {

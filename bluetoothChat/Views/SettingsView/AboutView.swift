@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// The `About` section in the `SettingsView`.
+/// This is the small **dim** icon in the top of the settings as well as the description.
 struct AboutView: View {
     var body: some View {
         /*
@@ -35,11 +37,5 @@ struct AboutView: View {
             }
         })
             .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-    }
-}
-
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        AboutView()
     }
 }

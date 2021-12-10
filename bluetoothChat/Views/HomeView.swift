@@ -8,28 +8,22 @@
 import CoreData
 import SwiftUI
 
-/*
- This is the main view from which everything else will be loaded.
- Most important is the Bluetooth Manager which handles the logic
- of the app.
- */
+/// The `HomeView` where users are presented with the different conversations that they are in.
+/// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
     
-    /*
-     Get the environment object context
-     */
+    /// Context of the `CoreData` for persistent storage.
     @Environment(\.managedObjectContext) var context
     
-    /*
+    /**
      Initialize the ChatBrain which handles logic of Bluetooth
      and sending / receiving messages.
      */
     @StateObject var chatBrain: ChatBrain
     
-    /*
+    /**
      Get conversations saved to Core Data
      */
-    
     @FetchRequest(
         entity: ConversationEntity.entity(),
         sortDescriptors: [
@@ -37,13 +31,13 @@ struct HomeView: View {
         ]
     ) var conversations: FetchedResults<ConversationEntity>
     
-    /*
-     Used for confirmation dialog when deleting a contact
+    /**
+     Used for confirmation dialog when deleting a contact.
      */
     @State var confirmationShown: Bool = false
     
-    /*
-     The actual body of the HomeView
+    /**
+     The actual body of the HomeView.
      */
     var body: some View {
         
@@ -139,6 +133,13 @@ struct HomeView: View {
         }
     }
     
+    /// As usernames gets a random 4 digit number added to them, which we do not want
+    /// to present, we use this function to only get the actual username of the user.
+    ///
+    /// If it fails for some reason (most likely wrong formatting) we simply show
+    /// "Unknown".
+    /// - Parameter conversation: The conversation for which we want to get the username.
+    /// - Returns: A string with only the username, where the 4 last digits are removed.
     func getSafeAuthor(conversation: ConversationEntity) -> String {
         if let safeAuthor = conversation.author {
             return safeAuthor.components(separatedBy: "#").first ?? "Unknown"
@@ -146,6 +147,10 @@ struct HomeView: View {
         return "Unknown"
     }
     
+    /// Checks if a conversation has no sent messages.
+    ///
+    /// It is used to show another text in the `recent` messages part.
+    /// - Returns: A boolean confirming if the conversation has messages in it or not.
     func conversationsIsEmpty() -> Bool {
         do {
             let request: NSFetchRequest<ConversationEntity>

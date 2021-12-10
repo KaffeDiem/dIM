@@ -7,13 +7,18 @@
 
 import SwiftUI
 
-
-/*
- Read message toggle.
- */
+/// The `READ` setting toggle which is a setting that
+/// can be turned on and off based on user preferences.
+///
+/// If it is enabled then the sender of messages can see that you have
+/// read their messages.
+///
+/// - Note: Default value is off.
 struct ReadToggle: View {
     
+    /// `UserDefaults` for persistent storage.
     let defaults = UserDefaults.standard
+    /// The read status toggle as a boolean saved to `UserDefaults`
     @State var readStatusToggle: Bool = UserDefaults.standard.bool(forKey: "settings.readmessages")
     
     var body: some View {
@@ -33,15 +38,24 @@ struct ReadToggle: View {
     }
 }
 
+/// The main `SettingsView` which shows a number of subviews for different purposes.
+///
+/// It is here that we set new usernames and toggles different settings.
+/// It also shows contact information for dIM among other things.
 struct SettingsView: View {
     
+    /// The `UserDefaults` for getting information from persistent storage.
     let defaults = UserDefaults.standard
     
+    /// The `ChatBrain` to get things from the logic layer.
     @EnvironmentObject var chatBrain: ChatBrain
     
+    /// Temporary storage for the new username textfield.
     @State var usernameTemp: String = ""
+    /// Colorscheme for this device to show different images depending on dark or light mode.
     @Environment(\.colorScheme) var colorScheme
     
+    /// The amount of connected devices which is fetched from the `ChatBrain`.
     @State private var connectedDevices = 0
     
     var body: some View {
@@ -133,6 +147,12 @@ struct SettingsView: View {
         }
     }
     
+    /// Check if a username is valid. If it is not we are not allowed
+    /// to set it.
+    ///
+    /// Usernames must be 4-16 chars long and not contain spaces.
+    /// - Parameter username: The username to check.
+    /// - Returns: A boolean indicating if the username is valid.
     func checkValidUsername(username: String) -> Bool{
         if username.count < 4 {
             return false
@@ -142,11 +162,5 @@ struct SettingsView: View {
             return false
         }
         return true
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
     }
 }

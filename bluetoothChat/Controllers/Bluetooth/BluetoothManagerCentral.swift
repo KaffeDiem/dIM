@@ -8,12 +8,15 @@
 import Foundation
 import CoreBluetooth
 
-/*
- Check the Bluetooth state of the device. If it is powered on and ready
- then start searching for peripherals to connect to. 
- */
 extension ChatBrain {
     
+    // MARK: CentralManager callback functions. Handles the server side of Bluetooth.
+    
+    /// Callback function which gets the Bluetooth state of this device.
+    ///
+    /// If Bluetooth is turned on and functions correctly we will start scanning
+    /// for peripherals.
+    /// - Parameter central: The Central Manager which has its state updated. Given by Apple APIs.
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         
@@ -24,12 +27,16 @@ extension ChatBrain {
         }
     }
     
-    
-    /*
-     Connect to peripheral devices which broadcast the chosen UUID
-     for the app and add it to discovered devices.
-     Callback function activated whenever a peripheral is discovered.
-     */
+    /// Callback function which is activated if a peripheral is discovered.
+    ///
+    /// This means that if this function is called a new device is nearby and ready
+    /// to broadcast messages for us.
+    /// - Note: Converts the peripheral to a Device() and stores it in memory. Otherwise the connection would be dropped.
+    /// - Parameters:
+    ///   - central: The central manager which discovers the peripheral.
+    ///   - peripheral: The peripheral which is discovered.
+    ///   - advertisementData: Holds information such as the name of the peripheral. See more in Apples docs.
+    ///   - RSSI: The signal strength to the peripheral device.
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "Unknown"
@@ -50,16 +57,13 @@ extension ChatBrain {
             }
         }
         
-        
         guard peripheralIsNew else {
             return
         }
-        
         // Connect to the newly discovered peripheral.
         centralManager.connect(peripheral, options: nil)
         
         print("Connecting to: \(name)")
-        
     
         // Save the connected peripheral in connectedPeripherals for later use.
         discoveredDevices.append(
@@ -71,10 +75,13 @@ extension ChatBrain {
         )
     }
     
-    
-    /*
-     If connection to peripheral was successfull then discover its services.
-     */
+    /// Callback function if the central manager connected successfully to the peripheral.
+    ///
+    /// Afterwards we discover what services it has to offer, and checks that it
+    /// supports the dIM identifier. Otherwise it could be all other Bluetooth devices.
+    /// - Parameters:
+    ///   - central: The central manager which connects to the peripheral.
+    ///   - peripheral: The peripheral which we connected successfully to.
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         // Set the delegate.
         peripheral.delegate = self
@@ -82,16 +89,24 @@ extension ChatBrain {
         peripheral.discoverServices([Service().UUID])
     }
     
-    
-    // MARK: TODO - delegate method if a peripheral fails to connect.
+    /// Callback function if we fail to connect to some peripheral.
+    ///
+    /// - Note: No error handling has been implemented.
+    /// - Parameters:
+    ///   - central: The central manager which fails to connect.
+    ///   - peripheral: The peripheral which we fail to connect to.
+    ///   - error: The error description of the failed connection.
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         print("Peripheral failed to connect: \(peripheral.name ?? "Unknown")")
     }
     
-    
-    /*
-     Removes peripheral devices when they lose connection to the central.
-     */
+    /// Callback function called when we lose connection to a peripheral.
+    ///
+    /// This function cleans up the peripheral and removes it from memory.
+    /// - Parameters:
+    ///   - central: The central which loses its connection to a peripheral.
+    ///   - peripheral: The peripheral device which we lose connection to.
+    ///   - error: The error description of the lost connection. (out-of-range for example)
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Peripheral disconnected: \(peripheral.name ?? "Unknown")")
         
@@ -106,13 +121,14 @@ extension ChatBrain {
         cleanUpPeripheral(peripheral)
     }
     
-    
-    /*
-     Read RSSI from a peripheral and save it to device list.
-     Callback function if 'peripheral.readRSSI()' is called on a peripheral.
-     */
+    /// Callback function whenever a peripheral updates its RSSI.
+    ///
+    /// - Note: RSSI is the signal strength.
+    /// - Parameters:
+    ///   - peripheral: The peripheral which updates its RSSI.
+    ///   - RSSI: The new RSSI value for said peripheral.
+    ///   - error: The error description if there are any. Printed to console.
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-
         if let error = error {
             print("Error reading RSSI: \(error.localizedDescription)")
         }
@@ -124,10 +140,14 @@ extension ChatBrain {
         }
     }
     
-    
-    // Discover characteristics if the correct service has been found.
+    /// Callback function if we discover the dIM UUID on a peripheral device.
+    ///
+    /// Afterwards we look for the specific characteristic which defines our
+    /// chat functionality.
+    /// - Parameters:
+    ///   - peripheral: The peripheral in which we discover a service.
+    ///   - error: The error description if there are any. Printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-
         if let error = error {
             print("Unable to discover services: \(error.localizedDescription)")
             // TODO: Should probably clean up here.
@@ -142,7 +162,13 @@ extension ChatBrain {
     }
     
     
-    // Once we discover the exptected characteristic we will be fully connected.
+    /// Callback function if we discover the characteristic which defines the chat functionality.
+    ///
+    /// - Note: This means that we are fully connected and ready to receive messages.
+    /// - Parameters:
+    ///   - peripheral: The now fully connected peripheral.
+    ///   - service: The service which we have discovered, only chat functionality is provided.
+    ///   - error: The error description if there are any. Printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         if let error = error {
@@ -159,7 +185,13 @@ extension ChatBrain {
     }
     
     
-    // Error handling if we are receiving the wrong notifications.
+    /// Callback function which does error handling if we receive the wrong notifications.
+    ///
+    /// Notifications are new messages.
+    /// - Parameters:
+    ///   - peripheral: The peripheral which send the notification.
+    ///   - characteristic: The characteristic which it sends notification for (chat functionality).
+    ///   - error: Error description if any. Printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         // Only receive notifications from the characteristics that we expect.
         guard characteristic.uuid == Service().charUUID else { return }
@@ -176,9 +208,17 @@ extension ChatBrain {
     }
     
     
-    // Receive messages from connected peripherals and decode it from JSON.
+    /// Callback function which is called whenever we receive a new message.
+    ///
+    /// Checks that we are not receiving too many messages from this particular device
+    /// and that we are not getting DOS attacked.
+    ///
+    /// The message is then decoded from JSON and passed to our `receivedMessage.swift` file.
+    /// - Parameters:
+    ///   - peripheral: The peripheral which we receive a new message from.
+    ///   - characteristic: The chateristic which we receive a new message from.
+    ///   - error: Error description if there are any. Also printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
         if let error = error {
             print("Error receiving data: \(error.localizedDescription)")
         }
@@ -240,8 +280,11 @@ extension ChatBrain {
         }
     }
     
-    
-    // MARK: TODO - this function, whatever it does.
+    /// Callback function if a peripheral modifies its services. This is not allowed
+    /// and we therefore drop our connection to it.
+    /// - Parameters:
+    ///   - peripheral: The peripheral modifying its services.
+    ///   - invalidatedServices: The service which it invalidates.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         print("Peripheral modified services: \(peripheral.name!) \n^ and is cleaned")
         cleanUpPeripheral(peripheral)
