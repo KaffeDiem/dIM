@@ -32,6 +32,9 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      */
     @Published var routedCounter: Int = 0
     
+    /// A UUID which is updated when a **ACK** message is retrieved. This forces
+    /// a refresh of the `ChatView` and the message status is updated.
+    @Published var refreshID = UUID()
     
     /**
      Holds an array of messages to be delivered at a later point.
