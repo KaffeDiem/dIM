@@ -197,6 +197,7 @@ extension ChatBrain {
             }
         }
         
+        self.refreshID = UUID()
         try? self.context.save()
         
         return true

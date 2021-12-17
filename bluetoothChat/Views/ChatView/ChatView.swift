@@ -116,6 +116,7 @@ struct ChatView: View {
                     }
                 }
             }
+            .id(chatBrain.refreshID) // Force a refresh when an ACK message is received
             
             /*
              Send message part
