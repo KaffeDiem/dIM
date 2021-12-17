@@ -152,6 +152,7 @@
 		B05E1F4926D3B42400AD9E65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B0B0D06926FCFD4200E2512B /* MessageStatus.swift */,
 				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
 				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
 				B0B0D06826FCFD2E00E2512B /* ChatView */,
@@ -200,7 +201,6 @@
 			children = (
 				B05E1F4A26D3B44300AD9E65 /* ChatView.swift */,
 				B070BAED2722E0740036091A /* MessageBubble.swift */,
-				B0B0D06926FCFD4200E2512B /* MessageStatus.swift */,
 			);
 			path = ChatView;
 			sourceTree = "<group>";
@@ -458,7 +458,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
@@ -483,7 +483,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;

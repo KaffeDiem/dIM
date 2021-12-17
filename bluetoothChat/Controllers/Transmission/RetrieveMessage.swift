@@ -197,7 +197,7 @@ extension ChatBrain {
             }
         }
         
-        try? context.save()
+        try? self.context.save()
         
         return true
     }

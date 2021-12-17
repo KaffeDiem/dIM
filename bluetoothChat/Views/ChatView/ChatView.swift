@@ -23,7 +23,7 @@ struct ChatView: View {
     /// It handles the logic behind this view.
     @EnvironmentObject var chatBrain: ChatBrain
     
-    /// The current conversation that the user is in.
+    /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
     
     /// Fetched results of the messages for this conversation.
@@ -172,8 +172,13 @@ struct ChatView: View {
 }
 
 
+/// A simple shape of a bubbble.
 struct Bubble: Shape {
+    /// A boolean confirming that the message is sent by us or not.
     var chat: Bool
+    /// Drawing of the actual path.
+    /// - Parameter rect: The rectangle size to draw.
+    /// - Returns: A path which is used for drawing.
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
         return Path(path.cgPath)
