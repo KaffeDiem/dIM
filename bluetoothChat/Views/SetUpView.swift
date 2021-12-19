@@ -17,6 +17,10 @@ struct SetUpView: View {
     @State var username: String = ""
     /// Checks if the user has set a username already. If yes we redirect to the `HomeView` instantly.
     @State var hasUsername: Bool = false
+    /// True if the keyboard is shown. Used for animations.
+    @FocusState private var keyboardShown: Bool
+    /// A model for keeping track of active card in the carousel.
+    @ObservedObject var UIStateCarousel = UIStateModel()
     
     /// The current colorscheme of the phone for displaying different visuals depending on light
     /// or dark mode.
@@ -32,29 +36,20 @@ struct SetUpView: View {
         /// The saved conversations of the current user. Passed to the `HomeView`.
     ) var conversations: FetchedResults<ConversationEntity>
     
-    init() {
-        
-    }
-    
     var body: some View {
         NavigationView {
             VStack {
+                // Explanatory carousel
+                if !keyboardShown {
+                    SnapCarousel()
+                        .environmentObject(UIStateCarousel)
+                        .transition(.slide)
+                }
                 
-                Image("appiconsvg")
-                    .resizable()
-                    .frame(width: 128, height: 128, alignment: .center)
-                    .aspectRatio(contentMode: .fit)
-                    .scaledToFit()
-                Text("Chat with your friends without restrictions.")
-                    .font(.subheadline)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 
-                Spacer()
-                
+                // TextField for setting username
                 VStack {
-                    Text("Choose username")
-                    TextField("Aa", text: $username, onCommit: {
-                        // Do something on commit.
+                    TextField("Username", text: $username, onCommit: {
                         }
                     )
                     .keyboardType(.namePhonePad)
@@ -63,68 +58,72 @@ struct SetUpView: View {
                         colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
                     )
                     .cornerRadius(10.0)
+                    .focused($keyboardShown)
                     
                     /*
                      Guiding text below textfield
                      */
-                    if username.count < 4 {
-                        Text("Minimum 4 characters.")
-                            .font(.footnote)
-                            .foregroundColor(.accentColor)
-                    } else if username.count > 16 {
-                        Text("Maximum 16 characters.")
-                            .font(.footnote)
-                            .foregroundColor(.accentColor)
-                    } else if username.contains(" ") {
-                        Text("No spaces in username.")
-                            .font(.footnote)
-                            .foregroundColor(.accentColor)
-                    } else {
-                        Text("")
+                    if !(username == "") {
+                        if username.count < 4 {
+                            Text("Minimum 4 characters.")
+                                .font(.footnote)
+                                .foregroundColor(.accentColor)
+                        } else if username.count > 16 {
+                            Text("Maximum 16 characters.")
+                                .font(.footnote)
+                                .foregroundColor(.accentColor)
+                        } else if username.contains(" ") {
+                            Text("No spaces in username.")
+                                .font(.footnote)
+                                .foregroundColor(.accentColor)
+                        } else {
+                            Text("")
+                        }
                     }
                 }
+                .animation(.spring())
                 .padding()
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
                 
                 Spacer()
                 
-                /*
-                 EULA part.
-                 */
-                HStack {
-                    Text("By continuing you agree to the")
-                    Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
-                }
-                
-                /*
-                 Enter button which handles setting the username if valid.
-                 */
-                Button(action: {
-                    let usernameValid: Bool = checkUsername(username: username)
-                    //  If the username is accepted then save it to persistent memory.
-                    if usernameValid {
-                        let usernameDigits = username + "#" + String(Int.random(in: 100000...999999))
-                        UserDefaults.standard.set(usernameDigits, forKey: "Username")
+                VStack {
+                    /*
+                     EULA part.
+                     */
+                    HStack {
+                        Text("By continuing you agree to the")
+                        Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
                     }
                     
-                    hasUsername = usernameValid
-                    
-                }, label: {
-                    Text("Set Username")
-                    .padding()
-                    .foregroundColor(.white)
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
-                            startPoint: .leading,
-                            endPoint: .trailing
+                    /*
+                     Enter button which handles setting the username if valid.
+                     */
+                    Button(action: {
+                        let usernameValid: Bool = checkUsername(username: username)
+                        //  If the username is accepted then save it to persistent memory.
+                        if usernameValid {
+                            let usernameDigits = username + "#" + String(Int.random(in: 100000...999999))
+                            UserDefaults.standard.set(usernameDigits, forKey: "Username")
+                        }
+                        hasUsername = usernameValid
+                    }, label: {
+                        Text("Continue")
+                        .padding()
+                        .foregroundColor(.white)
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                    )
-                    .cornerRadius(10.0)
-                    .padding()
-                })
+                        .cornerRadius(10.0)
+                    })
+                }
+                .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
                 NavigationLink(destination: HomeView(chatBrain: ChatBrain(context: context))
@@ -153,14 +152,13 @@ struct SetUpView: View {
                 }
             }
         }
-        
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
     /// Checks if a username is valid
     /// - Parameter username: The string which a user types in a textfield.
     /// - Returns: Returns a boolean stating if the username is valid or not.
-    func checkUsername(username: String) -> Bool{
+    private func checkUsername(username: String) -> Bool{
         if username == "DEMOAPPLETESTUSERNAME" {
             activateDemoMode()
             return true
@@ -175,7 +173,8 @@ struct SetUpView: View {
     }
     
     /// Activate demo mode for Apple where a conversation is automatically added as an example.
-    func activateDemoMode() {
+    /// This is used for the App Review process.
+    private func activateDemoMode() {
         let _ = CryptoHandler().getPublicKey()
         /*
          Add a test conversation

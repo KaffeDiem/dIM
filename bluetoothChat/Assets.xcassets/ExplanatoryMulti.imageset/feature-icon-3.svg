@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="627px" height="252px" viewBox="0 0 627 252" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Rectangle</title>
+    <g id="relay" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Phone" transform="translate(251.000000, 11.000000)">
+            <rect id="Rectangle" fill="#3C3C3C" x="0" y="0" width="126" height="224" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="5.94553672" x="0" y="0" width="126" height="224" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="2.97276836" x="16.6415094" y="96.8488064" width="92.7169811" height="30.3023873" rx="15.1511936"></rect>
+            <text id="Aa" font-family="LucidaGrande, Lucida Grande" font-size="10.7019661" font-weight="normal" fill="#EDEDED">
+                <tspan x="54.6599913" y="115.16289"> Aa</tspan>
+            </text>
+        </g>
+        <g id="Phone" transform="translate(509.000000, 31.000000)">
+            <rect id="Rectangle" fill="#3C3C3C" x="0" y="0" width="103" height="183" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="5.94553672" x="0" y="0" width="103" height="183" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="2.97276836" x="13.6936416" y="79.0227273" width="75.6127168" height="24.9545455" rx="12.4772727"></rect>
+            <text id="Aa" font-family="LucidaGrande, Lucida Grande" font-size="7.13464407" font-weight="normal" fill="#EDEDED">
+                <tspan x="46.237682" y="93.7443642"> Aa</tspan>
+            </text>
+        </g>
+        <g id="Phone" transform="translate(14.000000, 31.000000)">
+            <rect id="Rectangle" fill="#3C3C3C" x="0" y="0" width="103" height="183" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="5.94553672" x="0" y="0" width="103" height="183" rx="20.2148249"></rect>
+            <rect id="Rectangle" stroke="#979797" stroke-width="2.97276836" x="13.6936416" y="79.0227273" width="75.6127168" height="24.9545455" rx="12.4772727"></rect>
+            <text id="Aa" font-family="LucidaGrande, Lucida Grande" font-size="7.13464407" font-weight="normal" fill="#EDEDED">
+                <tspan x="46.237682" y="93.7443642"> Aa</tspan>
+            </text>
+        </g>
+        <g id="bubbles" transform="translate(141.000000, 116.000000)" fill="#FF9942">
+            <ellipse id="Oval" cx="6.55319149" cy="6.7826087" rx="6.55319149" ry="6.2173913"></ellipse>
+            <ellipse id="Oval" cx="77.4468085" cy="6.7826087" rx="6.55319149" ry="6.2173913"></ellipse>
+            <ellipse id="Oval" cx="42.2978723" cy="6.2173913" rx="6.55319149" ry="6.2173913"></ellipse>
+        </g>
+        <g id="bubbles" transform="translate(401.000000, 116.000000)" fill="#FF9942">
+            <ellipse id="Oval" cx="6.55319149" cy="6.7826087" rx="6.55319149" ry="6.2173913"></ellipse>
+            <ellipse id="Oval" cx="77.4468085" cy="6.7826087" rx="6.55319149" ry="6.2173913"></ellipse>
+            <ellipse id="Oval" cx="42.2978723" cy="6.2173913" rx="6.55319149" ry="6.2173913"></ellipse>
+        </g>
+    </g>
+</svg>
