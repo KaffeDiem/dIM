@@ -53,7 +53,7 @@ struct QRView: View {
                 
             Spacer(minLength: 150)
             
-            Text("Scan the QR code by pointing the camera at it. It is required that dIM is installed on the phone. You have to add each other to become contacts.")
+            Text("Open up your camera and scan each others QR code. It is required that dIM is installed on the phone. You have to add each other to become contacts.")
                 .font(.footnote)
                 .foregroundColor(.accentColor)
         }
@@ -70,7 +70,7 @@ struct QRView: View {
     /// Generates a QR code given some string as an input.
     /// - Parameter string: The string to generate a QR code from. Formatted as dim://username//publickey
     /// - Returns: A UIImage for displaying on the phone.
-    func generateQRCode(from string: String) -> UIImage {
+    private func generateQRCode(from string: String) -> UIImage {
         let data = Data(string.utf8)
         filter.setValue(data, forKey: "inputMessage")
 

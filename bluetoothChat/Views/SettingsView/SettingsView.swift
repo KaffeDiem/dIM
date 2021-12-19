@@ -49,12 +49,10 @@ struct SettingsView: View {
     
     /// The `ChatBrain` to get things from the logic layer.
     @EnvironmentObject var chatBrain: ChatBrain
-    
     /// Temporary storage for the new username textfield.
-    @State var usernameTemp: String = ""
+    @State private var usernameTemp: String = ""
     /// Colorscheme for this device to show different images depending on dark or light mode.
     @Environment(\.colorScheme) var colorScheme
-    
     /// The amount of connected devices which is fetched from the `ChatBrain`.
     @State private var connectedDevices = 0
     

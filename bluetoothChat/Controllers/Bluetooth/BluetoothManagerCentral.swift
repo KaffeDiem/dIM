@@ -16,12 +16,14 @@ extension ChatBrain {
     ///
     /// If Bluetooth is turned on and functions correctly we will start scanning
     /// for peripherals.
+    /// - Note: Cases such as .poweredOff are not handled right now. In the future they should be.
     /// - Parameter central: The Central Manager which has its state updated. Given by Apple APIs.
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-        
             case .poweredOn:
                 centralManager.scanForPeripherals(withServices: [Service().UUID], options: nil)
+            case .poweredOff:
+                discoveredDevices = []
             default:
                 print("A default case was triggerd.")
         }
@@ -91,7 +93,7 @@ extension ChatBrain {
     
     /// Callback function if we fail to connect to some peripheral.
     ///
-    /// - Note: No error handling has been implemented.
+    /// - Note: No error handling has been implemented yet.
     /// - Parameters:
     ///   - central: The central manager which fails to connect.
     ///   - peripheral: The peripheral which we fail to connect to.
@@ -103,6 +105,7 @@ extension ChatBrain {
     /// Callback function called when we lose connection to a peripheral.
     ///
     /// This function cleans up the peripheral and removes it from memory.
+    /// - Note: Should remove the device from the `connectedDevices` array as well (in the future).
     /// - Parameters:
     ///   - central: The central which loses its connection to a peripheral.
     ///   - peripheral: The peripheral device which we lose connection to.
@@ -213,7 +216,7 @@ extension ChatBrain {
     /// Checks that we are not receiving too many messages from this particular device
     /// and that we are not getting DOS attacked.
     ///
-    /// The message is then decoded from JSON and passed to our `receivedMessage.swift` file.
+    /// The message is then decoded from JSON and passed to our `receivedMessage`.
     /// - Parameters:
     ///   - peripheral: The peripheral which we receive a new message from.
     ///   - characteristic: The chateristic which we receive a new message from.

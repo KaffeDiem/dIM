@@ -111,15 +111,31 @@ struct HomeView: View {
                     .padding()
             }
         }
-        .navigationTitle("Chat")
-        
-        .onAppear() {
-        }
-        
         /*
          Toolbar in the navigation header for SettingsView and ChatView.
          */
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text("Chats")
+                        .font(.headline)
+                    if chatBrain.discoveredDevices.count < 1 {
+                        HStack {
+                            Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.red, .orange, .white)
+                            Text("Not connected")
+                                .foregroundColor(.accentColor)
+                                .font(.subheadline)
+                        }
+                    } else {
+                        HStack {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                            Text("\(chatBrain.discoveredDevices.count) in range").font(.subheadline)
+                        }
+                    }
+                }
+            }
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink(destination: SettingsView().environmentObject(chatBrain), label: {
                     Image(systemName: "gearshape.fill")
@@ -140,7 +156,7 @@ struct HomeView: View {
     /// "Unknown".
     /// - Parameter conversation: The conversation for which we want to get the username.
     /// - Returns: A string with only the username, where the 4 last digits are removed.
-    func getSafeAuthor(conversation: ConversationEntity) -> String {
+    private func getSafeAuthor(conversation: ConversationEntity) -> String {
         if let safeAuthor = conversation.author {
             return safeAuthor.components(separatedBy: "#").first ?? "Unknown"
         }
@@ -150,8 +166,8 @@ struct HomeView: View {
     /// Checks if a conversation has no sent messages.
     ///
     /// It is used to show another text in the `recent` messages part.
-    /// - Returns: A boolean confirming if the conversation has messages in it or not.
-    func conversationsIsEmpty() -> Bool {
+    /// - Returns: True if the conversation has messages in it.
+    private func conversationsIsEmpty() -> Bool {
         do {
             let request: NSFetchRequest<ConversationEntity>
             request = ConversationEntity.fetchRequest()

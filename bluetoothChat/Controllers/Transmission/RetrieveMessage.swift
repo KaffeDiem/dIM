@@ -166,7 +166,8 @@ extension ChatBrain {
                 message.status = Status.read.rawValue
             }
         }
-        
+      
+        self.refreshID = UUID()
         try? context.save()
         
         return true
