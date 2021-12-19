@@ -46,7 +46,6 @@ struct SetUpView: View {
                         .transition(.slide)
                 }
                 
-                
                 // TextField for setting username
                 VStack {
                     TextField("Username", text: $username, onCommit: {
@@ -59,10 +58,7 @@ struct SetUpView: View {
                     )
                     .cornerRadius(10.0)
                     .focused($keyboardShown)
-                    
-                    /*
-                     Guiding text below textfield
-                     */
+                    // Guide to username requirements
                     if !(username == "") {
                         if username.count < 4 {
                             Text("Minimum 4 characters.")

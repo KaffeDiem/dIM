@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/// A snapping carousel view used for the onboarding experience for dIM.
+///
+/// It works as a few slides of short explanatory slides giving users a first
+/// impression of what dIM is and how it works.
 struct SnapCarousel: View {
     @EnvironmentObject var UIState: UIStateModel
     @Environment(\.colorScheme) var colorScheme
@@ -21,11 +25,11 @@ struct SnapCarousel: View {
             Card(id: 1, text: "Messages are sent through the Bluetooth connection of other dIM users.", image: "ExplanatoryMulti"),
             Card(id: 2, text: "Bluetooth has a range of 100m (330ft), therefore you must be close to other users of dIM.", image: "ExplanatoryRange"),
             Card(id: 3, text: "Your messages are safe. No one will ever have access to your messages except for you and the receiver.", image: "ExplanatoryLock"),
-            Card(id: 4, text: "", image: "appiconsvg")
+            Card(id: 4, text: "Contacts are added by scanning each others QR code with the iPhone camera.", image: "ExplanatoryQR"),
+            Card(id: 5, text: "", image: "appiconsvg")
         ]
         
         return Canvas {
-            /// TODO: find a way to avoid passing same arguments to Carousel and Item
             Carousel(
                 numberOfItems: CGFloat(items.count),
                 spacing: spacing,
@@ -45,6 +49,7 @@ struct SnapCarousel: View {
                                 .scaledToFit()
                                 .frame(height: 128)
                             Spacer()
+                            // Show a link on the last slide instead of text
                             if item.id == items.count - 1 {
                                 Link("Read more", destination: URL(string: "https://dimchat.org")!)
                                     .foregroundColor(Color.accentColor)
@@ -77,7 +82,7 @@ public class UIStateModel: ObservableObject {
     @Published var screenDrag: Float = 0.0
 }
 
-struct Carousel<Items : View> : View {
+private struct Carousel<Items : View> : View {
     let items: Items
     let numberOfItems: CGFloat //= 8
     let spacing: CGFloat //= 16
@@ -187,7 +192,7 @@ private struct Item<Content: View>: View {
 struct SnapCarousel_Previews: PreviewProvider {
     static var previews: some View {
         SnapCarousel()
-            .preferredColorScheme(.dark)
+//            .preferredColorScheme(.dark)
             .environmentObject(UIStateModel())
     }
 }

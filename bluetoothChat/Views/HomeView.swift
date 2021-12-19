@@ -102,13 +102,15 @@ struct HomeView: View {
                         }
                 }
             } else {
-                Image("QRHowTo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 192, alignment: .center)
-                    .padding()
-                Text("Add a new contact by scanning their QR code with your phones camera and by letting them scan yours.")
-                    .padding()
+                SnapCarousel()
+                    .environmentObject(UIStateModel())
+//                Image("QRHowTo")
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .frame(width: 192, alignment: .center)
+//                    .padding()
+//                Text("Add a new contact by scanning their QR code with your phones camera and by letting them scan yours.")
+//                    .padding()
             }
         }
         /*
