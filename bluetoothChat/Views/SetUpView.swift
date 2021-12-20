@@ -22,6 +22,8 @@ struct SetUpView: View {
     /// A model for keeping track of active card in the carousel.
     @ObservedObject var UIStateCarousel = UIStateModel()
     
+    @State var carouselShown = true
+    
     /// The current colorscheme of the phone for displaying different visuals depending on light
     /// or dark mode.
     @Environment(\.colorScheme) var colorScheme
@@ -40,10 +42,10 @@ struct SetUpView: View {
         NavigationView {
             VStack {
                 // Explanatory carousel
-                if !keyboardShown {
+                if carouselShown {
                     SnapCarousel()
                         .environmentObject(UIStateCarousel)
-                        .transition(.slide)
+                        .transition(.opacity)
                 }
                 
                 // TextField for setting username
@@ -58,6 +60,11 @@ struct SetUpView: View {
                     )
                     .cornerRadius(10.0)
                     .focused($keyboardShown)
+                    .onChange(of: keyboardShown) { newValue in
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            self.carouselShown.toggle()
+                        }
+                    }
                     // Guide to username requirements
                     if !(username == "") {
                         if username.count < 4 {
@@ -132,7 +139,6 @@ struct SetUpView: View {
             .onAppear() {
                 // Check if the user already has a username.
                 if UserDefaults.standard.string(forKey: "Username") != nil {
-                    print("Username has been set -> Skip SetUpView")
                     self.hasUsername = true
                 } else {
                     self.hasUsername = false
@@ -142,8 +148,8 @@ struct SetUpView: View {
                 UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                     if success {
                         print("All set!")
-                    } else if let error = error {
-                        print(error.localizedDescription)
+                    } else if let e = error {
+                        print(e.localizedDescription)
                     }
                 }
             }
@@ -172,16 +178,14 @@ struct SetUpView: View {
     /// This is used for the App Review process.
     private func activateDemoMode() {
         let _ = CryptoHandler().getPublicKey()
-        /*
-         Add a test conversation
-         */
+        // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
         let prkey = CryptoHandler().generatePrivateKey()
         let pukey = prkey.publicKey
         let pukeyStr = CryptoHandler().exportPublicKey(pukey)
         conversation.publicKey = pukeyStr
-        
+        // And fill that conversation with a message
         let firstMessage = MessageEntity(context: context)
         firstMessage.id = 123456
         firstMessage.receiver = "DEMOAPPLETESTUSERNAME"

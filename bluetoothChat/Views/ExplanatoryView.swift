@@ -14,6 +14,7 @@ import SwiftUI
 struct SnapCarousel: View {
     @EnvironmentObject var UIState: UIStateModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.openURL) var openURL
     
     var body: some View {
         let spacing: CGFloat = 16
@@ -23,9 +24,9 @@ struct SnapCarousel: View {
         let items = [
             Card(id: 0, text: "Send offline messages.", image: "appiconsvg"),
             Card(id: 1, text: "Messages are sent through the Bluetooth connection of other dIM users.", image: "ExplanatoryMulti"),
-            Card(id: 2, text: "Bluetooth has a range of 100m (330ft), therefore you must be close to other users of dIM.", image: "ExplanatoryRange"),
+            Card(id: 2, text: "Add contacts by scanning each others QR code with the iPhone camera.", image: "ExplanatoryQR"),
             Card(id: 3, text: "Your messages are safe. No one will ever have access to your messages except for you and the receiver.", image: "ExplanatoryLock"),
-            Card(id: 4, text: "Contacts are added by scanning each others QR code with the iPhone camera.", image: "ExplanatoryQR"),
+            Card(id: 4, text: "Bluetooth has a range of 100m (330ft), therefore you must be close to other users of dIM.", image: "ExplanatoryRange"),
             Card(id: 5, text: "", image: "appiconsvg")
         ]
         
@@ -49,11 +50,25 @@ struct SnapCarousel: View {
                                 .scaledToFit()
                                 .frame(height: 128)
                             Spacer()
-                            // Show a link on the last slide instead of text
+                            // Show a link on the last slide instead of text.
                             if item.id == items.count - 1 {
-                                Link("Read more", destination: URL(string: "https://dimchat.org")!)
-                                    .foregroundColor(Color.accentColor)
-                            } else {
+                                Button(action: {
+                                    openURL(URL(string: "https://dimchat.org")!)
+                                }, label: {
+                                    Text("Read More")
+                                        .padding(UIState.activeCard == items.count - 1 ? 10 : 3)
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .background(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                        .cornerRadius(10.0)
+                                })
+                            } else { // Show the corresponding text to the image of this card.
                                 Text("\(item.text)")
                                     .multilineTextAlignment(.center)
                             }
@@ -192,7 +207,7 @@ private struct Item<Content: View>: View {
 struct SnapCarousel_Previews: PreviewProvider {
     static var previews: some View {
         SnapCarousel()
-//            .preferredColorScheme(.dark)
+            .preferredColorScheme(.dark)
             .environmentObject(UIStateModel())
     }
 }

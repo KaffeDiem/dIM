@@ -15,15 +15,11 @@ struct HomeView: View {
     /// Context of the `CoreData` for persistent storage.
     @Environment(\.managedObjectContext) var context
     
-    /**
-     Initialize the ChatBrain which handles logic of Bluetooth
-     and sending / receiving messages.
-     */
+    /// Initialize the ChatBrain which handles logic of Bluetooth
+    /// and sending / receiving messages.
     @StateObject var chatBrain: ChatBrain
     
-    /**
-     Get conversations saved to Core Data
-     */
+    /// Get conversations saved to Core Data
     @FetchRequest(
         entity: ConversationEntity.entity(),
         sortDescriptors: [
@@ -31,14 +27,13 @@ struct HomeView: View {
         ]
     ) var conversations: FetchedResults<ConversationEntity>
     
-    /**
-     Used for confirmation dialog when deleting a contact.
-     */
+    /// Used for confirmation dialog when deleting a contact.
     @State var confirmationShown: Bool = false
     
-    /**
-     The actual body of the HomeView.
-     */
+    /// Keep track of the active card in the carousel view.
+    @StateObject var UIStateCarousel = UIStateModel()
+    
+    /// Body and content of the HomeView.
     var body: some View {
         
         VStack {
@@ -103,14 +98,7 @@ struct HomeView: View {
                 }
             } else {
                 SnapCarousel()
-                    .environmentObject(UIStateModel())
-//                Image("QRHowTo")
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .frame(width: 192, alignment: .center)
-//                    .padding()
-//                Text("Add a new contact by scanning their QR code with your phones camera and by letting them scan yours.")
-//                    .padding()
+                    .environmentObject(UIStateCarousel)
             }
         }
         /*
