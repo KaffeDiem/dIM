@@ -12,8 +12,11 @@ import SwiftUI
 /// It works as a few slides of short explanatory slides giving users a first
 /// impression of what dIM is and how it works.
 struct SnapCarousel: View {
+    /// UIStateModel keeps track of the active card in the carousel.
     @EnvironmentObject var UIState: UIStateModel
+    /// Detect if the system is light or dark and update UI accordingly.
     @Environment(\.colorScheme) var colorScheme
+    /// Used to open URLS by pressing the *Read More* button.
     @Environment(\.openURL) var openURL
     
     var body: some View {
@@ -86,18 +89,28 @@ struct SnapCarousel: View {
     }
 }
 
-struct Card: Decodable, Hashable, Identifiable {
+/// A card is an item in the carousel.
+fileprivate struct Card: Decodable, Hashable, Identifiable {
+    /// The id of the card which determines placement in the carousel.
     var id: Int
+    /// The text to show the end user for this card.
     var text: String = ""
+    /// The image to show the end user (links to asset)
     var image: String
 }
 
+/// A `UIStateModel` is used to keep track of the currently active card
+/// in the carousel and is passed down from the parent view.
 public class UIStateModel: ObservableObject {
+    /// Currently active card.
     @Published var activeCard: Int = 0
+    /// How much the user is dragging on the cards right now.
     @Published var screenDrag: Float = 0.0
 }
 
-private struct Carousel<Items : View> : View {
+/// The actual carousel struct which handles the logic of the carousel.
+/// - Note: Dive in to the code to see how this works.
+fileprivate struct Carousel<Items : View> : View {
     let items: Items
     let numberOfItems: CGFloat //= 8
     let spacing: CGFloat //= 16
@@ -163,7 +176,7 @@ private struct Carousel<Items : View> : View {
     }
 }
 
-private struct Canvas<Content : View> : View {
+fileprivate struct Canvas<Content : View> : View {
     let content: Content
     @EnvironmentObject var UIState: UIStateModel
     
@@ -177,7 +190,7 @@ private struct Canvas<Content : View> : View {
     }
 }
 
-private struct Item<Content: View>: View {
+fileprivate struct Item<Content: View>: View {
     @EnvironmentObject var UIState: UIStateModel
     let cardWidth: CGFloat
     let cardHeight: CGFloat
@@ -204,10 +217,10 @@ private struct Item<Content: View>: View {
     }
 }
 
-struct SnapCarousel_Previews: PreviewProvider {
-    static var previews: some View {
-        SnapCarousel()
-            .preferredColorScheme(.dark)
-            .environmentObject(UIStateModel())
-    }
-}
+//struct SnapCarousel_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SnapCarousel()
+//            .preferredColorScheme(.dark)
+//            .environmentObject(UIStateModel())
+//    }
+//}

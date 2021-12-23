@@ -38,9 +38,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Bluetooth is used to send and receive messages.</string>
+	<string>The app sends, receives and relays yours and others messages through Bluetooth. Only the intended receiver will learn about messages that you send to them.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Bluetooth is used to send and receive messages.</string>
+	<string>The app sends, receives and relays yours and others messages through Bluetooth. Only the intended receiver will learn about messages that you send to them.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
