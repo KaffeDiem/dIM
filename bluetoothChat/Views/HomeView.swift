@@ -132,7 +132,7 @@ struct HomeView: View {
                 })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView(), label: {
+                NavigationLink(destination: QRView().environmentObject(chatBrain), label: {
                     Image(systemName: "qrcode")
                 })
             }

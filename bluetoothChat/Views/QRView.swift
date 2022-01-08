@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CodeScanner
 import CoreImage.CIFilterBuiltins
 
 /// The `QRView` gets the users public key in a string format,
@@ -16,13 +17,18 @@ struct QRView: View {
     /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
+    @EnvironmentObject var chatBrain: ChatBrain
+    
     /// The username fetched from `UserDefaults`
-    let username = UserDefaults.standard.string(forKey: "Username")
+    private let username = UserDefaults.standard.string(forKey: "Username")
     
     /// Contect for drawing of the QR code.
-    let context = CIContext()
+    private let context = CIContext()
     /// Filter for drawing the QR code. Built-in function.
-    let filter = CIFilter.qrCodeGenerator()
+    private let filter = CIFilter.qrCodeGenerator()
+    
+    /// Show camera for scanning QR codes.
+    @State private var showScanner = false
     
     var body: some View {
        
@@ -56,6 +62,25 @@ struct QRView: View {
             Text("Open up your camera and scan each others QR code. It is required that dIM is installed on the phone. You have to add each other to become contacts.")
                 .font(.footnote)
                 .foregroundColor(.accentColor)
+            
+            Button {
+                showScanner = true
+            } label: {
+                Text("Press to scan")
+                    .padding()
+                    .foregroundColor(.white)
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(10.0)
+            }.sheet(isPresented: $showScanner, content: {
+                CodeScannerView(codeTypes: [.qr], completion: handleScan)
+            })
         }
         .padding()
     
@@ -65,6 +90,16 @@ struct QRView: View {
                 .edgesIgnoringSafeArea(.all)
         )
         .navigationBarTitle("Add Contact", displayMode: .inline)
+    }
+    
+    func handleScan(result: Result<ScanResult, ScanError>) {
+        showScanner = false
+        switch result {
+        case .success(let result):
+            chatBrain.handleScan(result: result.string)
+        case .failure(let error):
+            print(error.localizedDescription)
+        }
     }
     
     /// Generates a QR code given some string as an input.

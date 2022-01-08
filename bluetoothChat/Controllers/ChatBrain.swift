@@ -133,4 +133,53 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
             }
         }
     }
+    
+    public func handleScan(result: String) {
+        let component = result.components(separatedBy: "//")
+        
+        guard component.count == 3 else {
+            print("QR code error: Format of scanned QR code is wrong.")
+            return
+        }
+        
+        let name = component[1]
+        let publicKey = component[2]
+        
+        let fetchRequest: NSFetchRequest<ConversationEntity>
+        fetchRequest = ConversationEntity.fetchRequest()
+        
+        do {
+            /*
+             Get existing conversations from Core Data.
+             */
+            let conversations = try context.fetch(fetchRequest)
+            
+            /*
+             Check if a contact with that username already exists.
+             */
+            for c in conversations {
+                if c.author == name {
+                    print("ERROR: Contact has been added already.")
+                    return
+                }
+            }
+        } catch {
+            print("No previously added contacts. Adding first.")
+        }
+        
+        /*
+         Create the new conversation to be added and saved to Core Data.
+         */
+        let conversation = ConversationEntity(context: context)
+        conversation.author = name
+        conversation.publicKey = publicKey
+        
+        print("Added new contact to conversation: \(name)")
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error: Could not save context while adding new contact.")
+        }
+    }
 }
