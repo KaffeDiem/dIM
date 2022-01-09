@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera is used to scan QR codes.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -43,6 +41,8 @@
 	<string>The app sends, receives and relays yours and others messages through Bluetooth. Only the intended receiver will learn about messages that you send to them.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app sends, receives and relays yours and others messages through Bluetooth. Only the intended receiver will learn about messages that you send to them.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used to scan QR codes.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

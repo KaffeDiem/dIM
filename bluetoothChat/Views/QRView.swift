@@ -59,14 +59,14 @@ struct QRView: View {
                 
             Spacer(minLength: 150)
             
-            Text("Open up your camera and scan each others QR code. It is required that dIM is installed on the phone. You have to add each other to become contacts.")
+            Text("Press the scan button and scan each others QR code. You must add each other.")
                 .font(.footnote)
                 .foregroundColor(.accentColor)
             
             Button {
                 showScanner = true
             } label: {
-                Text("Press to scan")
+                Text("Scan")
                     .padding()
                     .foregroundColor(.white)
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -79,7 +79,29 @@ struct QRView: View {
                     )
                     .cornerRadius(10.0)
             }.sheet(isPresented: $showScanner, content: {
-                CodeScannerView(codeTypes: [.qr], completion: handleScan)
+                ZStack {
+                    CodeScannerView(codeTypes: [.qr], completion: handleScan)
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button {
+                                showScanner = false
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .foregroundColor(.white)
+                                    .imageScale(.large)
+                                    .padding()
+                            }
+
+                        }
+                        Spacer()
+                        Text("Add a new contact by scanning their QR code.")
+                            .multilineTextAlignment(.center)
+                            .font(.footnote)
+                            .foregroundColor(.white)
+                            .padding()
+                    }
+                }
             })
         }
         .padding()
