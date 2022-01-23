@@ -123,6 +123,7 @@ extension ChatHandler {
                     
                 currentConversation!.addToMessages(localMessage)
                 currentConversation!.lastMessage = localMessage.text!
+                currentConversation!.date = Date()
                 self.sendAckMessage(localMessage)
                 
                 self.sendNotification(what: localMessage)
@@ -225,7 +226,7 @@ extension ChatHandler {
     
     /// Send a notification to the user if the app is closed and and we retrieve a message.
     /// - Parameter message: The message that the user has received.
-    func sendNotification(what message: MessageEntity) {
+    private func sendNotification(what message: MessageEntity) {
         let content = UNMutableNotificationContent()
         content.title = message.sender!.components(separatedBy: "#").first ?? "Unknown"
         content.body = message.text!

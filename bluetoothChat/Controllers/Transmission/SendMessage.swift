@@ -83,6 +83,7 @@ extension ChatHandler {
         localMessage.sender = username
         
         conversation.lastMessage = "You: " + message
+        conversation.date = Date()
         conversation.addToMessages(localMessage)
         
         try? context.save()

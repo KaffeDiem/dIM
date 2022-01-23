@@ -19,19 +19,19 @@ struct HomeView: View {
     /// and sending / receiving messages.
     @StateObject var chatBrain: ChatHandler
     
-    /// Get conversations saved to Core Data
+    /// Get conversations saved to Core Data and sort them by date last updated.
     @FetchRequest(
         entity: ConversationEntity.entity(),
         sortDescriptors: [
-            NSSortDescriptor(keyPath: \ConversationEntity.author, ascending: true)
+            NSSortDescriptor(keyPath: \ConversationEntity.date, ascending: false)
         ]
     ) var conversations: FetchedResults<ConversationEntity>
     
     /// Used for confirmation dialog when deleting a contact.
-    @State var confirmationShown: Bool = false
+    @State private var confirmationShown: Bool = false
     
     /// Keep track of the active card in the carousel view.
-    @StateObject var UIStateCarousel = UIStateModel()
+    @StateObject private var UIStateCarousel = UIStateModel()
     
     /// Body and content of the HomeView.
     var body: some View {
