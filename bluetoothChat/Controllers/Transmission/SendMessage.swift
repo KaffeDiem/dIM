@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: Sending messages.
     
@@ -35,10 +35,10 @@ extension ChatBrain {
         /*
          Encrypt the message text.
          */
-        let privateKey = CryptoHandler().getPrivateKey()
-        let receiverPublicKey = try! CryptoHandler().importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler().deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
-        let encryptedData = try! CryptoHandler().encryptMessage(text: message, symmetricKey: symmetricKey)
+        let privateKey = CryptoHandler.getPrivateKey()
+        let receiverPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+        let encryptedData = try! CryptoHandler.encryptMessage(text: message, symmetricKey: symmetricKey)
         
         /*
          The unique message ID.

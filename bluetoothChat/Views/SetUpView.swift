@@ -129,7 +129,7 @@ struct SetUpView: View {
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(destination: HomeView(chatBrain: ChatBrain(context: context))
+                NavigationLink(destination: HomeView(chatBrain: ChatHandler(context: context))
                                 .navigationBarTitle("")
                                 .navigationBarBackButtonHidden(true),
                                isActive: $hasUsername) {
@@ -177,13 +177,13 @@ struct SetUpView: View {
     /// Activate demo mode for Apple where a conversation is automatically added as an example.
     /// This is used for the App Review process.
     private func activateDemoMode() {
-        let _ = CryptoHandler().getPublicKey()
+        let _ = CryptoHandler.getPublicKey()
         // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
-        let prkey = CryptoHandler().generatePrivateKey()
+        let prkey = CryptoHandler.generatePrivateKey()
         let pukey = prkey.publicKey
-        let pukeyStr = CryptoHandler().exportPublicKey(pukey)
+        let pukeyStr = CryptoHandler.exportPublicKey(pukey)
         conversation.publicKey = pukeyStr
         // And fill that conversation with a message
         let firstMessage = MessageEntity(context: context)

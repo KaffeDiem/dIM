@@ -21,7 +21,7 @@ struct ChatView: View {
     @Environment(\.colorScheme) var colorScheme
     /// The `ChatBrain` object is used to send and receive messages.
     /// It handles the logic behind this view.
-    @EnvironmentObject var chatBrain: ChatBrain
+    @EnvironmentObject var chatBrain: ChatHandler
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity

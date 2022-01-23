@@ -17,7 +17,7 @@ struct HomeView: View {
     
     /// Initialize the ChatBrain which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var chatBrain: ChatBrain
+    @StateObject var chatBrain: ChatHandler
     
     /// Get conversations saved to Core Data
     @FetchRequest(

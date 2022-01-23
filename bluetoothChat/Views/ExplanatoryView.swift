@@ -216,11 +216,3 @@ fileprivate struct Item<Content: View>: View {
             .frame(width: cardWidth, height: _id == UIState.activeCard ? cardHeight : cardHeight - 80, alignment: .center)
     }
 }
-
-//struct SnapCarousel_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SnapCarousel()
-//            .preferredColorScheme(.dark)
-//            .environmentObject(UIStateModel())
-//    }
-//}

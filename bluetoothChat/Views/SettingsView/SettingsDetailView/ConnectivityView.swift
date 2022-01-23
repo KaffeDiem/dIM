@@ -12,7 +12,7 @@ import SwiftUI
 /// It also shows a few statistics for this session.
 struct ConnectivityView: View {
     /// The ChatBrain object is used to get statistics and current connections.
-    @EnvironmentObject var chatBrain: ChatBrain
+    @EnvironmentObject var chatBrain: ChatHandler
     
     var body: some View {
         GroupBox(label: Text("Connectivity"), content: {

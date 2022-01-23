@@ -11,7 +11,7 @@ import Foundation
  Notice that these functions are only called if 'useDSRAlgortihm' is
  set to true in GLOBALS.swift as it is an experimental feature.
  */
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: DSR (Dynamic Source Routing) functionality
     

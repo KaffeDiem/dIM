@@ -11,7 +11,7 @@ import SwiftUI
 import CoreData
 
 
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: Receiving messages.
 
@@ -217,10 +217,10 @@ extension ChatBrain {
     /// - Returns: The decrypted content of the message or nil if it cannot be decrypted.
     func decryptRetrievedMessageToString(message: Message, conversation: ConversationEntity) -> String? {
         
-        let senderPublicKey = try! CryptoHandler().importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler().deriveSymmetricKey(privateKey: CryptoHandler().getPrivateKey(), publicKey: senderPublicKey)
+        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
         
-        return CryptoHandler().decryptMessage(text: message.text, symmetricKey: symmetricKey)
+        return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }
     
     /// Send a notification to the user if the app is closed and and we retrieve a message.

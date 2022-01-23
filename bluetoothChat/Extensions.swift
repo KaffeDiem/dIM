@@ -16,20 +16,3 @@ extension UIApplication {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
-
-extension Color {
-    /// Extension on color which automatically converts a HEX color code
-    /// to a RGB color format.
-    /// - Parameters:
-    ///   - hex: The HEX code of the color.
-    ///   - alpha: The alpha value (transparency, where 1 is non-transparent).
-    init(hex: UInt, alpha: Double = 1) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xff) / 255,
-            green: Double((hex >> 08) & 0xff) / 255,
-            blue: Double((hex >> 00) & 0xff) / 255,
-            opacity: alpha
-        )
-    }
-}

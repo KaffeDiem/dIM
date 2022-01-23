@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConnectionView: View {
-    @EnvironmentObject var bluetoothManager: ChatBrain
+    @EnvironmentObject var bluetoothManager: ChatHandler
     
     var body: some View {
         Text(bluetoothManager.discoveredDevices.count > 0 ? "\(bluetoothManager.discoveredDevices.count) connected device\(bluetoothManager.discoveredDevices.count > 1 ? "s" : ""). You should be connected to the outside world." : "No devices available.")
