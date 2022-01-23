@@ -17,7 +17,7 @@ struct QRView: View {
     /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var chatBrain: ChatBrain
+    @EnvironmentObject var chatBrain: ChatHandler
     
     /// The username fetched from `UserDefaults`
     private let username = UserDefaults.standard.string(forKey: "Username")
@@ -50,7 +50,7 @@ struct QRView: View {
                  The form of the QR code is:
                  dim://username//publickey
                  */
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(CryptoHandler().getPublicKey())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(CryptoHandler.getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()

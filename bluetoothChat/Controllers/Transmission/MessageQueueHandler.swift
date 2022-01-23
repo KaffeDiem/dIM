@@ -8,7 +8,7 @@
 import Foundation
 import CoreBluetooth
 
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: Message queue functionality.
     

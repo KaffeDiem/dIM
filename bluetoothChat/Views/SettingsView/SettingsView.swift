@@ -48,7 +48,7 @@ struct SettingsView: View {
     let defaults = UserDefaults.standard
     
     /// The `ChatBrain` to get things from the logic layer.
-    @EnvironmentObject var chatBrain: ChatBrain
+    @EnvironmentObject var chatBrain: ChatHandler
     /// Temporary storage for the new username textfield.
     @State private var usernameTemp: String = ""
     /// Colorscheme for this device to show different images depending on dark or light mode.

@@ -13,7 +13,7 @@ import CoreBluetooth
  for this client.
  */
 
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: Relay messages functionality.
     

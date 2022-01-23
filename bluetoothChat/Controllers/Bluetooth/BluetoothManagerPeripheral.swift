@@ -8,7 +8,7 @@
 import Foundation
 import CoreBluetooth
 
-extension ChatBrain {
+extension ChatHandler {
     
     // MARK: PeripheralManager callback functions. Handles the client side of Bluetooth.
 
@@ -20,7 +20,7 @@ extension ChatBrain {
     /// - Parameter peripheralManager: The peripheral manager to start advertising for.
     func startAdvertising(peripheralManager: CBPeripheralManager) {
         peripheralManager.startAdvertising([
-            CBAdvertisementDataServiceUUIDsKey: [Service().UUID],
+            CBAdvertisementDataServiceUUIDsKey: [Service.UUID],
             //  Advertise either the set username or the default name of the device.
             CBAdvertisementDataLocalNameKey: UserDefaults.standard.string(forKey: "Username") ?? "Unknown"
         ])
@@ -43,14 +43,14 @@ extension ChatBrain {
         }
         
         let characteristic = CBMutableCharacteristic(
-            type: Service().charUUID,
+            type: Service.charUUID,
             properties: [.write, .notify],
             value: nil,
             permissions: [.writeable, .readable]
         )
         self.characteristic = characteristic
         
-        let service = CBMutableService(type: Service().UUID, primary: true)
+        let service = CBMutableService(type: Service.UUID, primary: true)
         service.characteristics = [characteristic]
         
         // Add the service to the peripheral manager and start advertising

@@ -19,7 +19,7 @@ import CoreData
 /// is stored in memory and written to the persistent storage as needed.
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the ChatBrain has been divided into files for seperation and isolation of features.
-class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
     /**
      Context for CoreData storage
@@ -111,7 +111,7 @@ class ChatBrain: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriphe
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
         
-        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service().UUID])
+        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service.UUID])
         
         /*
          Cancel the connection from the central manager.
