@@ -68,7 +68,7 @@ struct ChatView: View {
                                 /* Copy button */
                                 Button(role: .none, action: {
                                     UIPasteboard.general.setValue(message.text ?? "Something went wrong copying from dIM",
-                                        forPasteboardType: kUTTypePlainText as String)
+                                                                  forPasteboardType: "public.plain-text")
                                 }, label: {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 })
