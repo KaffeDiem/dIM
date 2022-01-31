@@ -17,7 +17,7 @@ struct HomeView: View {
     
     /// Initialize the ChatBrain which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var chatBrain: ChatHandler
+    @StateObject var chatHandler: ChatHandler
     
     /// Get conversations saved to Core Data and sort them by date last updated.
     @FetchRequest(
@@ -44,7 +44,7 @@ struct HomeView: View {
                 List(conversations) { conversation in
                     NavigationLink(
                         destination: ChatView(conversation: conversation)
-                            .environmentObject(chatBrain),
+                            .environmentObject(chatHandler),
                         label: {
                             VStack {
                                 Text(getSafeAuthor(conversation: conversation))
@@ -109,7 +109,7 @@ struct HomeView: View {
                 VStack {
                     Text("Chats")
                         .font(.headline)
-                    if chatBrain.discoveredDevices.count < 1 {
+                    if chatHandler.discoveredDevices.count < 1 {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right.slash")
                                 .symbolRenderingMode(.palette)
@@ -121,18 +121,18 @@ struct HomeView: View {
                     } else {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(chatBrain.discoveredDevices.count) in range").font(.subheadline)
+                            Text("\(chatHandler.discoveredDevices.count) in range").font(.subheadline)
                         }
                     }
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView().environmentObject(chatBrain), label: {
+                NavigationLink(destination: SettingsView().environmentObject(chatHandler), label: {
                     Image(systemName: "gearshape.fill")
                 })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView().environmentObject(chatBrain), label: {
+                NavigationLink(destination: QRView().environmentObject(chatHandler), label: {
                     Image(systemName: "qrcode")
                 })
             }

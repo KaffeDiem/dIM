@@ -124,13 +124,13 @@ struct SetupView: View {
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(
-                    destination: HomeView(chatBrain: ChatHandler(context: context))
-                                .navigationBarTitle("")
-                                .navigationBarBackButtonHidden(true),
-                    isActive: 	$viewModel.hasUsername) {
+                NavigationLink(isActive: $viewModel.hasUsername) {
+                    HomeView(chatHandler: ChatHandler(context: context))
+                } label: {
                     EmptyView()
                 }
+                .navigationBarTitle("")
+                .navigationBarBackButtonHidden(true)
             }
             .onAppear() {
                 viewModel.onAppear()
@@ -143,6 +143,6 @@ struct SetupView: View {
 
 struct SetupView_Previews: PreviewProvider {
     static var previews: some View {
-        SetupView(viewModel: Resolver.resolve())
+        SetupView(viewModel: SetupViewModel(context: Resolver.resolve()))
     }
 }
