@@ -114,7 +114,9 @@ struct QRView: View {
         .navigationBarTitle("Add Contact", displayMode: .inline)
     }
     
-    func handleScan(result: Result<ScanResult, ScanError>) {
+    /// Handles the result of the QR scan.
+    /// - Parameter result: Result of the QR scan or an error.
+    private func handleScan(result: Result<ScanResult, ScanError>) {
         showScanner = false
         switch result {
         case .success(let result):
