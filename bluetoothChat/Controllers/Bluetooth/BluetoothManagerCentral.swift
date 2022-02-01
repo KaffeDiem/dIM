@@ -21,7 +21,7 @@ extension ChatHandler {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
             case .poweredOn:
-                centralManager.scanForPeripherals(withServices: [Service.UUID], options: nil)
+                centralManager.scanForPeripherals(withServices: [Session.UUID], options: nil)
             case .poweredOff:
                 discoveredDevices = []
             default:
@@ -88,7 +88,7 @@ extension ChatHandler {
         // Set the delegate.
         peripheral.delegate = self
         // Discover services which the peripheral has to offer.
-        peripheral.discoverServices([Service.UUID])
+        peripheral.discoverServices([Session.UUID])
     }
     
     /// Callback function if we fail to connect to some peripheral.
@@ -115,7 +115,7 @@ extension ChatHandler {
         
         central.cancelPeripheralConnection(peripheral)
         centralManager.scanForPeripherals(
-            withServices: [Service.UUID],
+            withServices: [Session.UUID],
             options: [
                 CBCentralManagerScanOptionAllowDuplicatesKey: true
             ]
@@ -160,7 +160,7 @@ extension ChatHandler {
         // Loop trough services in case there are multiple and
         // connect to our characteristic if it is found.
         peripheral.services?.forEach {service in
-            peripheral.discoverCharacteristics([Service.charUUID], for: service)
+            peripheral.discoverCharacteristics([Session.characteristicsUUID], for: service)
         }
     }
     
@@ -179,7 +179,7 @@ extension ChatHandler {
         }
         
         service.characteristics?.forEach { characteristic in
-            guard characteristic.uuid == Service.charUUID else { return }
+            guard characteristic.uuid == Session.characteristicsUUID else { return }
             // Subsribe to all notifications made by the characteristic.
             peripheral.setNotifyValue(true, for: characteristic)
             // Save a reference of the characteristic to send back
@@ -197,7 +197,7 @@ extension ChatHandler {
     ///   - error: Error description if any. Printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         // Only receive notifications from the characteristics that we expect.
-        guard characteristic.uuid == Service.charUUID else { return }
+        guard characteristic.uuid == Session.characteristicsUUID else { return }
         
         if let error = error {
             print("Unable to get new notification: \(error.localizedDescription)")

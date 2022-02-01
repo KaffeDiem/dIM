@@ -12,7 +12,7 @@ import UIKit
 /// The Service struct keeps information that we may need across
 /// the app. This includes the UUID of the apps Bluetooth service
 /// as well as the Characteristics UUID.
-struct Service {
+struct Session {
     static let deviceName = UIDevice.current.name
     
     /**
@@ -21,5 +21,7 @@ struct Service {
      */
     static let UUID = CBUUID(string: "D6B52A44-E586-4502-9F98-4799C8B95C86")
     /// The unique UUID of the characteristic (the chat functionality part)
-    static let charUUID = CBUUID(string: "54C89B72-F7EE-4A0A-8382-7367C3E151A5")
+    static let characteristicsUUID = CBUUID(string: "54C89B72-F7EE-4A0A-8382-7367C3E151A5")
+    /// Core Data Context for reading and saving to persistent storage.
+    static let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 }

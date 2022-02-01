@@ -111,7 +111,7 @@ class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPerip
      */
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
         
-        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Service.UUID])
+        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID])
         
         /*
          Cancel the connection from the central manager.

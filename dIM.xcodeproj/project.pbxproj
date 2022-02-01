@@ -164,7 +164,6 @@
 				B0CCFAEC27A85827003B4A8F /* Home */,
 				B0873019276F852300723C41 /* ExplanatoryView.swift */,
 				B0CCFAE927A8535B003B4A8F /* Injection.swift */,
-				B0B0D06826FCFD2E00E2512B /* ChatView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -245,6 +244,7 @@
 				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
 				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
 				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
+				B0B0D06826FCFD2E00E2512B /* ChatView */,
 				B0225B09271B2AF5005D8098 /* SettingsView */,
 			);
 			path = Home;

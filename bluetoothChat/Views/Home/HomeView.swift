@@ -12,9 +12,6 @@ import SwiftUI
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
     
-    /// Context of the `CoreData` for persistent storage.
-    @Environment(\.managedObjectContext) var context
-    
     /// Initialize the ChatBrain which handles logic of Bluetooth
     /// and sending / receiving messages.
     @StateObject var chatHandler: ChatHandler
@@ -67,7 +64,7 @@ struct HomeView: View {
                                 conversation.removeFromMessages(conversation.messages!)
                                 conversation.lastMessage = "Start a new conversation."
                                 do {
-                                    try context.save()
+                                    try Session.context.save()
                                 } catch {
                                     print("Context could not be saved.")
                                 }
@@ -86,9 +83,9 @@ struct HomeView: View {
                         ) {
                             Button("Delete Contact", role: .destructive) {
                                 withAnimation {
-                                    context.delete(conversation)
+                                    Session.context.delete(conversation)
                                     do {
-                                        try context.save()
+                                        try Session.context.save()
                                     } catch {
                                         print("Context could not be saved.")
                                     }
@@ -162,7 +159,7 @@ struct HomeView: View {
             let request: NSFetchRequest<ConversationEntity>
             request = ConversationEntity.fetchRequest()
             
-            let count = try context.count(for: request)
+            let count = try Session.context.count(for: request)
             return count == 0
         } catch {
             return true
