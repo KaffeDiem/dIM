@@ -16,6 +16,8 @@ struct HomeView: View {
     /// and sending / receiving messages.
     @StateObject var chatHandler: ChatHandler
     
+    @ObservedObject var viewModel = HomeViewModel()
+    
     /// Get conversations saved to Core Data and sort them by date last updated.
     @FetchRequest(
         entity: ConversationEntity.entity(),
@@ -38,13 +40,14 @@ struct HomeView: View {
                 /*
                  List all added users and their conversations.
                  */
-                List(conversations) { conversation in
-                    NavigationLink(
-                        destination: ChatView(conversation: conversation)
-                            .environmentObject(chatHandler),
-                        label: {
+                List() {
+                    ForEach(conversations, id: \.self) { conversation in
+                        NavigationLink {
+                            ChatView(conversation: conversation)
+                                .environmentObject(chatHandler)
+                        } label: {
                             VStack {
-                                Text(getSafeAuthor(conversation: conversation))
+                                Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
                                     .foregroundColor(.accentColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -54,11 +57,8 @@ struct HomeView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .padding()
-                        })
-                    /*
-                     Swipe Actions are activated when swiping left on the conversation thread.
-                     */
-                        .swipeActions {
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             // Clearing a conversation.
                             Button {
                                 conversation.removeFromMessages(conversation.messages!)
@@ -72,26 +72,14 @@ struct HomeView: View {
                                 Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
                             }
                             .tint(.accentColor)
-                            // Deleting a contact.
-                            Button(role: .destructive, action: {confirmationShown = true}) {
-                                Label("Delete Contact", systemImage: "person.fill.xmark")
+                            
+                            Button(role: .destructive) {
+                                deleteContact(for: conversation)
+                            } label: {
+                                Label("Delete Conversation", systemImage: "person.fill.xmark")
                             }
                         }
-                        .confirmationDialog(
-                            "Are you sure?",
-                            isPresented: $confirmationShown
-                        ) {
-                            Button("Delete Contact", role: .destructive) {
-                                withAnimation {
-                                    Session.context.delete(conversation)
-                                    do {
-                                        try Session.context.save()
-                                    } catch {
-                                        print("Context could not be saved.")
-                                    }
-                                }
-                            }
-                        }
+                    }
                 }
             } else {
                 SnapCarousel()
@@ -134,20 +122,17 @@ struct HomeView: View {
                 })
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
     
-    /// As usernames gets a random 4 digit number added to them, which we do not want
-    /// to present, we use this function to only get the actual username of the user.
-    ///
-    /// If it fails for some reason (most likely wrong formatting) we simply show
-    /// "Unknown".
-    /// - Parameter conversation: The conversation for which we want to get the username.
-    /// - Returns: A string with only the username, where the 4 last digits are removed.
-    private func getSafeAuthor(conversation: ConversationEntity) -> String {
-        if let safeAuthor = conversation.author {
-            return safeAuthor.components(separatedBy: "#").first ?? "Unknown"
+    private func deleteContact(for conversation: ConversationEntity) {
+        Session.context.delete(conversation)
+        
+        do {
+            try Session.context.save()
+        } catch {
+            print("[Error] Could not delete conversations.")
         }
-        return "Unknown"
     }
     
     /// Checks if a conversation has no sent messages.
