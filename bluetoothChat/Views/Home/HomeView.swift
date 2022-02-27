@@ -12,12 +12,11 @@ import SwiftUI
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
     
-    /// Context of the `CoreData` for persistent storage.
-    @Environment(\.managedObjectContext) var context
-    
     /// Initialize the ChatBrain which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var chatBrain: ChatHandler
+    @StateObject var chatHandler: ChatHandler
+    
+    @ObservedObject var viewModel = HomeViewModel()
     
     /// Get conversations saved to Core Data and sort them by date last updated.
     @FetchRequest(
@@ -41,13 +40,14 @@ struct HomeView: View {
                 /*
                  List all added users and their conversations.
                  */
-                List(conversations) { conversation in
-                    NavigationLink(
-                        destination: ChatView(conversation: conversation)
-                            .environmentObject(chatBrain),
-                        label: {
+                List() {
+                    ForEach(conversations, id: \.self) { conversation in
+                        NavigationLink {
+                            ChatView(conversation: conversation)
+                                .environmentObject(chatHandler)
+                        } label: {
                             VStack {
-                                Text(getSafeAuthor(conversation: conversation))
+                                Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
                                     .foregroundColor(.accentColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -57,17 +57,14 @@ struct HomeView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .padding()
-                        })
-                    /*
-                     Swipe Actions are activated when swiping left on the conversation thread.
-                     */
-                        .swipeActions {
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             // Clearing a conversation.
                             Button {
                                 conversation.removeFromMessages(conversation.messages!)
                                 conversation.lastMessage = "Start a new conversation."
                                 do {
-                                    try context.save()
+                                    try Session.context.save()
                                 } catch {
                                     print("Context could not be saved.")
                                 }
@@ -75,26 +72,14 @@ struct HomeView: View {
                                 Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
                             }
                             .tint(.accentColor)
-                            // Deleting a contact.
-                            Button(role: .destructive, action: {confirmationShown = true}) {
-                                Label("Delete Contact", systemImage: "person.fill.xmark")
+                            
+                            Button(role: .destructive) {
+                                deleteContact(for: conversation)
+                            } label: {
+                                Label("Delete Conversation", systemImage: "person.fill.xmark")
                             }
                         }
-                        .confirmationDialog(
-                            "Are you sure?",
-                            isPresented: $confirmationShown
-                        ) {
-                            Button("Delete Contact", role: .destructive) {
-                                withAnimation {
-                                    context.delete(conversation)
-                                    do {
-                                        try context.save()
-                                    } catch {
-                                        print("Context could not be saved.")
-                                    }
-                                }
-                            }
-                        }
+                    }
                 }
             } else {
                 SnapCarousel()
@@ -109,7 +94,7 @@ struct HomeView: View {
                 VStack {
                     Text("Chats")
                         .font(.headline)
-                    if chatBrain.discoveredDevices.count < 1 {
+                    if chatHandler.discoveredDevices.count < 1 {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right.slash")
                                 .symbolRenderingMode(.palette)
@@ -121,36 +106,33 @@ struct HomeView: View {
                     } else {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(chatBrain.discoveredDevices.count) in range").font(.subheadline)
+                            Text("\(chatHandler.discoveredDevices.count) in range").font(.subheadline)
                         }
                     }
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView().environmentObject(chatBrain), label: {
+                NavigationLink(destination: SettingsView().environmentObject(chatHandler), label: {
                     Image(systemName: "gearshape.fill")
                 })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView().environmentObject(chatBrain), label: {
+                NavigationLink(destination: QRView().environmentObject(chatHandler), label: {
                     Image(systemName: "qrcode")
                 })
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
     
-    /// As usernames gets a random 4 digit number added to them, which we do not want
-    /// to present, we use this function to only get the actual username of the user.
-    ///
-    /// If it fails for some reason (most likely wrong formatting) we simply show
-    /// "Unknown".
-    /// - Parameter conversation: The conversation for which we want to get the username.
-    /// - Returns: A string with only the username, where the 4 last digits are removed.
-    private func getSafeAuthor(conversation: ConversationEntity) -> String {
-        if let safeAuthor = conversation.author {
-            return safeAuthor.components(separatedBy: "#").first ?? "Unknown"
+    private func deleteContact(for conversation: ConversationEntity) {
+        Session.context.delete(conversation)
+        
+        do {
+            try Session.context.save()
+        } catch {
+            print("[Error] Could not delete conversations.")
         }
-        return "Unknown"
     }
     
     /// Checks if a conversation has no sent messages.
@@ -162,7 +144,7 @@ struct HomeView: View {
             let request: NSFetchRequest<ConversationEntity>
             request = ConversationEntity.fetchRequest()
             
-            let count = try context.count(for: request)
+            let count = try Session.context.count(for: request)
             return count == 0
         } catch {
             return true

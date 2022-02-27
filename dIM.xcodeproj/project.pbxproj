@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
+		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
 		B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */; };
 		B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0C271B2B87005D8098 /* AboutView.swift */; };
 		B0225B0F271B2C34005D8098 /* SupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0E271B2C34005D8098 /* SupportView.swift */; };
@@ -26,7 +27,7 @@
 		B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */; };
 		B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */; };
 		B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06079B326D54F54007B4DF6 /* ConversationModel.swift */; };
-		B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetUpView.swift */; };
+		B064B43726D771F0005D6BFB /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetupView.swift */; };
 		B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = B070BAED2722E0740036091A /* MessageBubble.swift */; };
 		B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179C26D6276C00F9C649 /* SettingsView.swift */; };
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
@@ -39,6 +40,9 @@
 		B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */; };
 		B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatus.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
+		B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */; };
+		B0CCFAE827A849CD003B4A8F /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = B0CCFAE727A849CD003B4A8F /* Resolver */; };
+		B0CCFAEA27A8535B003B4A8F /* Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CCFAE927A8535B003B4A8F /* Injection.swift */; };
 		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
@@ -47,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		B020E7D727A944E50098097A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityView.swift; sourceTree = "<group>"; };
 		B0225B0C271B2B87005D8098 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B0225B0E271B2C34005D8098 /* SupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportView.swift; sourceTree = "<group>"; };
@@ -67,7 +72,7 @@
 		B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerPeripheral.swift; sourceTree = "<group>"; };
 		B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		B06079B326D54F54007B4DF6 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
-		B064B43626D771F0005D6BFB /* SetUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpView.swift; sourceTree = "<group>"; };
+		B064B43626D771F0005D6BFB /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		B070BAED2722E0740036091A /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		B074179C26D6276C00F9C649 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -80,6 +85,8 @@
 		B0B0D06926FCFD4200E2512B /* MessageStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatus.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bluetoothChat.entitlements; sourceTree = "<group>"; };
+		B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewModel.swift; sourceTree = "<group>"; };
+		B0CCFAE927A8535B003B4A8F /* Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injection.swift; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
@@ -91,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0CCFAE827A849CD003B4A8F /* Resolver in Frameworks */,
 				B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,13 +162,10 @@
 		B05E1F4926D3B42400AD9E65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
-				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
+				B0CCFAEB27A85809003B4A8F /* Setup */,
+				B0CCFAEC27A85827003B4A8F /* Home */,
 				B0873019276F852300723C41 /* ExplanatoryView.swift */,
-				B064B43626D771F0005D6BFB /* SetUpView.swift */,
-				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
-				B0B0D06826FCFD2E00E2512B /* ChatView */,
-				B0225B09271B2AF5005D8098 /* SettingsView */,
+				B0CCFAE927A8535B003B4A8F /* Injection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -226,6 +231,28 @@
 			path = SettingsDetailView;
 			sourceTree = "<group>";
 		};
+		B0CCFAEB27A85809003B4A8F /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */,
+				B064B43626D771F0005D6BFB /* SetupView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+		B0CCFAEC27A85827003B4A8F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
+				B020E7D727A944E50098097A /* HomeViewModel.swift */,
+				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
+				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
+				B0B0D06826FCFD2E00E2512B /* ChatView */,
+				B0225B09271B2AF5005D8098 /* SettingsView */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		B0D15B6B26D9138E0099F8F5 /* Transmission */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +283,7 @@
 			name = bluetoothChat;
 			packageProductDependencies = (
 				B09FAD1C2789EFFA0030B777 /* CodeScanner */,
+				B0CCFAE727A849CD003B4A8F /* Resolver */,
 			);
 			productName = bluetoothChat;
 			productReference = B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */;
@@ -286,6 +314,7 @@
 			mainGroup = B05E1F2926D3B3A800AD9E65;
 			packageReferences = (
 				B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */,
 			);
 			productRefGroup = B05E1F3326D3B3A800AD9E65 /* Products */;
 			projectDirPath = "";
@@ -327,7 +356,9 @@
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
 				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
 				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
+				B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */,
 				B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */,
+				B0CCFAEA27A8535B003B4A8F /* Injection.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
 				B0225B0F271B2C34005D8098 /* SupportView.swift in Sources */,
 				B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */,
@@ -335,6 +366,7 @@
 				B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
+				B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
 				B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */,
 				B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */,
@@ -343,7 +375,7 @@
 				B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */,
 				B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */,
 				B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */,
-				B064B43726D771F0005D6BFB /* SetUpView.swift in Sources */,
+				B064B43726D771F0005D6BFB /* SetupView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* ChatHandler.swift in Sources */,
 			);
@@ -495,7 +527,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -520,7 +552,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -561,6 +593,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Resolver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -568,6 +608,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */;
 			productName = CodeScanner;
+		};
+		B0CCFAE727A849CD003B4A8F /* Resolver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */;
+			productName = Resolver;
 		};
 /* End XCSwiftPackageProductDependency section */
 
