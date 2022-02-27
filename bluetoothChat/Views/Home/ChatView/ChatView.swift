@@ -19,12 +19,13 @@ struct ChatView: View {
     @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
-    /// The `ChatBrain` object is used to send and receive messages.
-    /// It handles the logic behind this view.
-    @EnvironmentObject var chatBrain: ChatHandler
+    
+    /// View model for the view.
+    @ObservedObject var viewModel: ChatViewModel
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
+    
     
     /// Fetched results of the messages for this conversation.
     @FetchRequest var messages: FetchedResults<MessageEntity>
@@ -41,6 +42,7 @@ struct ChatView: View {
         
     init(conversation: ConversationEntity) {
         self.conversation = conversation
+        self.viewModel = ChatViewModel(forConversation: conversation)
         
         _messages = FetchRequest<MessageEntity>(
             entity: MessageEntity.entity(),
@@ -75,7 +77,7 @@ struct ChatView: View {
                                 /* Resend button (for users own messages) */
                                 if message.sender! == username {
                                     Button(role: .none, action: {
-                                        chatBrain.sendMessage(for: conversation, text: message.text!, context: context)
+                                        Session.chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
                                     }, label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     })
@@ -116,7 +118,7 @@ struct ChatView: View {
                     }
                 }
             }
-            .id(chatBrain.refreshID) // Force a refresh when an ACK message is received
+            .id(Session.chatHandler.refreshID) // Force a refresh when an ACK message is received
             
             /*
              Send message part
@@ -128,7 +130,7 @@ struct ChatView: View {
                 .submitLabel(.send)
                 .onSubmit({
                     if message.count < 261 {
-                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        Session.chatHandler.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 })
@@ -144,7 +146,7 @@ struct ChatView: View {
                 
                 Button(action: {
                     if message.count < 261 {
-                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        Session.chatHandler.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 }, label: {
@@ -154,34 +156,22 @@ struct ChatView: View {
             }
         }
         .navigationTitle((conversation.author!.components(separatedBy: "#")).first ?? "Unknown")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink {
+                    CreateGroupView()
+                } label: {
+                    Text("Create group")
+                }
+
+            }
+        }
     
         .onAppear() {
-            /*
-             Send READ acknowledgements messages if the user has enabled
-             it in settings.
-             */
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatBrain.sendReadMessage(conversation)
-            }
+            viewModel.onAppear()
         }
         .onDisappear() {
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatBrain.sendReadMessage(conversation)
-            }
+            viewModel.onDissapear()
         }
-    }
-}
-
-
-/// A simple shape of a bubbble.
-struct Bubble: Shape {
-    /// A boolean confirming that the message is sent by us or not.
-    var chat: Bool
-    /// Drawing of the actual path.
-    /// - Parameter rect: The rectangle size to draw.
-    /// - Returns: A path which is used for drawing.
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        return Path(path.cgPath)
     }
 }

@@ -21,4 +21,6 @@ struct Session {
     static let characteristicsUUID = CBUUID(string: "54C89B72-F7EE-4A0A-8382-7367C3E151A5")
     /// Core Data Context for reading and saving to persistent storage.
     static let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    /// ChatHandler handles the Bluetooth connections as well as message transmission.
+    static let chatHandler = ChatHandler(context: Session.context)
 }

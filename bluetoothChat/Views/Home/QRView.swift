@@ -17,8 +17,6 @@ struct QRView: View {
     /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var chatBrain: ChatHandler
-    
     /// The username fetched from `UserDefaults`
     private let username = UserDefaults.standard.string(forKey: "Username")
     
@@ -120,7 +118,7 @@ struct QRView: View {
         showScanner = false
         switch result {
         case .success(let result):
-            chatBrain.handleScan(result: result.string)
+            Session.chatHandler.handleScan(result: result.string)
         case .failure(let error):
             print(error.localizedDescription)
         }

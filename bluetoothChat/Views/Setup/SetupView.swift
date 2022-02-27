@@ -108,24 +108,14 @@ struct SetupView: View {
                         viewModel.setUsername(username: textfieldUsername)
                     }, label: {
                         Text("Continue")
-                        .padding()
-                        .foregroundColor(.white)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10.0)
+                            .modifier(PrimaryButton())
                     })
                 }
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
                 NavigationLink(isActive: $viewModel.hasUsername) {
-                    HomeView(chatHandler: ChatHandler(context: context))
+                    HomeView()
                 } label: {
                     EmptyView()
                 }

@@ -64,3 +64,16 @@ struct MessageBubble: View {
         }
     }
 }
+
+/// A simple shape of a bubbble.
+fileprivate struct Bubble: Shape {
+    /// A boolean confirming that the message is sent by us or not.
+    var chat: Bool
+    /// Drawing of the actual path.
+    /// - Parameter rect: The rectangle size to draw.
+    /// - Returns: A path which is used for drawing.
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+        return Path(path.cgPath)
+    }
+}

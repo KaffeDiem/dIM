@@ -11,11 +11,6 @@ import SwiftUI
 /// The `HomeView` where users are presented with the different conversations that they are in.
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
-    
-    /// Initialize the ChatBrain which handles logic of Bluetooth
-    /// and sending / receiving messages.
-    @StateObject var chatHandler: ChatHandler
-    
     @ObservedObject var viewModel = HomeViewModel()
     
     /// Get conversations saved to Core Data and sort them by date last updated.
@@ -44,7 +39,6 @@ struct HomeView: View {
                     ForEach(conversations, id: \.self) { conversation in
                         NavigationLink {
                             ChatView(conversation: conversation)
-                                .environmentObject(chatHandler)
                         } label: {
                             VStack {
                                 Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
@@ -94,7 +88,7 @@ struct HomeView: View {
                 VStack {
                     Text("Chats")
                         .font(.headline)
-                    if chatHandler.discoveredDevices.count < 1 {
+                    if Session.chatHandler.discoveredDevices.count < 1 {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right.slash")
                                 .symbolRenderingMode(.palette)
@@ -106,18 +100,18 @@ struct HomeView: View {
                     } else {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(chatHandler.discoveredDevices.count) in range").font(.subheadline)
+                            Text("\(Session.chatHandler.discoveredDevices.count) in range").font(.subheadline)
                         }
                     }
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView().environmentObject(chatHandler), label: {
+                NavigationLink(destination: SettingsView(), label: {
                     Image(systemName: "gearshape.fill")
                 })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView().environmentObject(chatHandler), label: {
+                NavigationLink(destination: QRView(), label: {
                     Image(systemName: "qrcode")
                 })
             }
