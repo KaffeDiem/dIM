@@ -1,5 +1,6 @@
-# dIM
-### (Decentralised Instant Messenger)
+# dIM (Decentralised Instant Messenger)
+
+### (Help wanted to build an Android version)
 
 A chat app for iOS which uses Bluetooth to send, receive and route messages.
 
