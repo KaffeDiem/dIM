@@ -11,9 +11,6 @@ import SwiftUI
 ///
 /// It also shows a few statistics for this session.
 struct ConnectivityView: View {
-    /// The ChatBrain object is used to get statistics and current connections.
-    @EnvironmentObject var chatBrain: ChatHandler
-    
     var body: some View {
         GroupBox(label: Text("Connectivity"), content: {
             
@@ -24,12 +21,12 @@ struct ConnectivityView: View {
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            if chatBrain.discoveredDevices.count < 1 {
+            if Session.chatHandler.discoveredDevices.count < 1 {
                 Label("Not connected.", systemImage: "figure.stand")
                     .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
             } else {
                 Label(
-                    "\(chatBrain.discoveredDevices.count) device\(chatBrain.discoveredDevices.count == 1 ? "" : "s") connected.",
+                    "\(Session.chatHandler.discoveredDevices.count) device\(Session.chatHandler.discoveredDevices.count == 1 ? "" : "s") connected.",
                     systemImage: "figure.stand.line.dotted.figure.stand"
                 )
                     .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
@@ -40,7 +37,7 @@ struct ConnectivityView: View {
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            Label("\(chatBrain.routedCounter) messages routed.", systemImage: "network")
+            Label("\(Session.chatHandler.routedCounter) messages routed.", systemImage: "network")
                 .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
         })
     }

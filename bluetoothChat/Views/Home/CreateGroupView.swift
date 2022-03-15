@@ -25,6 +25,23 @@ struct CreateGroupView: View {
                 )
                 .cornerRadius(10.0)
             
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Messages can only be read by group members.")
+                    .modifier(BulletlistModifier())
+                    .foregroundColor(.green)
+                Text("No limit on the amount of group members.")
+                    .modifier(BulletlistModifier())
+                    .foregroundColor(.green)
+                    .padding(.bottom)
+                Text("Group members cannot be removed.")
+                    .modifier(BulletlistModifier())
+                    .foregroundColor(.red)
+                Text("Your message may not reach everyone.")
+                    .modifier(BulletlistModifier())
+                    .foregroundColor(.red)
+            }
+            .frame(maxWidth: .infinity)
+            
             Spacer()
             
             Button {
@@ -33,14 +50,21 @@ struct CreateGroupView: View {
                 Text("Create group")
                     .modifier(PrimaryButton())
             }
-
-            Text("Notice: Groups are less secure than direct messaging.")
-                .font(.footnote)
         }
         .padding()
         .navigationBarTitle("Create group")
     }
     
+}
+
+struct BulletlistModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.footnote)
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.quaternary, in: Capsule())
+    }
 }
 
 struct CreateGroupView_Previews: PreviewProvider {

@@ -46,9 +46,6 @@ struct SettingsView: View {
     
     /// The `UserDefaults` for getting information from persistent storage.
     let defaults = UserDefaults.standard
-    
-    /// The `ChatBrain` to get things from the logic layer.
-    @EnvironmentObject var chatBrain: ChatHandler
     /// Temporary storage for the new username textfield.
     @State private var usernameTemp: String = ""
     /// Colorscheme for this device to show different images depending on dark or light mode.
@@ -70,7 +67,6 @@ struct SettingsView: View {
                  Current connections
                  */
                 ConnectivityView()
-                    .environmentObject(chatBrain)
                     .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
                 
                 GroupBox(label: Text("Send read receipts"), content: {
