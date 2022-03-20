@@ -12,8 +12,6 @@ struct CreateGroupView: View {
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var viewModel = CreateGroupViewModel()
     
-    @State private var groupName = ""
-    
     var body: some View {
         VStack {
             Spacer()
@@ -24,7 +22,7 @@ struct CreateGroupView: View {
                     .font(.footnote)
                 Spacer()
             }
-            TextField("Aa", text: $groupName)
+            TextField("Aa", text: $viewModel.groupName)
                 .keyboardType(.namePhonePad)
                 .padding()
                 .background(
@@ -55,10 +53,16 @@ struct CreateGroupView: View {
             Button {
                 viewModel.showCreatedGroup = true
             } label: {
-                Text("Create group")
-                    .modifier(PrimaryButton())
+                if viewModel.createGroupButtonEnabled {
+                    Text("Create group")
+                        .modifier(PrimaryButton())
+                } else {
+                    Text("Create group")
+                        .modifier(PrimaryButtonDisabled())
+                }
             }
             .padding(.top)
+            .disabled(viewModel.createGroupButtonEnabled)
         }
         .padding()
         .navigationBarTitle("Create group")
@@ -75,7 +79,7 @@ struct CreateGroupView: View {
             dismissCallback: {
                 viewModel.dismissCreatedGroup()
             }, view: {
-                Text("The group \"\(groupName)\" has been created.")
+                Text("The group \"\(viewModel.groupName)\" has been created.")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, maxHeight: 120)
                     .background(Color("setup-grayDARK"))

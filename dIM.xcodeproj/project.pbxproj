@@ -242,6 +242,15 @@
 			path = SettingsDetailView;
 			sourceTree = "<group>";
 		};
+		B0BFC57F27E7AFC200D5A4AD /* CreateGroupView */ = {
+			isa = PBXGroup;
+			children = (
+				B047A0F427CBDAF5006C2FDA /* CreateGroupView.swift */,
+				B0BFC57D27E7A5F100D5A4AD /* CreateGroupViewModel.swift */,
+			);
+			path = CreateGroupView;
+			sourceTree = "<group>";
+		};
 		B0CCFAEB27A85809003B4A8F /* Setup */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,8 +267,7 @@
 				B020E7D727A944E50098097A /* HomeViewModel.swift */,
 				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
 				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
-				B047A0F427CBDAF5006C2FDA /* CreateGroupView.swift */,
-				B0BFC57D27E7A5F100D5A4AD /* CreateGroupViewModel.swift */,
+				B0BFC57F27E7AFC200D5A4AD /* CreateGroupView */,
 				B0B0D06826FCFD2E00E2512B /* ChatView */,
 				B0225B09271B2AF5005D8098 /* SettingsView */,
 			);

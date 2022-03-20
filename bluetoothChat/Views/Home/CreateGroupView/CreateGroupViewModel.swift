@@ -8,7 +8,13 @@
 import Foundation
 
 class CreateGroupViewModel: ObservableObject {
+    @Published var groupName = "" {
+        didSet {
+            createGroupButtonEnabled = validateGroupName(groupName)
+        }
+    }
     @Published var showCreatedGroup = false
+    @Published var createGroupButtonEnabled = false
     
     private var context = Session.context
     
@@ -24,5 +30,16 @@ class CreateGroupViewModel: ObservableObject {
         newGroup.symmetricKey = CryptoHandler.generateSymmetricKey().serialize()
         
         try? context.save()
+    }
+    
+    private func validateGroupName(_ name: String) -> Bool {
+        if name.count < 4 {
+            return true
+        } else if name.count > 16 {
+            return true
+        } else if name.contains(" ") {
+            return true
+        }
+        return false
     }
 }

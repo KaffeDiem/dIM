@@ -24,6 +24,20 @@ struct PrimaryButton: ViewModifier {
     }
 }
 
+struct PrimaryButtonDisabled: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(.clear)
+            .foregroundColor(.white)
+            .frame(minWidth: 0, maxWidth: .infinity)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.accentColor, lineWidth: 3)
+            )
+    }
+}
+
 extension UIApplication {
     /// Called on a textfield to dismiss the keyboard when the user
     /// taps the view. This allows us to scroll the view and then
