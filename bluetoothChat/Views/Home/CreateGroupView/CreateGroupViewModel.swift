@@ -34,12 +34,12 @@ class CreateGroupViewModel: ObservableObject {
     
     private func validateGroupName(_ name: String) -> Bool {
         if name.count < 4 {
-            return true
+            return false
         } else if name.count > 16 {
-            return true
+            return false
         } else if name.contains(" ") {
-            return true
+            return false
         }
-        return false
+        return true
     }
 }

@@ -62,13 +62,13 @@ struct CreateGroupView: View {
                 }
             }
             .padding(.top)
-            .disabled(viewModel.createGroupButtonEnabled)
+            .disabled(!viewModel.createGroupButtonEnabled)
         }
         .padding()
         .navigationBarTitle("Create group")
         .popup(
             isPresented: $viewModel.showCreatedGroup,
-            type: .toast,
+            type: .default,
             position: .bottom,
             animation: .default,
             autohideIn: 4.0,
