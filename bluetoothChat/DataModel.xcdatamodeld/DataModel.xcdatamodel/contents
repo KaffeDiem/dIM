@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ConversationEntity" representedClassName="ConversationEntity" syncable="YES" codeGenerationType="class">
         <attribute name="author" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -10,7 +10,7 @@
     <entity name="GroupEntity" representedClassName="GroupEntity" syncable="YES" codeGenerationType="class">
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastMessage" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="symmetricKey" optional="YES" attributeType="String"/>
         <relationship name="messages" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MessageEntity" inverseName="inGroup" inverseEntity="MessageEntity"/>
     </entity>
@@ -26,7 +26,7 @@
     </entity>
     <elements>
         <element name="ConversationEntity" positionX="-306.1605224609375" positionY="45.73828125" width="128" height="118"/>
-        <element name="MessageEntity" positionX="-67.5987548828125" positionY="84.41009521484375" width="128" height="149"/>
         <element name="GroupEntity" positionX="-189" positionY="126" width="128" height="104"/>
+        <element name="MessageEntity" positionX="-67.5987548828125" positionY="84.41009521484375" width="128" height="149"/>
     </elements>
 </model>

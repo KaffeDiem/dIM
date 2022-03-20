@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import Resolver
+import PartialSheet
 
 /**
  SetUpView handles all initial first logins where users choose a username
@@ -127,6 +128,7 @@ struct SetupView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .attachPartialSheetToRoot()
     }
 }
 

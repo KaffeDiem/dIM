@@ -8,7 +8,6 @@ import MobileCoreServices
 import Foundation
 import SwiftUI
 
-
 /// The `ChatView` displays a conversation and all the messages that have been sent and
 /// received in said conversation.
 ///
