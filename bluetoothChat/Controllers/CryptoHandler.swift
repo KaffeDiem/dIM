@@ -160,4 +160,26 @@ class CryptoHandler {
         }
     }
         
+    static func generateSymmetricKey() -> SymmetricKey {
+        return SymmetricKey(size: .bits256)
+    }
+}
+
+extension SymmetricKey {
+    /// Creates a `SymmetricKey` from a Base64-encoded `String`.
+    /// - Parameter base64EncodedString: The Base64-encoded string from which to generate the `SymmetricKey`.
+    init?(base64EncodedString: String) {
+        guard let data = Data(base64Encoded: base64EncodedString) else {
+            return nil
+        }
+
+        self.init(data: data)
+    }
+
+    /// Serializes a `SymmetricKey` to a Base64-encoded `String`.
+    func serialize() -> String {
+        return self.withUnsafeBytes { body in
+            Data(body).base64EncodedString()
+        }
+    }
 }
