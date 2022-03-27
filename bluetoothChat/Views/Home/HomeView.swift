@@ -30,93 +30,96 @@ struct HomeView: View {
     /// Body and content of the HomeView.
     var body: some View {
         
-        VStack {
-            if !conversationsIsEmpty() {
-                /*
-                 List all added users and their conversations.
-                 */
-                List() {
-                    ForEach(conversations, id: \.self) { conversation in
-                        NavigationLink {
-                            ChatView(conversation: conversation)
-                        } label: {
-                            VStack {
-                                Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
-                                    .foregroundColor(.accentColor)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+        NavigationView {
+            VStack {
+                if !conversationsIsEmpty() {
+                    /*
+                     List all added users and their conversations.
+                     */
+                    List() {
+                        ForEach(conversations, id: \.self) { conversation in
+                            NavigationLink {
+                                ChatView(conversation: conversation)
+                            } label: {
+                                VStack {
+                                    Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
+                                        .foregroundColor(.accentColor)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                                Text(conversation.lastMessage ?? "Start a new conversation.")
-                                    .scaledToFit()
-                                    .font(.footnote)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .padding()
-                        }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            // Clearing a conversation.
-                            Button {
-                                conversation.removeFromMessages(conversation.messages!)
-                                conversation.lastMessage = "Start a new conversation."
-                                do {
-                                    try Session.context.save()
-                                } catch {
-                                    print("Context could not be saved.")
+                                    Text(conversation.lastMessage ?? "Start a new conversation.")
+                                        .scaledToFit()
+                                        .font(.footnote)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                            } label: {
-                                Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
+                                .padding()
                             }
-                            .tint(.accentColor)
-                            
-                            Button(role: .destructive) {
-                                deleteContact(for: conversation)
-                            } label: {
-                                Label("Delete Conversation", systemImage: "person.fill.xmark")
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                // Clearing a conversation.
+                                Button {
+                                    conversation.removeFromMessages(conversation.messages!)
+                                    conversation.lastMessage = "Start a new conversation."
+                                    do {
+                                        try Session.context.save()
+                                    } catch {
+                                        print("Context could not be saved.")
+                                    }
+                                } label: {
+                                    Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
+                                }
+                                .tint(.accentColor)
+                                
+                                Button(role: .destructive) {
+                                    deleteContact(for: conversation)
+                                } label: {
+                                    Label("Delete Conversation", systemImage: "person.fill.xmark")
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    SnapCarousel()
+                        .environmentObject(UIStateCarousel)
+                }
+            }
+            .navigationBarTitle("Chats")
+            /*
+             Toolbar in the navigation header for SettingsView and ChatView.
+             */
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text("Chats")
+                            .font(.headline)
+                        if Session.chatHandler.discoveredDevices.count < 1 {
+                            HStack {
+                                Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.red, .orange, .white)
+                                Text("Not connected")
+                                    .foregroundColor(.accentColor)
+                                    .font(.subheadline)
+                            }
+                        } else {
+                            HStack {
+                                Image(systemName: "antenna.radiowaves.left.and.right")
+                                Text("\(Session.chatHandler.discoveredDevices.count) in range").font(.subheadline)
                             }
                         }
                     }
                 }
-            } else {
-                SnapCarousel()
-                    .environmentObject(UIStateCarousel)
-            }
-        }
-        /*
-         Toolbar in the navigation header for SettingsView and ChatView.
-         */
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                VStack {
-                    Text("Chats")
-                        .font(.headline)
-                    if Session.chatHandler.discoveredDevices.count < 1 {
-                        HStack {
-                            Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.red, .orange, .white)
-                            Text("Not connected")
-                                .foregroundColor(.accentColor)
-                                .font(.subheadline)
-                        }
-                    } else {
-                        HStack {
-                            Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(Session.chatHandler.discoveredDevices.count) in range").font(.subheadline)
-                        }
-                    }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink(destination: SettingsView(), label: {
+                        Image(systemName: "gearshape.fill")
+                    })
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: QRView(), label: {
+                        Image(systemName: "qrcode")
+                    })
                 }
             }
-            ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView(), label: {
-                    Image(systemName: "gearshape.fill")
-                })
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView(), label: {
-                    Image(systemName: "qrcode")
-                })
-            }
         }
-        .navigationBarBackButtonHidden(true)
+//        .navigationBarBackButtonHidden(true)
     }
     
     private func deleteContact(for conversation: ConversationEntity) {

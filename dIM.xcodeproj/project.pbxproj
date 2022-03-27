@@ -29,6 +29,7 @@
 		B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */; };
 		B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */; };
 		B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06079B326D54F54007B4DF6 /* ConversationModel.swift */; };
+		B0641E1627E7B2C3003C767D /* TabBarHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0641E1527E7B2C3003C767D /* TabBarHostView.swift */; };
 		B064B43726D771F0005D6BFB /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetupView.swift */; };
 		B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = B070BAED2722E0740036091A /* MessageBubble.swift */; };
 		B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179C26D6276C00F9C649 /* SettingsView.swift */; };
@@ -79,6 +80,7 @@
 		B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerPeripheral.swift; sourceTree = "<group>"; };
 		B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		B06079B326D54F54007B4DF6 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
+		B0641E1527E7B2C3003C767D /* TabBarHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarHostView.swift; sourceTree = "<group>"; };
 		B064B43626D771F0005D6BFB /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		B070BAED2722E0740036091A /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		B074179C26D6276C00F9C649 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 			children = (
 				B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */,
 				B064B43626D771F0005D6BFB /* SetupView.swift */,
+				B0641E1527E7B2C3003C767D /* TabBarHostView.swift */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
 				B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */,
+				B0641E1627E7B2C3003C767D /* TabBarHostView.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,

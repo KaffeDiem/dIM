@@ -52,6 +52,7 @@ struct CreateGroupView: View {
             
             Button {
                 viewModel.showCreatedGroup = true
+                viewModel.addGroup(viewModel.groupName)
             } label: {
                 if viewModel.createGroupButtonEnabled {
                     Text("Create group")

@@ -8,6 +8,8 @@
 import Foundation
 
 class CreateGroupViewModel: ObservableObject {
+    let context = Session.context
+    
     @Published var groupName = "" {
         didSet {
             createGroupButtonEnabled = validateGroupName(groupName)
@@ -16,20 +18,21 @@ class CreateGroupViewModel: ObservableObject {
     @Published var showCreatedGroup = false
     @Published var createGroupButtonEnabled = false
     
-    private var context = Session.context
-    
     public func dismissCreatedGroup() {
         showCreatedGroup = false
     }
     
-    public func addGroup(_ name: String, withMember member: ConversationEntity) {
-        let newGroup = GroupEntity(context: context)
-        newGroup.created = Date()
-        newGroup.name = name
-        newGroup.lastMessage = "Send a message to the group"
-        newGroup.symmetricKey = CryptoHandler.generateSymmetricKey().serialize()
+    public func addGroup(_ name: String, withMember member: ConversationEntity? = nil) {
         
-        try? context.save()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            let newGroup = GroupEntity(context: self.context)
+            newGroup.created = Date()
+            newGroup.name = name
+            newGroup.lastMessage = "Send a message to the group"
+            newGroup.symmetricKey = CryptoHandler.generateSymmetricKey().serialize()
+            
+            try? self.context.save()
+        })
     }
     
     private func validateGroupName(_ name: String) -> Bool {

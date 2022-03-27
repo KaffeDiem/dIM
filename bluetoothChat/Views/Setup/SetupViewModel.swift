@@ -14,11 +14,7 @@ class SetupViewModel: ObservableObject {
     @Published public var hasUsername = false
     
     /// The CoreData context object which we save to persistent storage to.
-    private var context: NSManagedObjectContext
-    
-    init(context: NSManagedObjectContext) {
-        self.context = context
-    }
+    private var context = Session.context
     
     @MainActor
     public func onAppear() {
@@ -45,6 +41,7 @@ class SetupViewModel: ObservableObject {
             let usernameWithDigits = username + "#" + String(Int.random(in: 100000...999999))
             UserDefaults.standard.set(usernameWithDigits, forKey: "Username")
             hasUsername = true
+            Session.username = UserDefaults.standard.string(forKey: "Username")
         }
     }
     

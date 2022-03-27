@@ -23,4 +23,6 @@ struct Session {
     static let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     /// ChatHandler handles the Bluetooth connections as well as message transmission.
     static let chatHandler = ChatHandler(context: Session.context)
+    /// Get username of user if it has been set.
+    static var username = UserDefaults.standard.string(forKey: "Username")
 }
