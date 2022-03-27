@@ -53,6 +53,8 @@
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
 		B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */; };
+		B0EA847627F06330002F3537 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0EA847527F06330002F3537 /* GroupView.swift */; };
+		B0EA847827F063C4002F3537 /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0EA847727F063C4002F3537 /* ChatListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +103,8 @@
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
 		B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueHandler.swift; sourceTree = "<group>"; };
+		B0EA847527F06330002F3537 /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
+		B0EA847727F063C4002F3537 /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +178,7 @@
 		B05E1F4926D3B42400AD9E65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B0EA847A27F06417002F3537 /* CustomView */,
 				B0CCFAEB27A85809003B4A8F /* Setup */,
 				B0CCFAEC27A85827003B4A8F /* Home */,
 				B0873019276F852300723C41 /* ExplanatoryView.swift */,
@@ -259,6 +264,7 @@
 				B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */,
 				B064B43626D771F0005D6BFB /* SetupView.swift */,
 				B0641E1527E7B2C3003C767D /* TabBarHostView.swift */,
+				B0EA847927F063DD002F3537 /* GroupView */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
@@ -287,6 +293,22 @@
 				B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */,
 			);
 			path = Transmission;
+			sourceTree = "<group>";
+		};
+		B0EA847927F063DD002F3537 /* GroupView */ = {
+			isa = PBXGroup;
+			children = (
+				B0EA847527F06330002F3537 /* GroupView.swift */,
+			);
+			path = GroupView;
+			sourceTree = "<group>";
+		};
+		B0EA847A27F06417002F3537 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				B0EA847727F063C4002F3537 /* ChatListCell.swift */,
+			);
+			path = CustomView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -373,6 +395,7 @@
 			files = (
 				B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */,
 				B047A0F527CBDAF5006C2FDA /* CreateGroupView.swift in Sources */,
+				B0EA847627F06330002F3537 /* GroupView.swift in Sources */,
 				B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */,
 				B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */,
 				B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */,
@@ -387,6 +410,7 @@
 				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
 				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
 				B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */,
+				B0EA847827F063C4002F3537 /* ChatListCell.swift in Sources */,
 				B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */,
 				B0CCFAEA27A8535B003B4A8F /* Injection.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,

@@ -41,17 +41,10 @@ struct HomeView: View {
                             NavigationLink {
                                 ChatView(conversation: conversation)
                             } label: {
-                                VStack {
-                                    Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
-                                        .foregroundColor(.accentColor)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                                    Text(conversation.lastMessage ?? "Start a new conversation.")
-                                        .scaledToFit()
-                                        .font(.footnote)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                                .padding()
+                                    ChatListCell(
+                                        title: viewModel.getAuthor(for: conversation) ?? "Unknown",
+                                        lastMessage: conversation.lastMessage ?? "Start a new conversation."
+                                    )
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 // Clearing a conversation.
