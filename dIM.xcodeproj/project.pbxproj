@@ -37,6 +37,7 @@
 		B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A226D6CB0800F9C649 /* DeviceModel.swift */; };
 		B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */; };
 		B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0873019276F852300723C41 /* ExplanatoryView.swift */; };
+		B08B10D827F3137F0010BDC9 /* GroupChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08B10D727F3137F0010BDC9 /* GroupChatView.swift */; };
 		B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B09FAD1C2789EFFA0030B777 /* CodeScanner */; };
 		B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81027511A0400EC3299 /* GLOBALS.swift */; };
 		B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */; };
@@ -88,6 +89,7 @@
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
 		B0873019276F852300723C41 /* ExplanatoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplanatoryView.swift; sourceTree = "<group>"; };
+		B08B10D727F3137F0010BDC9 /* GroupChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatView.swift; sourceTree = "<group>"; };
 		B0A2B81027511A0400EC3299 /* GLOBALS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLOBALS.swift; sourceTree = "<group>"; };
 		B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRRoutingHandler.swift; sourceTree = "<group>"; };
 		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 			isa = PBXGroup;
 			children = (
 				B0EA847527F06330002F3537 /* GroupView.swift */,
+				B08B10D727F3137F0010BDC9 /* GroupChatView.swift */,
 			);
 			path = GroupView;
 			sourceTree = "<group>";
@@ -388,6 +391,7 @@
 			files = (
 				B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */,
 				B047A0F527CBDAF5006C2FDA /* CreateGroupView.swift in Sources */,
+				B08B10D827F3137F0010BDC9 /* GroupChatView.swift in Sources */,
 				B0EA847627F06330002F3537 /* GroupView.swift in Sources */,
 				B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */,
 				B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */,

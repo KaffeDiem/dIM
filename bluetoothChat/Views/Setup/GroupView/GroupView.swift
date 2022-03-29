@@ -18,9 +18,14 @@ struct GroupView: View {
     var body: some View {
         NavigationView {
             List(groups) { group in
-                ChatListCell(
-                    title: group.name ?? "Unknown",
-                    lastMessage: group.lastMessage ?? "Send the first message to the group.")
+                NavigationLink {
+                    GroupChatView(group: group)
+                } label: {
+                    ChatListCell(
+                        title: group.name ?? "Unknown",
+                        lastMessage: group.lastMessage ?? "Send the first message to the group."
+                    )
+                }
             }
         }
     }
