@@ -26,15 +26,6 @@
         "revision" : "77c04cef5651a07ab795f8b4edeb39cb231b2411",
         "version" : "1.0.7"
       }
-    },
-    {
-      "identity" : "resolver",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hmlongco/Resolver.git",
-      "state" : {
-        "revision" : "97de0b0320036607564af4a60025b48f8d041221",
-        "version" : "1.5.0"
-      }
     }
   ],
   "version" : 2

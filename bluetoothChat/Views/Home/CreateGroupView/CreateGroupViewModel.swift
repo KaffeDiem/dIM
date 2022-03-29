@@ -23,16 +23,13 @@ class CreateGroupViewModel: ObservableObject {
     }
     
     public func addGroup(_ name: String, withMember member: ConversationEntity? = nil) {
+        let newGroup = GroupEntity(context: self.context)
+        newGroup.created = Date()
+        newGroup.name = name
+        newGroup.lastMessage = "Send a message to the group"
+        newGroup.symmetricKey = CryptoHandler.generateSymmetricKey().serialize()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            let newGroup = GroupEntity(context: self.context)
-            newGroup.created = Date()
-            newGroup.name = name
-            newGroup.lastMessage = "Send a message to the group"
-            newGroup.symmetricKey = CryptoHandler.generateSymmetricKey().serialize()
-            
-            try? self.context.save()
-        })
+        try? self.context.save()
     }
     
     private func validateGroupName(_ name: String) -> Bool {

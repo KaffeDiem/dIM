@@ -47,8 +47,6 @@
 		B0BFC57E27E7A5F100D5A4AD /* CreateGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC57D27E7A5F100D5A4AD /* CreateGroupViewModel.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
 		B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */; };
-		B0CCFAE827A849CD003B4A8F /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = B0CCFAE727A849CD003B4A8F /* Resolver */; };
-		B0CCFAEA27A8535B003B4A8F /* Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CCFAE927A8535B003B4A8F /* Injection.swift */; };
 		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
@@ -98,7 +96,6 @@
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bluetoothChat.entitlements; sourceTree = "<group>"; };
 		B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewModel.swift; sourceTree = "<group>"; };
-		B0CCFAE927A8535B003B4A8F /* Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injection.swift; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
@@ -113,7 +110,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0BFC57927E78A3A00D5A4AD /* PopupView in Frameworks */,
-				B0CCFAE827A849CD003B4A8F /* Resolver in Frameworks */,
 				B0BFC57C27E7918100D5A4AD /* PartialSheet in Frameworks */,
 				B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */,
 			);
@@ -182,7 +178,6 @@
 				B0CCFAEB27A85809003B4A8F /* Setup */,
 				B0CCFAEC27A85827003B4A8F /* Home */,
 				B0873019276F852300723C41 /* ExplanatoryView.swift */,
-				B0CCFAE927A8535B003B4A8F /* Injection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -329,7 +324,6 @@
 			name = bluetoothChat;
 			packageProductDependencies = (
 				B09FAD1C2789EFFA0030B777 /* CodeScanner */,
-				B0CCFAE727A849CD003B4A8F /* Resolver */,
 				B0BFC57827E78A3A00D5A4AD /* PopupView */,
 				B0BFC57B27E7918100D5A4AD /* PartialSheet */,
 			);
@@ -362,7 +356,6 @@
 			mainGroup = B05E1F2926D3B3A800AD9E65;
 			packageReferences = (
 				B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */,
-				B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */,
 				B0BFC57727E78A3A00D5A4AD /* XCRemoteSwiftPackageReference "PopupView" */,
 				B0BFC57A27E7918100D5A4AD /* XCRemoteSwiftPackageReference "PartialSheet" */,
 			);
@@ -412,7 +405,6 @@
 				B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */,
 				B0EA847827F063C4002F3537 /* ChatListCell.swift in Sources */,
 				B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */,
-				B0CCFAEA27A8535B003B4A8F /* Injection.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
 				B0225B0F271B2C34005D8098 /* SupportView.swift in Sources */,
 				B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */,
@@ -665,14 +657,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hmlongco/Resolver.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -690,11 +674,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B0BFC57A27E7918100D5A4AD /* XCRemoteSwiftPackageReference "PartialSheet" */;
 			productName = PartialSheet;
-		};
-		B0CCFAE727A849CD003B4A8F /* Resolver */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B0CCFAE627A849CD003B4A8F /* XCRemoteSwiftPackageReference "Resolver" */;
-			productName = Resolver;
 		};
 /* End XCSwiftPackageProductDependency section */
 
