@@ -140,9 +140,9 @@ struct GroupChatView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
-                    CreateGroupView()
                 } label: {
-                    Text("Create group")
+                    Text("Invite")
+                    Image(systemName: "qrcode")
                 }
 
             }

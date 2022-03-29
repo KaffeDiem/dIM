@@ -26,7 +26,38 @@ struct GroupView: View {
                         lastMessage: group.lastMessage ?? "Send the first message to the group."
                     )
                 }
+                .listRowSeparator(.hidden)
             }
+        
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text("Groups")
+                        .font(.headline)
+                    if Session.chatHandler.discoveredDevices.count < 1 {
+                        HStack {
+                            Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.red, .orange, .white)
+                            Text("Not connected")
+                                .foregroundColor(.accentColor)
+                                .font(.subheadline)
+                        }
+                    } else {
+                        HStack {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                            Text("\(Session.chatHandler.discoveredDevices.count) in range").font(.subheadline)
+                        }
+                    }
+                }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                NavigationLink(destination: SettingsView(), label: {
+                    Image(systemName: "gearshape.fill")
+                })
+            }
+        }
+        .navigationTitle("Groups")
         }
     }
 }

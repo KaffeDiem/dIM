@@ -11,18 +11,29 @@ struct ChatListCell: View {
     let title: String
     let lastMessage: String
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .foregroundColor(.accentColor)
+            HStack {
+                Circle()
+                    .foregroundColor(colorScheme == .dark ? .gray : Color("setup-grayLIGHT"))
+                    .frame(width: 50, height: 50, alignment: .center)
+                    .overlay(
+                        Text(title.prefix(2))
+                    )
+                    .padding(.trailing, 8)
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .foregroundColor(.accentColor)
 
-                Text(lastMessage)
-                    .scaledToFit()
-                    .font(.footnote)
+                    Text(lastMessage)
+                        .scaledToFit()
+                        .font(.footnote)
+                }
             }
         }
-        .padding()
+        .padding(8)
     }
 }
 

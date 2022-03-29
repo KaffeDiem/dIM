@@ -46,6 +46,7 @@ struct HomeView: View {
                                         lastMessage: conversation.lastMessage ?? "Start a new conversation."
                                     )
                             }
+                            .listRowSeparator(.hidden)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 // Clearing a conversation.
                                 Button {
@@ -112,7 +113,6 @@ struct HomeView: View {
                 }
             }
         }
-//        .navigationBarBackButtonHidden(true)
     }
     
     private func deleteContact(for conversation: ConversationEntity) {
