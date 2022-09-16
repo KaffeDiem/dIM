@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIKit
-import Resolver
 
 /**
  SetUpView handles all initial first logins where users choose a username
@@ -140,9 +139,3 @@ struct SetupView: View {
     }
 }
 
-
-struct SetupView_Previews: PreviewProvider {
-    static var previews: some View {
-        SetupView(viewModel: SetupViewModel(context: Resolver.resolve()))
-    }
-}
