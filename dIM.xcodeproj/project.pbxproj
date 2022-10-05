@@ -33,7 +33,9 @@
 		B074179F26D62A5700F9C649 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B074179E26D62A5700F9C649 /* Extensions.swift */; };
 		B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07417A226D6CB0800F9C649 /* DeviceModel.swift */; };
 		B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */; };
+		B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = B080269F28EDA83B00CBE455 /* Documentation.docc */; };
 		B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0873019276F852300723C41 /* ExplanatoryView.swift */; };
+		B098EFAF28E9E2D60040B434 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B098EFAE28E9E2D60040B434 /* PageView.swift */; };
 		B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B09FAD1C2789EFFA0030B777 /* CodeScanner */; };
 		B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81027511A0400EC3299 /* GLOBALS.swift */; };
 		B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */; };
@@ -76,7 +78,9 @@
 		B074179E26D62A5700F9C649 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B07417A226D6CB0800F9C649 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
+		B080269F28EDA83B00CBE455 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		B0873019276F852300723C41 /* ExplanatoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplanatoryView.swift; sourceTree = "<group>"; };
+		B098EFAE28E9E2D60040B434 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		B0A2B81027511A0400EC3299 /* GLOBALS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLOBALS.swift; sourceTree = "<group>"; };
 		B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRRoutingHandler.swift; sourceTree = "<group>"; };
 		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
@@ -130,19 +134,21 @@
 		B05E1F3426D3B3A800AD9E65 /* bluetoothChat */ = {
 			isa = PBXGroup;
 			children = (
-				B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */,
-				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
-				B05E1F4926D3B42400AD9E65 /* Views */,
-				B05E1F4C26D3C7F200AD9E65 /* Models */,
-				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
-				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
-				B074179E26D62A5700F9C649 /* Extensions.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
-				B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */,
-				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
+				B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */,
+				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
+				B080269F28EDA83B00CBE455 /* Documentation.docc */,
+				B074179E26D62A5700F9C649 /* Extensions.swift */,
+				B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */,
+				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
+				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
+				B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */,
+				B05E1F4C26D3C7F200AD9E65 /* Models */,
 				B05E1F3D26D3B3AB00AD9E65 /* Preview Content */,
+				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
+				B05E1F4926D3B42400AD9E65 /* Views */,
 			);
 			path = bluetoothChat;
 			sourceTree = "<group>";
@@ -198,6 +204,14 @@
 			path = Bluetooth;
 			sourceTree = "<group>";
 		};
+		B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */ = {
+			isa = PBXGroup;
+			children = (
+				B098EFAE28E9E2D60040B434 /* PageView.swift */,
+			);
+			path = "Extensions+CustomUI";
+			sourceTree = "<group>";
+		};
 		B0B0D06826FCFD2E00E2512B /* ChatView */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,8 +252,8 @@
 		B0CCFAEC27A85827003B4A8F /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
 				B020E7D727A944E50098097A /* HomeViewModel.swift */,
+				B05E1F3926D3B3A800AD9E65 /* HomeView.swift */,
 				B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */,
 				B0357C0A26DBEB950013CAF9 /* QRView.swift */,
 				B0B0D06826FCFD2E00E2512B /* ChatView */,
@@ -356,6 +370,7 @@
 				B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */,
 				B074179F26D62A5700F9C649 /* Extensions.swift in Sources */,
 				B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */,
+				B098EFAF28E9E2D60040B434 /* PageView.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
 				B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */,
@@ -366,6 +381,7 @@
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
 				B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */,
 				B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */,
+				B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */,
 				B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetupView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
@@ -515,11 +531,12 @@
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = bluetoothChat/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -540,11 +557,12 @@
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = bluetoothChat/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.kaspermunch.dim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
