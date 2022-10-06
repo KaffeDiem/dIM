@@ -12,7 +12,7 @@ import SwiftUI
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
     
-    /// Initialize the ChatBrain which handles logic of Bluetooth
+    /// Initialize the chatHandler which handles logic of Bluetooth
     /// and sending / receiving messages.
     @StateObject var chatHandler: ChatHandler
     

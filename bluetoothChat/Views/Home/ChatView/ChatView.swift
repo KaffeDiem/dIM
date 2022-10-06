@@ -19,9 +19,9 @@ struct ChatView: View {
     @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
-    /// The `ChatBrain` object is used to send and receive messages.
+    /// The `chatHandler` object is used to send and receive messages.
     /// It handles the logic behind this view.
-    @EnvironmentObject var chatBrain: ChatHandler
+    @EnvironmentObject var chatHandler: ChatHandler
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
@@ -75,7 +75,7 @@ struct ChatView: View {
                                 /* Resend button (for users own messages) */
                                 if message.sender! == username {
                                     Button(role: .none, action: {
-                                        chatBrain.sendMessage(for: conversation, text: message.text!, context: context)
+                                        chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
                                     }, label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     })
@@ -116,7 +116,7 @@ struct ChatView: View {
                     }
                 }
             }
-            .id(chatBrain.refreshID) // Force a refresh when an ACK message is received
+            .id(chatHandler.refreshID) // Force a refresh when an ACK message is received
             
             /*
              Send message part
@@ -128,7 +128,7 @@ struct ChatView: View {
                 .submitLabel(.send)
                 .onSubmit({
                     if message.count < 261 {
-                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        chatHandler.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 })
@@ -144,7 +144,7 @@ struct ChatView: View {
                 
                 Button(action: {
                     if message.count < 261 {
-                        chatBrain.sendMessage(for: conversation, text: message, context: context)
+                        chatHandler.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 }, label: {
@@ -161,12 +161,12 @@ struct ChatView: View {
              it in settings.
              */
             if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatBrain.sendReadMessage(conversation)
+                chatHandler.sendReadMessage(conversation)
             }
         }
         .onDisappear() {
             if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatBrain.sendReadMessage(conversation)
+                chatHandler.sendReadMessage(conversation)
             }
         }
     }
