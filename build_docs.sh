@@ -2,9 +2,12 @@
 
 rm -rf docsData doc_archives docs
 
+# Update to name of project
+PROJECTNAME=dIM
+
 echo "Building DocC documentation for ModularSlothCreator..."
 
-xcodebuild -project dIM.xcodeproj -derivedDataPath docsData -scheme dIM -destination 'platform=iOS Simulator,name=iPhone 13 Pro' -parallelizeTargets docbuild
+xcodebuild -project $PROJECTNAME.xcodeproj -derivedDataPath docsData -scheme $PROJECTNAME -destination 'platform=iOS Simulator,name=iPhone 13 Pro' -parallelizeTargets docbuild
 
 echo "Copying DocC archives to doc_archives..."
 
@@ -20,7 +23,7 @@ for ARCHIVE in doc_archives/*.doccarchive; do
     }
     ARCHIVE_NAME="$(cmd)"
     echo "Processing Archive: $ARCHIVE"
-    $(xcrun --find docc) process-archive transform-for-static-hosting "$ARCHIVE" --hosting-base-path dIM/$ARCHIVE_NAME --output-path docs/$ARCHIVE_NAME
+    $(xcrun --find docc) process-archive transform-for-static-hosting "$ARCHIVE" --hosting-base-path $PROJECTNAME/$ARCHIVE_NAME --output-path docs/$ARCHIVE_NAME
 done
 
 echo "Clean up..."
