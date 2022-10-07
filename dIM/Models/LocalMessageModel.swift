@@ -7,18 +7,28 @@
 
 import Foundation
 
-
-
-/**
- Local messages are messages meant to be stored on device.
- 
- Local messages act just like a regular message but with more detailed information.
- This is done to limit the size of the message sent between
- devices while upholding information in a single struct on the
- receiving device.
- 
- See MessageModel.swift
- */
+/// The model of a message meant to be stored on the device. Local messages
+/// act just like regular messages but with more detailed information not
+/// needed for the actually sent and received messages.
+///
+/// - Note: This model differs from the ``Message`` in that it also keeps a
+/// status of the message. This status is also saved to CoreData.
+///
+/// - Note: The text is the decrypted text message.
+///
+/// An example of a message being created and its status changed.
+/// ```swift
+/// let message = LocalMessage(
+///     id: Int,
+///     sender: String,
+///     receiver: String,
+///     text: String,
+///     date: Date,
+///     status: Status
+///     )
+///
+/// message.messageDelivered()
+/// ```
 struct LocalMessage: Identifiable, Hashable {
     /// Some id which uniquely identifies the message.
     var id: Int32
