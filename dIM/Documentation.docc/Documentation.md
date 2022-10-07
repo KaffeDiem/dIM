@@ -1,4 +1,4 @@
-# ``bluetoothChat``
+# ``dIM``
 
 An instant messenger app that works by using Bluetooth. 
 
