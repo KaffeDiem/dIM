@@ -26,6 +26,7 @@
 		B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */; };
 		B05E1F5726D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */; };
 		B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */; };
+		B05F7A9328F00A2700ABAC7E /* UsernameValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F7A9228F00A2700ABAC7E /* UsernameValidator.swift */; };
 		B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06079B326D54F54007B4DF6 /* ConversationModel.swift */; };
 		B064B43726D771F0005D6BFB /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B064B43626D771F0005D6BFB /* SetupView.swift */; };
 		B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = B070BAED2722E0740036091A /* MessageBubble.swift */; };
@@ -71,6 +72,7 @@
 		B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerCentral.swift; sourceTree = "<group>"; };
 		B05E1F5626D3DB5500AD9E65 /* BluetoothManagerPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerPeripheral.swift; sourceTree = "<group>"; };
 		B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		B05F7A9228F00A2700ABAC7E /* UsernameValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameValidator.swift; sourceTree = "<group>"; };
 		B06079B326D54F54007B4DF6 /* ConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
 		B064B43626D771F0005D6BFB /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		B070BAED2722E0740036091A /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
@@ -136,13 +138,13 @@
 			children = (
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
-				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
+				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B080269F28EDA83B00CBE455 /* Documentation.docc */,
 				B074179E26D62A5700F9C649 /* Extensions.swift */,
-				B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */,
 				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
+				B05F7A9128F00A0E00ABAC7E /* Helpers */,
 				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
 				B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */,
 				B05E1F4C26D3C7F200AD9E65 /* Models */,
@@ -193,6 +195,23 @@
 				B06E299E26D5358000FBB67E /* Bluetooth */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		B05F7A9028F009F300ABAC7E /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				B05F7A9228F00A2700ABAC7E /* UsernameValidator.swift */,
+			);
+			path = Validators;
+			sourceTree = "<group>";
+		};
+		B05F7A9128F00A0E00ABAC7E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B05F7A9028F009F300ABAC7E /* Validators */,
+				B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		B06E299E26D5358000FBB67E /* Bluetooth */ = {
@@ -361,6 +380,7 @@
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
+				B05F7A9328F00A2700ABAC7E /* UsernameValidator.swift in Sources */,
 				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
 				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
 				B0CCFAE527A8499A003B4A8F /* SetupViewModel.swift in Sources */,
