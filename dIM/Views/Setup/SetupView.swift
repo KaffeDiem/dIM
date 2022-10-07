@@ -13,9 +13,6 @@ import UIKit
  and are then redirected to ContentView which is the main View of the app.
  */
 struct SetupView: View {
-    /// String which stores the username temporarily.
-    @State private var textfieldUsername: String = ""
-    
     /// True if the keyboard is shown. Used for animations.
     @FocusState private var keyboardShown: Bool
     
@@ -50,9 +47,7 @@ struct SetupView: View {
                 
                 // TextField for setting username
                 VStack {
-                    TextField("Username", text: $textfieldUsername, onCommit: {
-                        }
-                    )
+                    TextField("Username", text: $viewModel.usernameValidator.username)
                     .keyboardType(.namePhonePad)
                     .padding()
                     .background(
@@ -65,23 +60,12 @@ struct SetupView: View {
                             self.carouselShown.toggle()
                         }
                     }
-                    // Guide to username requirements
-                    if !(textfieldUsername == "") {
-                        if textfieldUsername.count < 4 {
-                            Text("Minimum 4 characters.")
-                                .font(.footnote)
-                                .foregroundColor(.accentColor)
-                        } else if textfieldUsername.count > 16 {
-                            Text("Maximum 16 characters.")
-                                .font(.footnote)
-                                .foregroundColor(.accentColor)
-                        } else if textfieldUsername.contains(" ") {
-                            Text("No spaces in username.")
-                                .font(.footnote)
-                                .foregroundColor(.accentColor)
-                        } else {
-                            Text("")
-                        }
+                    
+                    // Show a warning if username is invalid
+                    if case .error(let errorMessage) = viewModel.usernameValidator.usernameState {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundColor(.accentColor)
                     }
                 }
                 .animation(.spring())
@@ -92,19 +76,15 @@ struct SetupView: View {
                 Spacer()
                 
                 VStack {
-                    /*
-                     EULA part.
-                     */
+                    // EULA part.
                     HStack {
                         Text("By continuing you agree to the")
                         Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
                     }
                     
-                    /*
-                     Enter button which handles setting the username if valid.
-                     */
+                    // Enter button
                     Button(action: {
-                        viewModel.setUsername(username: textfieldUsername)
+                        viewModel.saveUsername()
                     }, label: {
                         Text("Continue")
                         .padding()

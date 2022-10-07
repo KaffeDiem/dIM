@@ -10,8 +10,12 @@ import UserNotifications
 import CoreData
 
 class SetupViewModel: ObservableObject {
-    /// A boolean set to true if the username has been set. Used for redirecting to `HomeView`.
+    /// Check if the user has set a username already.
+    /// Used to redirect to ``HomeView``.
     @Published public var hasUsername = false
+    
+    /// Used to check for validaty of new username.
+    var usernameValidator: UsernameValidator = .init()
     
     /// The CoreData context object which we save to persistent storage to.
     private var context: NSManagedObjectContext
@@ -40,29 +44,27 @@ class SetupViewModel: ObservableObject {
     
     /// Set the username for this device and save it to `UserDefaults`.
     /// - Parameter username: The username to set.
-    public func setUsername(username: String) {
-        if validUsername(username: username) {
-            let usernameWithDigits = username + "#" + String(Int.random(in: 100000...999999))
-            UserDefaults.standard.set(usernameWithDigits, forKey: "Username")
-            hasUsername = true
+    public func saveUsername() {
+        let username = usernameValidator.username
+        
+        if username == "DEMOAPPLETESTUSERNAME" {
+            activateDemoMode()
+        } else {
+            switch usernameValidator.usernameState {
+            case .valid:
+                saveAndContinue(with: username)
+            case .undetermined, .error:
+                ()
+            }
         }
     }
     
-    /// Checks if a username is valid
-    /// - Parameter username: The string which a user types in a textfield.
-    /// - Returns: Returns a boolean stating if the username is valid or not.
-    public func validUsername(username: String) -> Bool {
-        if username == "DEMOAPPLETESTUSERNAME" {
-            activateDemoMode()
-            return true
-        } else if username.count < 4 {
-            return false
-        } else if username.count > 16 {
-            return false
-        } else if username.contains(" ") {
-            return false
-        }
-        return true
+    private func saveAndContinue(with username: String) {
+        let usernameWithDigits = username + "#" + String(Int.random(in: 100000...999999))
+        
+        // Save to `UserDefaults`
+        UserDefaults.standard.set(usernameWithDigits, forKey: "Username")
+        hasUsername = true
     }
     
     /// Activate demo mode for Apple where a conversation is automatically added as an example.

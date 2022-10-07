@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UsernameValidator {
+class UsernameValidator: ObservableObject {
     enum State {
         case valid
         case error(message: String)
