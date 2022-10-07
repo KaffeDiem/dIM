@@ -56,7 +56,7 @@
 		B0225B0C271B2B87005D8098 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B0225B0E271B2C34005D8098 /* SupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportView.swift; sourceTree = "<group>"; };
 		B0357C0A26DBEB950013CAF9 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
-		B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluetoothChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B05E1F3226D3B3A800AD9E65 /* dIM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dIM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B05E1F3926D3B3A800AD9E65 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -86,12 +86,12 @@
 		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
 		B0B0D06926FCFD4200E2512B /* MessageStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatus.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
-		B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bluetoothChat.entitlements; sourceTree = "<group>"; };
 		B0CCFAE427A8499A003B4A8F /* SetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupViewModel.swift; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
 		B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueHandler.swift; sourceTree = "<group>"; };
+		B0F199D128EF6C5B00F11157 /* dIM.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = dIM.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +118,7 @@
 		B05E1F2926D3B3A800AD9E65 = {
 			isa = PBXGroup;
 			children = (
-				B05E1F3426D3B3A800AD9E65 /* bluetoothChat */,
+				B05E1F3426D3B3A800AD9E65 /* dIM */,
 				B05E1F3326D3B3A800AD9E65 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -126,17 +126,17 @@
 		B05E1F3326D3B3A800AD9E65 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */,
+				B05E1F3226D3B3A800AD9E65 /* dIM.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B05E1F3426D3B3A800AD9E65 /* bluetoothChat */ = {
+		B05E1F3426D3B3A800AD9E65 /* dIM */ = {
 			isa = PBXGroup;
 			children = (
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
-				B0C6896A26E7CFAC004937D5 /* bluetoothChat.entitlements */,
+				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
 				B080269F28EDA83B00CBE455 /* Documentation.docc */,
@@ -150,7 +150,7 @@
 				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
 				B05E1F4926D3B42400AD9E65 /* Views */,
 			);
-			path = bluetoothChat;
+			path = dIM;
 			sourceTree = "<group>";
 		};
 		B05E1F3D26D3B3AB00AD9E65 /* Preview Content */ = {
@@ -277,9 +277,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B05E1F3126D3B3A800AD9E65 /* bluetoothChat */ = {
+		B05E1F3126D3B3A800AD9E65 /* dIM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B05E1F4626D3B3AB00AD9E65 /* Build configuration list for PBXNativeTarget "bluetoothChat" */;
+			buildConfigurationList = B05E1F4626D3B3AB00AD9E65 /* Build configuration list for PBXNativeTarget "dIM" */;
 			buildPhases = (
 				B05E1F2E26D3B3A800AD9E65 /* Sources */,
 				B05E1F2F26D3B3A800AD9E65 /* Frameworks */,
@@ -289,12 +289,12 @@
 			);
 			dependencies = (
 			);
-			name = bluetoothChat;
+			name = dIM;
 			packageProductDependencies = (
 				B09FAD1C2789EFFA0030B777 /* CodeScanner */,
 			);
 			productName = bluetoothChat;
-			productReference = B05E1F3226D3B3A800AD9E65 /* bluetoothChat.app */;
+			productReference = B05E1F3226D3B3A800AD9E65 /* dIM.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -327,7 +327,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B05E1F3126D3B3A800AD9E65 /* bluetoothChat */,
+				B05E1F3126D3B3A800AD9E65 /* dIM */,
 			);
 		};
 /* End PBXProject section */
@@ -524,14 +524,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
+				CODE_SIGN_ENTITLEMENTS = dIM/dIM.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"dIM/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = bluetoothChat/Info.plist;
+				INFOPLIST_FILE = dIM/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,14 +551,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = bluetoothChat/bluetoothChat.entitlements;
+				CODE_SIGN_ENTITLEMENTS = dIM/dIM.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"bluetoothChat/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"dIM/Preview Content\"";
 				DEVELOPMENT_TEAM = T3U4TGS8MW;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = bluetoothChat/Info.plist;
+				INFOPLIST_FILE = dIM/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -583,7 +585,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B05E1F4626D3B3AB00AD9E65 /* Build configuration list for PBXNativeTarget "bluetoothChat" */ = {
+		B05E1F4626D3B3AB00AD9E65 /* Build configuration list for PBXNativeTarget "dIM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B05E1F4726D3B3AB00AD9E65 /* Debug */,
