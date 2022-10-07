@@ -5,7 +5,9 @@
 ## User settings
 xcuserdata/
 
-docs/ 
+# Documentation
+docs/*
+!docs/dim/
 docsData/
 doc_archives/
 
