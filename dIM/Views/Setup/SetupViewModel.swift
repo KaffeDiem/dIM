@@ -14,8 +14,15 @@ class SetupViewModel: ObservableObject {
     /// Used to redirect to ``HomeView``.
     @Published public var hasUsername = false
     
+    @Published var username = "" {
+        didSet {
+            usernameState = usernameValidator.validate(username: username)
+        }
+    }
+    @Published var usernameState: UsernameValidator.State = .undetermined
+    
     /// Used to check for validaty of new username.
-    var usernameValidator: UsernameValidator = .init()
+    let usernameValidator: UsernameValidator = .init()
     
     /// The CoreData context object which we save to persistent storage to.
     private var context: NSManagedObjectContext
@@ -45,12 +52,10 @@ class SetupViewModel: ObservableObject {
     /// Set the username for this device and save it to `UserDefaults`.
     /// - Parameter username: The username to set.
     public func saveUsername() {
-        let username = usernameValidator.username
-        
         if username == "DEMOAPPLETESTUSERNAME" {
             activateDemoMode()
         } else {
-            switch usernameValidator.usernameState {
+            switch usernameState {
             case .valid:
                 saveAndContinue(with: username)
             case .undetermined, .error:

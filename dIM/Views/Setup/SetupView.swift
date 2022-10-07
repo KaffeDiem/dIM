@@ -47,7 +47,7 @@ struct SetupView: View {
                 
                 // TextField for setting username
                 VStack {
-                    TextField("Username", text: $viewModel.usernameValidator.username)
+                    TextField("Username", text: $viewModel.username)
                     .keyboardType(.namePhonePad)
                     .padding()
                     .background(
@@ -62,7 +62,7 @@ struct SetupView: View {
                     }
                     
                     // Show a warning if username is invalid
-                    if case .error(let errorMessage) = viewModel.usernameValidator.usernameState {
+                    if case .error(let errorMessage) = viewModel.usernameState {
                         Text(errorMessage)
                             .font(.footnote)
                             .foregroundColor(.accentColor)
@@ -83,9 +83,9 @@ struct SetupView: View {
                     }
                     
                     // Enter button
-                    Button(action: {
+                    Button {
                         viewModel.saveUsername()
-                    }, label: {
+                    } label: {
                         Text("Continue")
                         .padding()
                         .foregroundColor(.white)
@@ -98,7 +98,7 @@ struct SetupView: View {
                             )
                         )
                         .cornerRadius(10.0)
-                    })
+                    }
                 }
                 .padding()
                 

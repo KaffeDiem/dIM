@@ -7,31 +7,24 @@
 
 import Foundation
 
-class UsernameValidator: ObservableObject {
+class UsernameValidator {
     enum State {
         case valid
         case error(message: String)
         case undetermined
     }
     
-    @Published var username: String = "" {
-        didSet {
-            validateUsername()
-        }
-    }
-    @Published var usernameState: State = .undetermined
-    
-    private func validateUsername() {
+    func validate(username: String) -> State {
         if username.count < 4 {
-            usernameState = .error(message: "Username is too short")
+            return .error(message: "Username is too short")
         } else if username.count > 16 {
-            usernameState = .error(message: "Username is too long")
+            return .error(message: "Username is too long")
         } else if username.contains(" ") {
-            usernameState = .error(message: "Username must not contain space")
+            return .error(message: "Username must not contain space")
         } else if username.isEmpty {
-            usernameState = .undetermined
+            return .undetermined
         } else {
-            usernameState = .valid
+            return .valid
         }
     }
 }
