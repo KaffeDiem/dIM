@@ -13,7 +13,7 @@ import SwiftUI
 /// impression of what dIM is and how it works.
 struct SnapCarousel: View {
     /// UIStateModel keeps track of the active card in the carousel.
-    @EnvironmentObject var UIState: UIStateModel
+    @EnvironmentObject var UIState: CarouselViewModel
     /// Detect if the system is light or dark and update UI accordingly.
     @Environment(\.colorScheme) var colorScheme
     /// Used to open URLS by pressing the *Read More* button.
@@ -99,12 +99,11 @@ fileprivate struct Card: Decodable, Hashable, Identifiable {
     var image: String
 }
 
-/// A `UIStateModel` is used to keep track of the currently active card
-/// in the carousel and is passed down from the parent view.
-public class UIStateModel: ObservableObject {
-    /// Currently active card.
+
+/// Keeps track of the carousel view
+public class CarouselViewModel: ObservableObject {
     @Published var activeCard: Int = 0
-    /// How much the user is dragging on the cards right now.
+    /// Amount of drag from user input
     @Published var screenDrag: Float = 0.0
 }
 
@@ -120,7 +119,7 @@ fileprivate struct Carousel<Items : View> : View {
     
     @GestureState var isDetectingLongPress = false
     
-    @EnvironmentObject var UIState: UIStateModel
+    @EnvironmentObject var UIState: CarouselViewModel
         
     @inlinable public init(
         numberOfItems: CGFloat,
@@ -178,7 +177,7 @@ fileprivate struct Carousel<Items : View> : View {
 
 fileprivate struct Canvas<Content : View> : View {
     let content: Content
-    @EnvironmentObject var UIState: UIStateModel
+    @EnvironmentObject var UIState: CarouselViewModel
     
     @inlinable init(@ViewBuilder _ content: () -> Content) {
         self.content = content()
@@ -191,7 +190,7 @@ fileprivate struct Canvas<Content : View> : View {
 }
 
 fileprivate struct Item<Content: View>: View {
-    @EnvironmentObject var UIState: UIStateModel
+    @EnvironmentObject var UIState: CarouselViewModel
     let cardWidth: CGFloat
     let cardHeight: CGFloat
 

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 /**
  SetUpView handles all initial first logins where users choose a username
@@ -17,7 +16,7 @@ struct SetupView: View {
     @FocusState private var keyboardShown: Bool
     
     /// A model for keeping track of active card in the carousel.
-    @ObservedObject private var UIStateCarousel = UIStateModel()
+    @ObservedObject private var carouselViewModel = CarouselViewModel()
     
     /// Show the carousel or not.
     @State private var carouselShown = true
@@ -41,7 +40,7 @@ struct SetupView: View {
                 // Explanatory carousel
                 if carouselShown {
                     SnapCarousel()
-                        .environmentObject(UIStateCarousel)
+                        .environmentObject(carouselViewModel)
                         .transition(.opacity)
                 }
                 
@@ -103,7 +102,7 @@ struct SetupView: View {
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(isActive: $viewModel.hasUsername) {
+                NavigationLink(isActive: $viewModel.isUsernameSet) {
                     HomeView(chatHandler: ChatHandler(context: context))
                 } label: {
                     EmptyView()

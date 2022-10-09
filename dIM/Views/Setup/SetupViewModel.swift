@@ -12,7 +12,7 @@ import CoreData
 class SetupViewModel: ObservableObject {
     /// Check if the user has set a username already.
     /// Used to redirect to ``HomeView``.
-    @Published public var hasUsername = false
+    @Published public var isUsernameSet = false
     
     @Published var username = "" {
         didSet {
@@ -34,7 +34,7 @@ class SetupViewModel: ObservableObject {
     @MainActor
     public func onAppear() {
         if UserDefaults.standard.string(forKey: "Username") != nil {
-            hasUsername = true
+            isUsernameSet = true
         }
         
         // Request permission to send notifications
@@ -69,7 +69,7 @@ class SetupViewModel: ObservableObject {
         
         // Save to `UserDefaults`
         UserDefaults.standard.set(usernameWithDigits, forKey: "Username")
-        hasUsername = true
+        isUsernameSet = true
     }
     
     /// Activate demo mode for Apple where a conversation is automatically added as an example.

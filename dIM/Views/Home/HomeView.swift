@@ -30,7 +30,7 @@ struct HomeView: View {
     @State private var confirmationShown: Bool = false
     
     /// Keep track of the active card in the carousel view.
-    @StateObject private var UIStateCarousel = UIStateModel()
+    @StateObject private var UIStateCarousel = CarouselViewModel()
     
     /// Body and content of the HomeView.
     var body: some View {
