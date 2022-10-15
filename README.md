@@ -1,30 +1,29 @@
-# dIM (Decentralised Instant Messenger)
+# dIM Chat
 
-### (Help wanted to build an Android version)
-
-A chat app for iOS which uses Bluetooth to send, receive and route messages.
+dIM stands for Decentralized Instant Messenger. 
+It is a chat app built for iOS devices first and foremost. It will also run on iPad. 
+It works by relaying messages through the Bluetooth connections of other dIM users. 
 
 ![icon](./images/icon.png "dIM")
 
-
-dIM works by sending messages to nearby users using Bluetooth.
+*Get started* by cloning the project and deploy it to an iPhone.
+**Help is also wanted to build an Android version**
 
 ![local](./images/local.png)
 
-If the user is not available dIM will try to route the message trough other users until the message is received.
+Messages sent through dIM is sent through the peer-to-peer network that all dIM users are maintaining. The network is set up as soon as dIM has been opened for the first time, and is running is long as the app has not been force-closed and Bluetooth is enabled. 
+
+If the user is not available dIM will try to route the message trough other users until the message is received. This also uses a smart algorithm that minimizes sent messages on the network.
 
 ![local](./images/relay.png)
 
 ## Build and run
 Clone the project and open `dIM.xcodeproj` in Xcode. Build and run on
-a simulator running iOS >15.0. Notice that Bluetooth capabilities do not work
-on simulator devices.
+a simulator running iOS >15.0. Notice that Bluetooth only work on physical devices.
 
 ## Documentation
 Documentation can be found on [dimchat.org](https://www.dimchat.org).
 
-### Generate docs
-Documentation is generated with [Jazzy](https://github.com/realm/jazzy). Use
-the command-line argument `jazzy --build-tool-arguments
--scheme,bluetoothChat,-sdk,iphonesimulator15.2 --min-acl internal` to build the
-documentation.
+### Build documentation 
+Open the project, navigate to `Product -> Build Documentation`. 
+The `build-docs.sh` script can also be run.
