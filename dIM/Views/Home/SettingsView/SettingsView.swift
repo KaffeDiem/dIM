@@ -74,6 +74,10 @@ struct SettingsView: View {
         userID = String(tempEditableUsername.last ?? "000000")
     }
     
+    
+    /// UserDefaults value of `settings.readmessages`. Default value is `true`.
+    @AppStorage("settings.readmessages") var readStatusToggle = true
+    
     var body: some View {
         VStack {
             Form {
@@ -143,7 +147,7 @@ struct SettingsView: View {
                     Text("If you change your username, you and your contacts will have to add each other again.")
                 }
                 Section {
-                    Toggle(isOn: .constant(true), label: {
+                    Toggle(isOn: $readStatusToggle, label: {
                         Label("Show Read Receipts", systemImage: "arrow.up.arrow.down.circle.fill")
                     })
                 }
