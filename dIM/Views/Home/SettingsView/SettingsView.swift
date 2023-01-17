@@ -16,24 +16,14 @@ import SwiftUI
 /// - Note: Default value is off.
 struct ReadToggle: View {
     
-    /// `UserDefaults` for persistent storage.
-    let defaults = UserDefaults.standard
     /// The read status toggle as a boolean saved to `UserDefaults`
     @State var readStatusToggle: Bool = UserDefaults.standard.bool(forKey: "settings.readmessages")
     
     var body: some View {
         VStack {
-            Toggle("Read receipts", isOn: $readStatusToggle)
-                .onChange(of: readStatusToggle, perform: {value in
-                    if value {
-                        defaults.setValue(readStatusToggle, forKey: "settings.readmessages")
-                        print("toggle on")
-                    } else {
-                        defaults.setValue(readStatusToggle, forKey: "settings.readmessages")
-                        print("toggle off")
-                    }
-                })
-                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+            Toggle("Read receipts", isOn: $readStatusToggle).onChange(of: readStatusToggle, perform: { value in
+                UserDefaults.standard.setValue(readStatusToggle, forKey: "settings.readmessages")
+            }).toggleStyle(SwitchToggleStyle(tint: .accentColor))
         }
     }
 }
@@ -68,8 +58,10 @@ struct SettingsView: View {
     @State private var wantsToRevertUsernameChange = false
     @State private var hasChangedUsername = false
     
+    private let usernameValidator = UsernameValidator()
+    
     func removeIDfromUsername() {
-        var tempEditableUsername = usernameTemp.components(separatedBy: "#")
+        let tempEditableUsername = usernameTemp.components(separatedBy: "#")
         editableUsername = String(tempEditableUsername.first ?? "\(usernameTemp)")
         userID = String(tempEditableUsername.last ?? "000000")
     }
@@ -94,25 +86,22 @@ struct SettingsView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 65)
-                            TextField("Choose an username...",
-                                text: $editableUsername,
-                                onCommit: {
-                                        
-                                    UIApplication.shared.endEditing()
-                                    
-                                    if checkValidUsername(username: editableUsername) {
-                                        let usernameDigits = editableUsername + "#" + String(Int.random(in: 100000...999999))
-                                        defaults.set(usernameDigits, forKey: "Username")
-                                        self.hasChangedUsername = true
-                                        var tempEditableUsername = usernameDigits.components(separatedBy: "#")
-                                        editableUsername = String(tempEditableUsername.first ?? "\(usernameTemp)")
-                                        userID = String(tempEditableUsername.last ?? "000000")
-                                    } else {
-                                        usernameTemp = ""
-                                        self.showInvalidUsernameAlert = true
-                                    }
+                            TextField("Choose an username...", text: $editableUsername, onCommit: {
+                                UIApplication.shared.endEditing()
+                                
+                                switch usernameValidator.validate(username: editableUsername) {
+                                case .valid:
+                                    let usernameDigits = editableUsername + "#" + String(Int.random(in: 100000...999999))
+                                    defaults.set(usernameDigits, forKey: "Username")
+                                    self.hasChangedUsername = true
+                                    var tempEditableUsername = usernameDigits.components(separatedBy: "#")
+                                    editableUsername = String(tempEditableUsername.first ?? "\(usernameTemp)")
+                                    userID = String(tempEditableUsername.last ?? "000000")
+                                case .undetermined, .error(_):
+                                    usernameTemp = ""
+                                    self.showInvalidUsernameAlert = true
                                 }
-                            )
+                            })
                             .onAppear {
                                 self.storedUsername = usernameTemp
                                 removeIDfromUsername()
@@ -162,20 +151,20 @@ struct SettingsView: View {
                 Section {
                     if connectedDevices < 1 {
                         Label("No devices connected yet.", systemImage: "ipad.and.iphone")
-                             .imageScale(.large)
-                             .font(.title3)
-                             .fontWeight(.semibold)
+                            .imageScale(.large)
+                            .font(.title3)
+                            .fontWeight(.semibold)
                     } else {
                         Label("\(connectedDevices) devices connected.", systemImage: "ipad.and.iphone")
-                             .imageScale(.large)
-                             .font(.title3)
-                             .fontWeight(.semibold)
+                            .imageScale(.large)
+                            .font(.title3)
+                            .fontWeight(.semibold)
                     }
-                   
+                    
                     Label("\(chatBrain.routedCounter) messages routed in this session.", systemImage: "arrow.forward.circle.fill")
                         .imageScale(.large)
-                         .font(.title3)
-                         .fontWeight(.semibold)
+                        .font(.title3)
+                        .fontWeight(.semibold)
                 } header: {
                     Text("Connectivity")
                 }
@@ -189,10 +178,10 @@ struct SettingsView: View {
             .navigationBarTitle("Settings", displayMode: .large)
         }
         .alert(determineUsernameWordedIssue(username: editableUsername), isPresented: $showInvalidUsernameAlert) {
-                    Button("Cancel", role: .cancel) {
-                        self.usernameTemp = storedUsername
-                    }
-         }
+            Button("Cancel", role: .cancel) {
+                self.usernameTemp = storedUsername
+            }
+        }
         .alert("Do you want to change your username from \"\(defaults.string(forKey: "Username") ?? editableUsername)\" back to \"\(storedUsername)\"? You will not be able to revert afterwise.", isPresented: $wantsToRevertUsernameChange) {
             Button("Change", role: .none) {
                 self.usernameTemp = storedUsername
@@ -202,7 +191,7 @@ struct SettingsView: View {
             Button("Cancel", role: .cancel) {
                 self.usernameTemp = defaults.string(forKey: "Username") ?? ""
             }
-         }
+        }
     }
     
     /// Determines issues with setting an specific username and returns a `String` to be returned and shown in an alert.
@@ -218,92 +207,6 @@ struct SettingsView: View {
         }
         return "Your username has been changed successfully."
     }
-    
-    /*
-     ScrollView {
-         
-         /*
-          About dIM
-          */
-         
-         
-         /*
-          Current connections
-          */
-         /*
-         ConnectivityView()
-             .environmentObject(chatBrain)
-             .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-          */
-         
-         GroupBox(label: Text("Send read receipts"), content: {
-             Divider().padding(.vertical, 4)
-             Text("Read receipts allow your contacts to known when you have seen their messages.")
-                 .font(.footnote)
-                 .foregroundColor(.gray)
-                 .frame(maxWidth: .infinity, alignment: .leading)
-             ReadToggle()
-         })
-             .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-
-         GroupBox(label: Text("Change username"), content: {
-             Divider().padding(.vertical, 4)
-             /*
-              Text field to input new username
-              */
-             Text("Notice: If you change your username you and your contacts will have to add each other again.")
-                 .foregroundColor(.gray)
-                 .font(.footnote)
-                 .fixedSize(horizontal: false, vertical: true)
-                 .frame(maxWidth: .infinity, alignment: .leading)
-             
-             TextField(
-                 defaults.string(forKey: "Username") ?? "",
-                 text: $usernameTemp,
-                 onCommit: {
-                         
-                     UIApplication.shared.endEditing()
-                     
-                     if checkValidUsername(username: usernameTemp) {
-                         let usernameDigits = usernameTemp + "#" + String(Int.random(in: 100000...999999))
-                         defaults.set(usernameDigits, forKey: "Username")
-                     } else {
-                         usernameTemp = ""
-                     }
-                 }
-             )
-             .keyboardType(.namePhonePad)
-             .padding()
-             .background(
-                 colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
-             )
-             .cornerRadius(10.0)
-             
-             /*
-              Text below textfield.
-              */
-             if usernameTemp.count < 4 {
-                 Text("Minimum 4 characters.")
-                     .font(.footnote)
-                     .foregroundColor(.accentColor)
-             } else if usernameTemp.count > 16 {
-                 Text("Maximum 16 characters.")
-                     .font(.footnote)
-                     .foregroundColor(.accentColor)
-             } else if usernameTemp.contains(" ") {
-                 Text("No spaces in username.")
-                     .font(.footnote)
-                     .foregroundColor(.accentColor)
-             } else {
-                 Text(" ")
-             }
-         })
-             .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-         
-         SupportView()
-     }
-     */
-    
     
     /// Check if a username is valid. If it is not we are not allowed
     /// to set it.
