@@ -45,7 +45,7 @@ class UsernameValidator {
     
     var userInfo: UserInfo? {
         guard let usernameStore, let userIdStore else { return nil }
-        return .init(id: usernameStore, name: userIdStore)
+        return .init(id: userIdStore, name: usernameStore)
     }
     
     // MARK: Private variables
