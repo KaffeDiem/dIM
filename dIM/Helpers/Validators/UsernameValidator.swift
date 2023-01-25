@@ -29,26 +29,40 @@ class UsernameValidator {
         case valid(userInfo: UserInfo)
         case error(message: String)
         case undetermined
+        case demoMode
     }
     
     // MARK: Public variables
-    @Published var state: State
+    @Published private(set) var state: State {
+        didSet {
+            switch state {
+            case .valid: isUsernameValid = true
+            default: isUsernameValid = false
+            }
+        }
+    }
+    @Published var isUsernameValid: Bool = false
+    
     var userInfo: UserInfo? {
-        guard let username, let userId else { return nil }
-        return .init(id: username, name: userId)
+        guard let usernameStore, let userIdStore else { return nil }
+        return .init(id: usernameStore, name: userIdStore)
     }
     
     // MARK: Private variables
-    private var username: String? {
+    private var usernameStore: String? {
         UserDefaults.standard.string(forKey: Keys.username.value)
     }
     
-    private var userId: String? {
+    private var userIdStore: String? {
         UserDefaults.standard.string(forKey: Keys.userId.value)
     }
     
     init() {
         self.state = .undetermined
+        setupState()
+    }
+    
+    private func setupState() {
         if let userInfo {
             self.state = .valid(userInfo: userInfo)
         }
@@ -61,9 +75,9 @@ class UsernameValidator {
     func set(username: String) -> State {
         state = .undetermined
         let state = validate(username: username)
-        if case .valid(let username) = state {
-            UserDefaults.standard.set(username, forKey: Keys.username.value)
-            UserDefaults.standard.set(userId, forKey: Keys.userId.value)
+        if case .valid(let userInfo) = state {
+            UserDefaults.standard.set(userInfo.name, forKey: Keys.username.value)
+            UserDefaults.standard.set(userInfo.id, forKey: Keys.userId.value)
         }
         self.state = state
         return state
@@ -76,6 +90,7 @@ class UsernameValidator {
     /// - Parameter username: Username without digits
     /// - Returns: A state describing the validation
     private func validate(username: String) -> State {
+        guard !(username == "DEMOAPPLETESTUSERNAME") else { return .demoMode }
         guard username.count >= 4 else { return .error(message: "Username is too short") }
         guard username.count <= 16 else { return .error(message: "Username is too long") }
         guard !username.contains(" ") else { return .error(message: "Username cannot include spaces")}
