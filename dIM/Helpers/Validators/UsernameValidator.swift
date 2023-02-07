@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class UsernameValidator {
+class UsernameValidator: ObservableObject {
     struct UserInfo {
         let id: String
         let name: String
@@ -41,12 +41,9 @@ class UsernameValidator {
             }
         }
     }
-    @Published var isUsernameValid: Bool = false
     
-    var userInfo: UserInfo? {
-        guard let usernameStore, let userIdStore else { return nil }
-        return .init(id: userIdStore, name: usernameStore)
-    }
+    @Published var isUsernameValid: Bool = false
+    @Published var userInfo: UserInfo?
     
     // MARK: Private variables
     private var usernameStore: String? {
@@ -57,9 +54,26 @@ class UsernameValidator {
         UserDefaults.standard.string(forKey: Keys.userId.value)
     }
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init() {
         self.state = .undetermined
+        if let username = usernameStore, let userId = userIdStore {
+            userInfo = .init(id: userId, name: username)
+        }
+        setupBindings()
         setupState()
+    }
+    
+    private func setupBindings() {
+        $state.receive(on: RunLoop.main)
+            .sink { [weak self] state in
+                switch state {
+                case .valid(let userInfo):
+                    self?.userInfo = userInfo
+                default: ()
+                }
+            }.store(in: &cancellables)
     }
     
     private func setupState() {
