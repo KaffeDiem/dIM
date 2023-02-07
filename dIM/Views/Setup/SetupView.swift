@@ -30,6 +30,9 @@ struct SetupView: View {
     /// The CoreData context object which we save to persistent storage to.
     @Environment(\.managedObjectContext) var context
     
+    @State private var usernameTextField = ""
+    @State private var usernameTextFieldState: UsernameValidator.State = .undetermined
+    
     init(viewModel: SetupViewModel) {
         self.viewModel = viewModel
     }
@@ -46,7 +49,7 @@ struct SetupView: View {
                 
                 // TextField for setting username
                 VStack {
-                    TextField("Username", text: $viewModel.username)
+                    TextField("Username", text: $usernameTextField)
                     .keyboardType(.namePhonePad)
                     .padding()
                     .background(
@@ -61,7 +64,7 @@ struct SetupView: View {
                     }
                     
                     // Show a warning if username is invalid
-                    if case .error(let errorMessage) = viewModel.usernameState {
+                    if case .error(let errorMessage) = viewModel.usernameValidator.state {
                         Text(errorMessage)
                             .font(.footnote)
                             .foregroundColor(.accentColor)
@@ -83,7 +86,7 @@ struct SetupView: View {
                     
                     // Enter button
                     Button {
-                        viewModel.saveUsername()
+                        viewModel.usernameValidator.set(username: usernameTextField)
                     } label: {
                         Text("Continue")
                         .padding()
@@ -102,7 +105,7 @@ struct SetupView: View {
                 .padding()
                 
                 // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(isActive: $viewModel.isUsernameSet) {
+                NavigationLink(isActive: $viewModel.usernameValidator.isUsernameValid) {
                     HomeView(chatHandler: ChatHandler(context: context))
                 } label: {
                     EmptyView()

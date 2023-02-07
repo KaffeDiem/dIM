@@ -10,19 +10,8 @@ import UserNotifications
 import CoreData
 
 class SetupViewModel: ObservableObject {
-    /// Check if the user has set a username already.
-    /// Used to redirect to ``HomeView``.
-    @Published public var isUsernameSet = false
-    
-    @Published var username = "" {
-        didSet {
-            usernameState = usernameValidator.validate(username: username)
-        }
-    }
-    @Published var usernameState: UsernameValidator.State = .undetermined
-    
     /// Used to check for validaty of new username.
-    let usernameValidator: UsernameValidator = .init()
+    var usernameValidator: UsernameValidator = .init()
     
     /// The CoreData context object which we save to persistent storage to.
     private var context: NSManagedObjectContext
@@ -33,10 +22,6 @@ class SetupViewModel: ObservableObject {
     
     @MainActor
     public func onAppear() {
-        if UserDefaults.standard.string(forKey: "Username") != nil {
-            isUsernameSet = true
-        }
-        
         // Request permission to send notifications
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .badge, .sound]
@@ -47,29 +32,6 @@ class SetupViewModel: ObservableObject {
                 print(e.localizedDescription)
             }
         }
-    }
-    
-    /// Set the username for this device and save it to `UserDefaults`.
-    /// - Parameter username: The username to set.
-    public func saveUsername() {
-        if username == "DEMOAPPLETESTUSERNAME" {
-            activateDemoMode()
-        } else {
-            switch usernameState {
-            case .valid:
-                saveAndContinue(with: username)
-            case .undetermined, .error:
-                ()
-            }
-        }
-    }
-    
-    private func saveAndContinue(with username: String) {
-        let usernameWithDigits = username + "#" + String(Int.random(in: 100000...999999))
-        
-        // Save to `UserDefaults`
-        UserDefaults.standard.set(usernameWithDigits, forKey: "Username")
-        isUsernameSet = true
     }
     
     /// Activate demo mode for Apple where a conversation is automatically added as an example.
