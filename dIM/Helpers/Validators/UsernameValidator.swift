@@ -82,11 +82,11 @@ class UsernameValidator: ObservableObject {
         }
     }
     
-    @discardableResult
     /// Sets a new username and saves it to UserDefaults
+    /// - Note: Do not append id to username
     /// - Parameter username: Username to save
     /// - Returns: Username state
-    func set(username: String) -> State {
+    @discardableResult func set(username: String) -> State {
         state = .undetermined
         let state = validate(username: username)
         if case .valid(let userInfo) = state {
@@ -98,9 +98,7 @@ class UsernameValidator: ObservableObject {
     }
     
     /// Validate a given username
-    ///
     ///- Note: The given username should not include # or an id
-    ///
     /// - Parameter username: Username without digits
     /// - Returns: A state describing the validation
     private func validate(username: String) -> State {
