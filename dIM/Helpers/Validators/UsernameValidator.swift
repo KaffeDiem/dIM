@@ -101,7 +101,7 @@ class UsernameValidator: ObservableObject {
     ///- Note: The given username should not include # or an id
     /// - Parameter username: Username without digits
     /// - Returns: A state describing the validation
-    private func validate(username: String) -> State {
+    func validate(username: String) -> State {
         guard !(username == "DEMOAPPLETESTUSERNAME") else { return .demoMode }
         guard username.count >= 4 else { return .error(message: "Username is too short") }
         guard username.count <= 16 else { return .error(message: "Username is too long") }
