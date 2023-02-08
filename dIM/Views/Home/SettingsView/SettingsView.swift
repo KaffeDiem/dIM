@@ -96,7 +96,8 @@ struct SettingsView: View {
             
             Section {
                 Toggle(isOn: $readStatusToggle) {
-                    Label("Show Read Receipts", systemImage: "arrow.up.arrow.down.circle.fill")
+                    Label("Show Read Receipts", systemImage: "eye.fill")
+                        .imageScale(.large)
                 }
             } footer: {
                 Text("Read receips allow your contacts to see if you have read their messages.")
@@ -106,6 +107,7 @@ struct SettingsView: View {
                 NavigationLink(destination: AboutView()) {
                     Label("About & Contact", systemImage: "questionmark")
                         .foregroundColor(.accentColor)
+                        .imageScale(.large)
                 }
             }
             
@@ -113,7 +115,7 @@ struct SettingsView: View {
                 Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected", systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
-                Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.forward.circle.fill")
+                Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
                     .imageScale(.large)
             } header: {
                 Text("Connectivity")
