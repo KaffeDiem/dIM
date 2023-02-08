@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import MessageUI
 
 /// Shows some text together with an `Image`.
 struct FeatureCell: View {
@@ -74,5 +75,46 @@ struct AboutView: View {
 struct AboutView_Previews: PreviewProvider {
     static var previews: some View {
         AboutView()
+    }
+}
+
+/// An email helper class which allows us to send emails in the support section of
+/// the settings view.
+fileprivate class EmailHelper: NSObject, MFMailComposeViewControllerDelegate {
+    /// The EmailHelper static object.
+    public static let shared = EmailHelper()
+    private override init() {}
+    
+    /// Send an email by using the built in email app in iOS.
+    ///
+    /// Should show a pop-up in the future if the default mail has not been set.
+    /// - Parameters:
+    ///   - subject: The subject field for the email.
+    ///   - body: The text in the body of the email.
+    ///   - to: The receiving email address.
+    /// - Returns: A boolean confirming that a default email has been set up.
+    func sendEmail(subject:String, body:String, to:String) -> Bool {
+        if !MFMailComposeViewController.canSendMail() {
+            print("No mail account found")
+            return false
+        }
+        
+        let picker = MFMailComposeViewController()
+        
+        picker.setSubject(subject)
+        picker.setMessageBody(body, isHTML: true)
+        picker.setToRecipients([to])
+        picker.mailComposeDelegate = self
+        
+        EmailHelper.getRootViewController()?.present(picker, animated: true, completion: nil)
+        return true
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        EmailHelper.getRootViewController()?.dismiss(animated: true, completion: nil)
+    }
+    
+    static func getRootViewController() -> UIViewController? {
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController
     }
 }
