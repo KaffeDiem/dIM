@@ -147,6 +147,7 @@ struct SettingsView: View {
                 case .valid(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
+                    CryptoHandler.resetKeys()
                 default:
                     setUsernameTextFieldToStoredValue()
                 }
