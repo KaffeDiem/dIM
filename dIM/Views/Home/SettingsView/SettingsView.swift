@@ -44,8 +44,6 @@ struct SettingsView: View {
     @State private var usernameTextFieldIdentifier = ""
     
     @Environment(\.colorScheme) var colorScheme
-    /// The amount of connected devices which is fetched from the `ChatBrain`.
-    @State private var connectedDevices = 0
     
     @State private var invalidUsernameAlertMessageIsShown = false
     @State private var invalidUsernameAlertMessage = ""
@@ -112,7 +110,7 @@ struct SettingsView: View {
             }
             
             Section {
-                Label(connectedDevices < 0 ? "No devices connected." : "\(connectedDevices) devices connected", systemImage: "ipad.and.iphone")
+                Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected", systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
                 Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.forward.circle.fill")
