@@ -112,7 +112,7 @@ struct SettingsView: View {
             }
             
             Section {
-                Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected", systemImage: "ipad.and.iphone")
+                Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
                 Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
