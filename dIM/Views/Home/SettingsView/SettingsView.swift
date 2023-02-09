@@ -124,7 +124,7 @@ struct SettingsView: View {
 #if DEBUG
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Version: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown")")
+                    Text("Version: \(Bundle.main.releaseVersionNumber ?? "") build: \(Bundle.main.buildVersionNumber ?? "")")
                     Text("Public key: \(CryptoHandler.getPublicKey())")
                         .fontWeight(.light)
                         .font(.subheadline)

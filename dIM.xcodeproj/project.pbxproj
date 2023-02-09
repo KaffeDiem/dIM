@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B0024A9329954CBD00ADB06F /* Extensions+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */; };
 		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
 		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
 		B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Bundle.swift"; sourceTree = "<group>"; };
 		B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		B020E7D727A944E50098097A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */,
+				B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */,
 			);
 			path = "Extensions+CustomUI";
 			sourceTree = "<group>";
@@ -390,6 +393,7 @@
 				B07D3F0D26DCF10A0037F5BB /* CryptoHandler.swift in Sources */,
 				B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */,
 				B074179D26D6276C00F9C649 /* SettingsView.swift in Sources */,
+				B0024A9329954CBD00ADB06F /* Extensions+Bundle.swift in Sources */,
 				B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */,
 				B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */,
 				B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */,
