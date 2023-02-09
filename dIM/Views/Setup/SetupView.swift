@@ -47,7 +47,9 @@ struct SetupView: View {
                     
                     // TextField for setting username
                     VStack {
-                        TextField("Enter username", text: $usernameTextField)
+                        TextField("Enter username", text: $usernameTextField) {
+                            hideKeyboard()
+                        }
                             .keyboardType(.namePhonePad)
                             .padding()
                             .background(
@@ -62,8 +64,8 @@ struct SetupView: View {
                             }
                         
                         // Show a warning if username is invalid
-                        if case .error(let errorMessage) = usernameValidator.state {
-                            Text(errorMessage)
+                        if case .error(let errorMessage) = usernameValidator.validate(username: usernameTextField) {
+                            Text(usernameTextField.isEmpty ? "" : errorMessage)
                                 .font(.footnote)
                                 .foregroundColor(.accentColor)
                         }
@@ -101,6 +103,9 @@ struct SetupView: View {
                         }
                     }
                     .padding()
+                }
+                .onTapGesture {
+                    hideKeyboard()
                 }
                 .onAppear {
                     UNUserNotificationCenter.current().requestAuthorization(
