@@ -12,6 +12,10 @@ import SwiftUI
  and are then redirected to ContentView which is the main View of the app.
  */
 struct SetupView: View {
+    /// CoreDate context object
+    @Environment(\.managedObjectContext) var context
+    @Environment(\.colorScheme) private var colorScheme
+    
     /// True if the keyboard is shown. Used for animations.
     @FocusState private var keyboardShown: Bool
     
@@ -21,100 +25,94 @@ struct SetupView: View {
     /// Show the carousel or not.
     @State private var carouselShown = true
     
-    /// ViewModel for the `SetupView`.
-    @ObservedObject private var viewModel: SetupViewModel
-    
-    /// Get light or dark colorscheme to display different images.
-    @Environment(\.colorScheme) private var colorScheme
-    
-    /// The CoreData context object which we save to persistent storage to.
-    @Environment(\.managedObjectContext) var context
+    @ObservedObject private var usernameValidator = UsernameValidator()
     
     @State private var usernameTextField = ""
     @State private var usernameTextFieldState: UsernameValidator.State = .undetermined
     
-    init(viewModel: SetupViewModel) {
-        self.viewModel = viewModel
-    }
-    
     var body: some View {
         NavigationView {
-            VStack {
-                // Explanatory carousel
-                if carouselShown {
-                    SnapCarousel()
-                        .environmentObject(carouselViewModel)
-                        .transition(.opacity)
-                }
-                
-                // TextField for setting username
+            if usernameValidator.isUsernameValid {
+                HomeView(chatHandler: ChatHandler(context: context))
+                    .navigationBarTitle("")
+                    .navigationBarBackButtonHidden(true)
+            } else {
                 VStack {
-                    TextField("Username", text: $usernameTextField)
-                    .keyboardType(.namePhonePad)
-                    .padding()
-                    .background(
-                        colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
-                    )
-                    .cornerRadius(10.0)
-                    .focused($keyboardShown)
-                    .onChange(of: keyboardShown) { newValue in
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            self.carouselShown.toggle()
+                    // Explanatory carousel
+                    if carouselShown {
+                        SnapCarousel()
+                            .environmentObject(carouselViewModel)
+                            .transition(.opacity)
+                    }
+                    
+                    // TextField for setting username
+                    VStack {
+                        TextField("Enter username", text: $usernameTextField)
+                            .keyboardType(.namePhonePad)
+                            .padding()
+                            .background(
+                                colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                            )
+                            .cornerRadius(10.0)
+                            .focused($keyboardShown)
+                            .onChange(of: keyboardShown) { newValue in
+                                withAnimation(.easeInOut(duration: 0.5)) {
+                                    self.carouselShown.toggle()
+                                }
+                            }
+                        
+                        // Show a warning if username is invalid
+                        if case .error(let errorMessage) = usernameValidator.state {
+                            Text(errorMessage)
+                                .font(.footnote)
+                                .foregroundColor(.accentColor)
                         }
                     }
+                    .animation(.spring())
+                    .padding()
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
                     
-                    // Show a warning if username is invalid
-                    if case .error(let errorMessage) = viewModel.usernameValidator.state {
-                        Text(errorMessage)
-                            .font(.footnote)
-                            .foregroundColor(.accentColor)
-                    }
-                }
-                .animation(.spring())
-                .padding()
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-                
-                Spacer()
-                
-                VStack {
-                    // EULA part.
-                    HStack {
-                        Text("By continuing you agree to the")
-                        Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
-                    }
+                    Spacer()
                     
-                    // Enter button
-                    Button {
-                        viewModel.usernameValidator.set(username: usernameTextField)
-                    } label: {
-                        Text("Continue")
-                        .padding()
-                        .foregroundColor(.white)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10.0)
+                    VStack {
+                        // EULA part.
+                        HStack {
+                            Text("By continuing you agree to the")
+                            Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
+                        }
+                        
+                        // Enter button
+                        Button {
+                            usernameValidator.set(username: usernameTextField, context: context)
+                        } label: {
+                            Text("Continue")
+                                .padding()
+                                .foregroundColor(.white)
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(10.0)
+                        }
+                    }
+                    .padding()
+                }
+                .onAppear {
+                    UNUserNotificationCenter.current().requestAuthorization(
+                        options: [.alert, .badge, .sound]
+                    ) { success, error in
+                        if success {
+                            print("All set!")
+                        } else if let e = error {
+                            print(e.localizedDescription)
+                        }
                     }
                 }
-                .padding()
-                
-                // Empty link which takes the user to the main screen if username has been set.
-                NavigationLink(isActive: $viewModel.usernameValidator.isUsernameValid) {
-                    HomeView(chatHandler: ChatHandler(context: context))
-                } label: {
-                    EmptyView()
-                }
-                .navigationBarTitle("")
-                .navigationBarBackButtonHidden(true)
-            }
-            .onAppear() {
-                viewModel.onAppear()
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

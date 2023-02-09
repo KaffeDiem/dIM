@@ -33,6 +33,9 @@ struct ReadToggle: View {
 /// It is here that we set new usernames and toggles different settings.
 /// It also shows contact information for dIM among other things.
 struct SettingsView: View {
+    /// CoreDate context object
+    @Environment(\.managedObjectContext) var context
+    @Environment(\.colorScheme) var colorScheme
     
     /// The `UserDefaults` for getting information from persistent storage.
     private let defaults = UserDefaults.standard
@@ -42,8 +45,6 @@ struct SettingsView: View {
     
     @State private var usernameTextFieldText = ""
     @State private var usernameTextFieldIdentifier = ""
-    
-    @Environment(\.colorScheme) var colorScheme
     
     @State private var invalidUsernameAlertMessageIsShown = false
     @State private var invalidUsernameAlertMessage = ""
@@ -68,13 +69,11 @@ struct SettingsView: View {
                         UIApplication.shared.endEditing()
                         
                         switch usernameValidator.validate(username: usernameTextFieldText) {
-                        case .valid:
+                        case .valid, .demoMode:
                             changeUsernameAlertMessageIsShown = true
                         case .error(message: let errorMessage):
                             invalidUsernameAlertMessage = errorMessage
                             invalidUsernameAlertMessageIsShown = true
-                        case .demoMode:
-                            usernameTextFieldText = "DEMO"
                         default: ()
                         }
                     })
@@ -142,9 +141,9 @@ struct SettingsView: View {
         // Change username alert
         .alert("Change username", isPresented: $changeUsernameAlertMessageIsShown) {
             Button("OK") {
-                let state = usernameValidator.set(username: usernameTextFieldText)
+                let state = usernameValidator.set(username: usernameTextFieldText, context: context)
                 switch state {
-                case .valid(let userInfo):
+                case .valid(let userInfo), .demoMode(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
                     CryptoHandler.resetKeys()

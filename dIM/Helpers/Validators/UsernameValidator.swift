@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CoreData
 
 class UsernameValidator: ObservableObject {
     struct UserInfo {
@@ -27,23 +28,15 @@ class UsernameValidator: ObservableObject {
     /// State describing the current username
     enum State {
         case valid(userInfo: UserInfo)
+        case demoMode(userInfo: UserInfo)
         case error(message: String)
         case undetermined
-        case demoMode
     }
     
     // MARK: Public variables
-    @Published private(set) var state: State {
-        didSet {
-            switch state {
-            case .valid: isUsernameValid = true
-            default: isUsernameValid = false
-            }
-        }
-    }
-    
+    @Published private(set) var state: State
+    @Published private(set) var userInfo: UserInfo?
     @Published var isUsernameValid: Bool = false
-    @Published var userInfo: UserInfo?
     
     // MARK: Private variables
     private var usernameStore: String? {
@@ -68,9 +61,11 @@ class UsernameValidator: ObservableObject {
     private func setupBindings() {
         $state.receive(on: RunLoop.main)
             .sink { [weak self] state in
+                guard let self else { return }
                 switch state {
-                case .valid(let userInfo):
-                    self?.userInfo = userInfo
+                case .valid(let userInfo), .demoMode(let userInfo):
+                    self.isUsernameValid = true
+                    self.userInfo = userInfo
                 default: ()
                 }
             }.store(in: &cancellables)
@@ -86,12 +81,18 @@ class UsernameValidator: ObservableObject {
     /// - Note: Do not append id to username
     /// - Parameter username: Username to save
     /// - Returns: Username state
-    @discardableResult func set(username: String) -> State {
+    @discardableResult func set(username: String, context: NSManagedObjectContext) -> State {
         state = .undetermined
         let state = validate(username: username)
-        if case .valid(let userInfo) = state {
+        switch state {
+        case .valid(let userInfo):
             UserDefaults.standard.set(userInfo.name, forKey: Keys.username.value)
             UserDefaults.standard.set(userInfo.id, forKey: Keys.userId.value)
+        case .demoMode(let userInfo):
+            UserDefaults.standard.set(userInfo.name, forKey: Keys.username.value)
+            UserDefaults.standard.set(userInfo.id, forKey: Keys.userId.value)
+            activateDemoMode(for: context)
+        default: ()
         }
         self.state = state
         return state
@@ -99,15 +100,50 @@ class UsernameValidator: ObservableObject {
     
     /// Validate a given username
     ///- Note: The given username should not include # or an id
+    ///- Note: Discard the userInfo if only used to check if a given username is valid
     /// - Parameter username: Username without digits
     /// - Returns: A state describing the validation
     func validate(username: String) -> State {
-        guard !(username == "DEMOAPPLETESTUSERNAME") else { return .demoMode }
+        guard !(username == "APPLEDEMO") else { return .demoMode(userInfo: .init(id: "123456", name: "DEMO")) }
         guard username.count >= 4 else { return .error(message: "Username is too short") }
         guard username.count <= 16 else { return .error(message: "Username is too long") }
         guard !username.contains(" ") else { return .error(message: "Username cannot include spaces")}
         
         let id = String(Int.random(in: 1000 ... 9999))
         return .valid(userInfo: .init(id: id, name: username))
+    }
+}
+
+// MARK: Apple demo mode (for review process)
+extension UsernameValidator {
+    /// Activate demo mode for App Store review process
+    private func activateDemoMode(for context: NSManagedObjectContext) {
+        let _ = CryptoHandler.getPublicKey()
+        
+        // Add a test conversation
+        let conversation = ConversationEntity(context: context)
+        conversation.author = "SteveJobs#123456"
+        let prkey = CryptoHandler.generatePrivateKey()
+        let pukey = prkey.publicKey
+        let pukeyStr = CryptoHandler.exportPublicKey(pukey)
+        conversation.publicKey = pukeyStr
+        
+        // And fill that conversation with a message
+        let firstMessage = MessageEntity(context: context)
+        firstMessage.id = 123456
+        firstMessage.receiver = "DEMOAPPLETESTUSERNAME"
+        firstMessage.sender = conversation.author
+        firstMessage.status = Status.received.rawValue
+        firstMessage.text = "Hi there, how are you?"
+        firstMessage.date = Date()
+        
+        conversation.addToMessages(firstMessage)
+        conversation.lastMessage = firstMessage.text
+        
+        do {
+            try context.save()
+        } catch {
+            print("Demo user activated but could not save context.")
+        }
     }
 }
