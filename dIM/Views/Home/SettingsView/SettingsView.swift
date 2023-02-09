@@ -7,27 +7,6 @@
 
 import SwiftUI
 
-/// The `READ` setting toggle which is a setting that
-/// can be turned on and off based on user preferences.
-///
-/// If it is enabled then the sender of messages can see that you have
-/// read their messages.
-///
-/// - Note: Default value is off.
-struct ReadToggle: View {
-    
-    /// The read status toggle as a boolean saved to `UserDefaults`
-    @State var readStatusToggle: Bool = UserDefaults.standard.bool(forKey: "settings.readmessages")
-    
-    var body: some View {
-        VStack {
-            Toggle("Read receipts", isOn: $readStatusToggle).onChange(of: readStatusToggle, perform: { value in
-                UserDefaults.standard.setValue(readStatusToggle, forKey: "settings.readmessages")
-            }).toggleStyle(SwitchToggleStyle(tint: .accentColor))
-        }
-    }
-}
-
 /// The main `SettingsView` which shows a number of subviews for different purposes.
 ///
 /// It is here that we set new usernames and toggles different settings.
@@ -53,8 +32,8 @@ struct SettingsView: View {
     
     private let usernameValidator = UsernameValidator()
     
-    /// UserDefaults value of `settings.readmessages`. Default value is `true`.
-    @AppStorage("settings.readmessages") var readStatusToggle = true
+    /// Read messages setting saved to UserDefaults
+    @AppStorage("settings.readmessages") var readStatusToggle = false
     
     var body: some View {
         Form {
@@ -98,6 +77,7 @@ struct SettingsView: View {
                     Label("Show Read Receipts", systemImage: "eye.fill")
                         .imageScale(.large)
                 }
+                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
             } footer: {
                 Text("Read receips allow your contacts to see if you have read their messages.")
             }
