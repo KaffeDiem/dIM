@@ -20,12 +20,10 @@ extension ChatHandler {
     /// - Parameter central: The Central Manager which has its state updated. Given by Apple APIs.
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-            case .poweredOn:
-                centralManager.scanForPeripherals(withServices: [Session.UUID], options: nil)
-            case .poweredOff:
-                discoveredDevices = []
-            default:
-                print("A default case was triggerd.")
+        case .poweredOn:
+            centralManager.scanForPeripherals(withServices: [Session.UUID], options: nil)
+        default:
+            discoveredDevices = []
         }
     }
     
@@ -39,35 +37,27 @@ extension ChatHandler {
     ///   - peripheral: The peripheral which is discovered.
     ///   - advertisementData: Holds information such as the name of the peripheral. See more in Apples docs.
     ///   - RSSI: The signal strength to the peripheral device.
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
+    func centralManager(
+        _ central: CBCentralManager,
+        didDiscover peripheral: CBPeripheral,
+        advertisementData: [String : Any],
+        rssi RSSI: NSNumber
+    ) {
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "Unknown"
         
-        // Check if we have already seen this device.
-        var peripheralIsNew: Bool = true
-        
+        // Check if the device is connected already
         for device in discoveredDevices {
-            /*
-             Check if devices are still connected at the same time.
-             */
-            if device.peripheral.state != .connected && device.peripheral.state != .connecting {
-                cleanUpPeripheral(device.peripheral)
-            }
-            
-            if device.uuid == peripheral.identifier.uuidString {
-                peripheralIsNew = false
+            // If device is connected, do nothing
+            // Otherwise make sure to clean up and connect again
+            switch device.peripheral.state {
+            case .connected, .connecting:
+                return
+            default:
+                cleanUpPeripheral(peripheral)
             }
         }
         
-        guard peripheralIsNew else {
-            return
-        }
-        // Connect to the newly discovered peripheral.
         centralManager.connect(peripheral, options: nil)
-        
-        print("Connecting to: \(name)")
-    
-        // Save the connected peripheral in connectedPeripherals for later use.
         discoveredDevices.append(
             Device(
                 uuid: peripheral.identifier.uuidString,
