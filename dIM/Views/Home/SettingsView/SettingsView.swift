@@ -106,16 +106,6 @@ struct SettingsView: View {
             } footer: {
                 Text("Information about connected devices and amount of messages routed through your phone.")
             }
-#if DEBUG
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Version: \(Bundle.main.releaseVersionNumber ?? "") build: \(Bundle.main.buildVersionNumber ?? "")")
-                    Text("Public key: \(CryptoHandler.getPublicKey())")
-                        .fontWeight(.light)
-                        .font(.subheadline)
-                }
-            }
-#endif
         }
         .symbolRenderingMode(.hierarchical)
         .autocapitalization(.none)

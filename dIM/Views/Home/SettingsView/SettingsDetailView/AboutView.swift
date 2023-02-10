@@ -59,6 +59,14 @@ struct AboutView: View {
                 } label: {
                     Text("Email")
                 }
+                .padding(.bottom, 20)
+                
+                HStack {
+                    Spacer()
+                    Text("v\(Bundle.main.releaseVersionNumber ?? "")b\(Bundle.main.buildVersionNumber ?? "")")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                }
             }
         }
         .padding(20)
