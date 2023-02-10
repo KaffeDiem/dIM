@@ -49,7 +49,7 @@ struct SettingsView: View {
                         ProgressView()
                     } else {
                         TextField("Choose a username...", text: $usernameTextFieldText, onCommit: {
-                            UIApplication.shared.endEditing()
+                            hideKeyboard()
                             
                             switch usernameValidator.validate(username: usernameTextFieldText) {
                             case .valid, .demoMode:
