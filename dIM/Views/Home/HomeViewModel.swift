@@ -12,9 +12,8 @@ class HomeViewModel: ObservableObject {
     /// - Parameter conversation: The conversation to get the author from.
     /// - Returns: The username without random digits or nil if format is wrong.
     public func getAuthor(for conversation: ConversationEntity) -> String? {
-        if let author = conversation.author {
-            return author.components(separatedBy: "#").first
-        }
-        return nil
+        conversation.author?
+            .components(separatedBy: "#")
+            .first
     }
 }
