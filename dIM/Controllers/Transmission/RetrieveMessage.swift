@@ -23,30 +23,19 @@ extension ChatHandler {
     /// to confirm that we have received it.
     /// - Parameter messageEncrypted: The message that we have received. Then we determine if it is for us.
     func retrieveMessage(_ messageEncrypted: Message) {
-        
-        /*
-         Check if the message has been seen before
-         */
-        guard !seenMessages.contains(messageEncrypted.id) else { return }
-        
-        /*
-         Add message to list of previously seen messages.
-         */
+        // Do nothing if the message has been seen already
+        guard !seenMessages.contains(messageEncrypted.id) else {
+            return
+        }
+        // Add message to list of previously seen messages
         seenMessages.append(messageEncrypted.id)
         
-        /*
-         Determine if the message is for me
-         */
-        let defaults = UserDefaults.standard
-        let username = defaults.string(forKey: "Username")
+        let validator = UsernameValidator()
+        let usernameWithDigits = (validator.userInfo?.name ?? "") + "#" + (validator.userInfo?.id ?? "")
+        let messageIsForMe: Bool = messageEncrypted.receiver == usernameWithDigits
         
-        let MessageForMe: Bool = messageEncrypted.receiver == username
-        
-        /*
-         If the message is not for me then relay it.
-         */
-        guard MessageForMe else {
-            
+        // If message is not for me relay it
+        guard messageIsForMe else {
             if useDSRAlgorithm {
                 // If the message type is an ACK message.
                 if messageEncrypted.type == 1 {
@@ -60,12 +49,10 @@ extension ChatHandler {
                          */
                         let senderBluetoothID = getSenderOfMessage(messageID: messageID)
                         relayMessage(messageEncrypted, senderBluetoothID)
-                        
                         return
                     }
                 }
             }
-            
             relayMessage(messageEncrypted)
             return
         }
@@ -103,7 +90,7 @@ extension ChatHandler {
                 
                 let localMessage = MessageEntity(context: self.context)
                 localMessage.id = messageEncrypted.id
-                localMessage.receiver = username
+                localMessage.receiver = usernameWithDigits
                 localMessage.sender = messageEncrypted.sender
                 localMessage.status = Status.received.rawValue
                 localMessage.text = decryptedText
