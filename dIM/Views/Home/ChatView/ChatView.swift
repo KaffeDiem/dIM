@@ -165,28 +165,14 @@ struct ChatView: View {
              Send READ acknowledgements messages if the user has enabled
              it in settings.
              */
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
+            if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
                 chatHandler.sendReadMessage(conversation)
             }
         }
         .onDisappear() {
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
+            if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
                 chatHandler.sendReadMessage(conversation)
             }
         }
-    }
-}
-
-
-/// A simple shape of a bubbble.
-struct Bubble: Shape {
-    /// A boolean confirming that the message is sent by us or not.
-    var chat: Bool
-    /// Drawing of the actual path.
-    /// - Parameter rect: The rectangle size to draw.
-    /// - Returns: A path which is used for drawing.
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        return Path(path.cgPath)
     }
 }
