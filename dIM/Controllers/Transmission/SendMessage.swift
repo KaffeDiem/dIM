@@ -23,7 +23,8 @@ extension ChatHandler {
     ///   - context: The context which we save the message. Used for persistent storage to CoreData.
     func sendMessage(for conversation: ConversationEntity, text message: String, context: NSManagedObjectContext) {
         guard !message.isEmpty else { return }
-        guard let username = UserDefaults.standard.string(forKey: UserDefaultsKey.username.rawValue) else {
+        let validator = UsernameValidator()
+        guard let username = validator.userInfo?.asString else {
             fatalError("Could not find username while sending a message")
         }
         

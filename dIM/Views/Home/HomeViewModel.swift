@@ -17,8 +17,4 @@ class HomeViewModel: ObservableObject {
         }
         return nil
     }
-    
-    func onAppear() {
-        
-    }
 }

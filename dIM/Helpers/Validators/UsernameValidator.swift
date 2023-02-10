@@ -13,6 +13,10 @@ class UsernameValidator: ObservableObject {
     struct UserInfo {
         let id: String
         let name: String
+        
+        var asString: String {
+            name + "#" + id
+        }
     }
     
     /// State describing the current username

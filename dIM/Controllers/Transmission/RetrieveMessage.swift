@@ -31,7 +31,7 @@ extension ChatHandler {
         seenMessages.append(messageEncrypted.id)
         
         let validator = UsernameValidator()
-        let usernameWithDigits = (validator.userInfo?.name ?? "") + "#" + (validator.userInfo?.id ?? "")
+        let usernameWithDigits = validator.userInfo?.asString
         let messageIsForMe: Bool = messageEncrypted.receiver == usernameWithDigits
         
         // If message is not for me relay it
