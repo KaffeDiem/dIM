@@ -1,29 +1,27 @@
-# dIM Chat
-
-dIM stands for Decentralized Instant Messenger. 
-It is a chat app built for iOS devices first and foremost. It will also run on iPad. 
-It works by relaying messages through the Bluetooth connections of other dIM users. 
+# Decentralized Instant Messenger (dIM) 
+dIM is an open-source instant messenger built first and foremost for iOS. It will also run on iPad but support is limited.
+It works without an internet connection and messages are sent and received through Bluetooth. For it to work optimally it will require other dIM users nearby. More information [can be found here](https://www.dimchat.org). 
 
 ![icon](./images/icon.png "dIM")
 
-*Get started* by cloning the project and deploy it to an iPhone.
-**Help is also wanted to build an Android version**
+### Feature overview
+- Send and receive messages to contacts
+- Add contacts by scanning their QR-code with the camera or in the app
+- Encrypt all messages sent with private-key encryption
+- Delete messages and message threads
+- Change username
 
-![local](./images/local.png)
+### Future ideas 
+- [ ] Android version 
+- [ ] Groups chats
+- [ ] Deep links
+- [ ] In-app notifications
+- [ ] Automate the documentation on PR approval 
 
-Messages sent through dIM is sent through the peer-to-peer network that all dIM users are maintaining. The network is set up as soon as dIM has been opened for the first time, and is running is long as the app has not been force-closed and Bluetooth is enabled. 
+### Getting started
+Clone the project and deploy it to an iPhone. Please note that the Bluetooth capabilities does not work in the simulator, therefore a physical device is necessary to test sending and receiving messages.
 
-If the user is not available dIM will try to route the message trough other users until the message is received. This also uses a smart algorithm that minimizes sent messages on the network.
-
-![local](./images/relay.png)
-
-## Build and run
-Clone the project and open `dIM.xcodeproj` in Xcode. Build and run on
-a simulator running iOS >15.0. Notice that Bluetooth only work on physical devices.
-
-## Documentation
-Documentation can be found on [dimchat.org](https://www.dimchat.org).
+If the username is set to `APPLEDEMO` a conversation will show up. This can be used to test the UI in a simulator (and is also used in the Apple App Store review process).
 
 ### Build documentation 
-Open the project, navigate to `Product -> Build Documentation`. 
-The `build-docs.sh` script can also be run.
+Open the project, navigate to `Product -> Build Documentation`. This will create a DocC archive for you to explore. 
