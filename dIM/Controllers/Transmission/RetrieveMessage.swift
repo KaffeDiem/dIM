@@ -132,8 +132,8 @@ extension ChatHandler {
     ///   - conversation: The conversation in which the message is to be handled.
     /// - Returns: A boolean that confirms that the type of message is a `READ` type.
     func receivedRead(message: Message, conversation: ConversationEntity) -> Bool {
+        // Check if message is a READ type
         var components = message.text.components(separatedBy: "/")
-        
         guard components.first == "READ" && components.count > 1 else {
             return false
         }
@@ -168,18 +168,13 @@ extension ChatHandler {
     ///   - conversation: The conversation in which it is handled.
     /// - Returns: A boolean confirming that it is or is not an `ACK` message.
     func receivedAck(message: Message, conversation: ConversationEntity) -> Bool {
-        
+        // Check if message is of ACK type
         let components = message.text.components(separatedBy: "/")
-        
-        /*
-         Check that the message is an ACK message.
-         */
         guard components.first == "ACK" && components.count == 2 else {
             return false
         }
         
         let messages = conversation.messages?.allObjects as! [MessageEntity]
-        
         for message in messages {
             if message.id == Int(components[1])! {
                 message.status = Status.delivered.rawValue
@@ -188,17 +183,10 @@ extension ChatHandler {
         
         self.refreshID = UUID()
         try? self.context.save()
-        
         return true
     }
     
-    
-    // MARK: Helper functions
-    
-    /*
-     Given a message and a conversation, decrypt the text and send it back.
-     */
-    /// A helper function to decrypt a message to a string.
+    /// Decrypt a message to a string.
     /// - Parameters:
     ///   - message: The message to decrypt.
     ///   - conversation: The conversation to decrypt the message for.
