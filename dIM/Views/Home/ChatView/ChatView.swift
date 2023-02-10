@@ -32,12 +32,10 @@ struct ChatView: View {
     /// Temporary storage of the textfield entry.
     @State var message: String = ""
     
-    /// A boolean for showing the report alert or not. Showed if we press
-    /// the report button after a longpress on a message.
-    @State var showingReportAlert = false
+    @State var repoartAlertShouldShow = false
     
-    /// Our username for comparisons to the username of the conversation.
-    let username: String = UserDefaults.standard.string(forKey: "Username")!
+    /// Current username
+    private let username: String
         
     init(conversation: ConversationEntity) {
         self.conversation = conversation
@@ -50,6 +48,13 @@ struct ChatView: View {
             predicate: NSPredicate(format: "inConversation == %@", conversation),
             animation: nil
         )
+        
+        let usernameValidator = UsernameValidator()
+        if let username = usernameValidator.userInfo?.name {
+            self.username = username
+        } else {
+            fatalError("Unexpectedly did not find any username while opening a chat view")
+        }
     }
     
     var body: some View {
@@ -93,13 +98,13 @@ struct ChatView: View {
                                 })
                                 /* Report button */
                                 Button(role: .destructive, action: {
-                                    showingReportAlert = true
+                                    repoartAlertShouldShow = true
                                     print("Alert should be shown")
                                 }, label: {
                                     Label("Report", systemImage: "exclamationmark.bubble")
                                 })
                             }
-                            .alert("Report Message", isPresented: $showingReportAlert) {
+                            .alert("Report Message", isPresented: $repoartAlertShouldShow) {
                                 Button("OK", role: .cancel) {}
                             } message: {
                                 Text("dIM stores all data on yours and the senders device. Therefore you should block the user who has sent this message to you if you deem it inappropriate.\nIllegal content should be reported to the authorities.")

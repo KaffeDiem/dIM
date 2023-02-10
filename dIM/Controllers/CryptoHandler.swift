@@ -22,7 +22,7 @@ class CryptoHandler {
         /*
          Return the public key if it exists.
          */
-        if let privateKey = defaults.string(forKey: "settings.privatekey") {
+        if let privateKey = defaults.string(forKey: UserDefaultsKey.privateKey.rawValue) {
             let privateKey = try! importPrivateKey(privateKey)
             
             let publicKeyExport = exportPublicKey(privateKey.publicKey)
@@ -40,7 +40,7 @@ class CryptoHandler {
         /*
          Save the private key to persistent memory as a string.
          */
-        defaults.setValue(privateKeyExport, forKey: "settings.privatekey")
+        defaults.setValue(privateKeyExport, forKey: UserDefaultsKey.privateKey.rawValue)
         
         return publicKeyExport
     }
@@ -49,7 +49,7 @@ class CryptoHandler {
     /// Returns your private key which is saved as a string in `UserDefaults`.
     /// - Returns: Your private key as a private key object.
     static func getPrivateKey() -> P256.KeyAgreement.PrivateKey {
-        return try! importPrivateKey(UserDefaults.standard.string(forKey: "settings.privatekey")!)
+        return try! importPrivateKey(UserDefaults.standard.string(forKey: UserDefaultsKey.privateKey.rawValue)!)
     }
 
     /// Generate a new private key for you.
@@ -159,5 +159,11 @@ class CryptoHandler {
             return "Error decrypting message: \(error.localizedDescription)"
         }
     }
-        
+    
+    /// Reset public and private keys
+    /// - Warning: Calling this function is disruptive and users will no longer be able to send and receive messages.
+    static func resetKeys() {
+        let defaults = UserDefaults.standard
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.privateKey.rawValue)
+    }
 }

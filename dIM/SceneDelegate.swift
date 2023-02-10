@@ -13,6 +13,8 @@ import UserNotifications
 /// Default class generated for iOS apps.
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    // Get the managed object context from the shared persistent container.
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var window: UIWindow?
 
     // MARK: Handle adding a new contact when scanning their QR code
@@ -91,12 +93,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-
-        // Get the managed object context from the shared persistent container.
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        migrateIfNecessary()
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = SetupView(viewModel: SetupViewModel(context: context))
+        let contentView = SetupView()
             .environment(\.managedObjectContext, context)
         
         // Use a UIHostingController as window root view controller.
@@ -142,6 +143,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+    }
+    
+    /// If the user had versions prior to 2.* installed they will now be migrated
+    /// to the new use of the UsernameValidator
+    private func migrateIfNecessary() {
+        // Username used to be stored as 'Username' in UserDefaults with its digits.
+        guard let username = UserDefaults.standard.string(forKey: "Username") else {
+            print("-- NO NEED TO MIGRATE USER --")
+            return
+        }
+        
+        let components = username.components(separatedBy: "#")
+        
+        guard components.count == 3 else {
+            print("-- COULD NOT MIGRATE USER --")
+            return
+        }
+        
+        UserDefaults.standard.set(components[0], forKey: UserDefaultsKey.username.rawValue)
+        UserDefaults.standard.set(components[2], forKey: UserDefaultsKey.userId.rawValue)
     }
 }
 
