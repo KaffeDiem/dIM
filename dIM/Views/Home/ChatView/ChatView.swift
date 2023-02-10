@@ -32,7 +32,7 @@ struct ChatView: View {
     /// Temporary storage of the textfield entry.
     @State var message: String = ""
     
-    @State var repoartAlertShouldShow = false
+    @State var reportAlertIsShown = false
     
     /// Current username
     private let username: String
@@ -50,7 +50,7 @@ struct ChatView: View {
         )
         
         let usernameValidator = UsernameValidator()
-        if let username = usernameValidator.userInfo?.name {
+        if let username = usernameValidator.userInfo?.asString {
             self.username = username
         } else {
             fatalError("Unexpectedly did not find any username while opening a chat view")
@@ -71,20 +71,21 @@ struct ChatView: View {
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                             .contextMenu {
                                 /* Copy button */
-                                Button(role: .none, action: {
-                                    UIPasteboard.general.setValue(message.text ?? "Something went wrong copying from dIM",
-                                                                  forPasteboardType: "public.plain-text")
-                                }, label: {
+                                Button(role: .none) {
+                                    UIPasteboard.general.setValue(
+                                        message.text ?? "Something went wrong copying from dIM",
+                                        forPasteboardType: "public.plain-text")
+                                } label: {
                                     Label("Copy", systemImage: "doc.on.doc")
-                                })
+                                }
                                 /* Resend button (for users own messages) */
                                 if message.sender! == username {
-                                    Button(role: .none, action: {
+                                    Button(role: .none) {
                                         chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
-                                    }, label: {
+                                    } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
-                                    })
                                     }
+                                }
                                 /* Delete button*/
                                 Button(role: .destructive, action: {
                                     context.delete(message)
@@ -98,13 +99,13 @@ struct ChatView: View {
                                 })
                                 /* Report button */
                                 Button(role: .destructive, action: {
-                                    repoartAlertShouldShow = true
+                                    reportAlertIsShown = true
                                     print("Alert should be shown")
                                 }, label: {
                                     Label("Report", systemImage: "exclamationmark.bubble")
                                 })
                             }
-                            .alert("Report Message", isPresented: $repoartAlertShouldShow) {
+                            .alert("Report Message", isPresented: $reportAlertIsShown) {
                                 Button("OK", role: .cancel) {}
                             } message: {
                                 Text("dIM stores all data on yours and the senders device. Therefore you should block the user who has sent this message to you if you deem it inappropriate.\nIllegal content should be reported to the authorities.")
