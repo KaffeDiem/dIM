@@ -107,7 +107,6 @@ extension ChatHandler {
          no read status has been sent yet.
          */
         var received: [MessageEntity] = []
-        
         let messages: [MessageEntity] = conversation.messages!.allObjects as! [MessageEntity]
         
         for message in messages {
@@ -117,38 +116,35 @@ extension ChatHandler {
             }
         }
         
-        /*
-         Return if there are no messages to send.
-         */
+        // Return if there are no messages to send
         guard received.count > 0 else {
             return
         }
         
-        /*
-         Compose a single READ message to send.
-         */
+        // Create one single READ message for all the messages ids
         var text: String = "READ/"
-        
         for message in received {
             text = text + String(message.id) + "/"
+        }
+        
+        let validator = UsernameValidator()
+        guard let usernameWithDigits = validator.userInfo?.asString else {
+            fatalError("A READ message was sent but no username has been set")
         }
         
         let readMessage = Message(
             id: Int32.random(in: 0...Int32.max),
             type: 2,
-            sender: UserDefaults.standard.string(forKey: "Username")!,
+            sender: usernameWithDigits,
             receiver: conversation.author ?? "Unknown",
             text: text
         )
         
         if let characteristic = self.characteristic {
-    
             seenMessages.append(readMessage.id)
             do {
                 let readMessageEncoded = try JSONEncoder().encode(readMessage)
-                
                 peripheralManager.updateValue(readMessageEncoded, for: characteristic, onSubscribedCentrals: nil)
-                
             } catch {
                 print("Error encoding message: \(readMessage) -> \(error)")
             }
@@ -161,10 +157,14 @@ extension ChatHandler {
     /// shortest route possible.
     /// - Parameter message: The message which we want to send an ACK message for.
     func sendAckMessage(_ message: MessageEntity) {
+        let validator = UsernameValidator()
+        guard let usernameWithDigits = validator.userInfo?.asString else {
+            fatalError("An ACK message was sent but no username has been set")
+        }
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
             type: 1,
-            sender: UserDefaults.standard.string(forKey: "Username")!,
+            sender: usernameWithDigits,
             receiver: message.sender!,
             text: "ACK/\(message.id)"
         )
