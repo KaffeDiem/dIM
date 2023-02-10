@@ -20,44 +20,33 @@ import CoreData
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the ChatBrain has been divided into files for seperation and isolation of features.
 class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+    let context: NSManagedObjectContext
     
-    /**
-     Context for CoreData storage
-     */
-    var context: NSManagedObjectContext
-    
-    /**
-     A simple counter to show amount of relayed messages this session.
-     It is reset when the app is force-closed or the device is restarted.
-     */
+    /// A simple counter to show amount of relayed messages this session.
+    /// It is reset when the app is force-closed or the device is restarted.
     @Published var routedCounter: Int = 0
     
     /// A UUID which is updated when a **ACK** message is retrieved. This forces
     /// a refresh of the `ChatView` and the message status is updated.
     @Published var refreshID = UUID()
     
-    /**
-     Holds an array of messages to be delivered at a later point.
-     Used for the queue functionality.
-     */
+    // Holds an array of messages to be delivered at a later point.
+    // Used for the queue functionality.
     @Published var messageQueue: [queuedMessage] = []
     
     
-    /**
-     Holds a reference to all devices discovered. If no reference
-     is held then the Bluetooth connection may be dropped.
-     */
+    // Holds a reference to all devices discovered. If no reference
+    // is held then the Bluetooth connection may be dropped.
     @Published var discoveredDevices: [Device] = []
     
-    /**
-     Holds the connected characteristics. This is only used for the chat
-     functionality for now.
-     */
+    /// Holds the connected characteristics. This is only used for the chat
+    /// functionality for now.
     var connectedCharateristics: [CBCharacteristic] = []
     
     /// The centralManager acts as our Bluetooth server and receives messages
     /// sent by clients to the server.
     var centralManager: CBCentralManager!
+    
     /// The peripheralManager acts as our Bluetooth clients and establishes
     /// connections to other BT servers. It also sends messages.
     var peripheralManager: CBPeripheralManager!
@@ -66,27 +55,19 @@ class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPerip
     /// Bluetooth API.
     var characteristic: CBMutableCharacteristic?
     
-    /**
-     A list which holds message IDs which we have seen before.
-     This prevents looping them in the network for ages.
-     */
+    /// Save messages which has been seen before such that they are not sent again.
+    /// Otherwise they can loop around in the network forever.
     var seenMessages: [Int32] = []
     
-    /**
-     A dictionary which stores how many messages we have received from a connected peripheral.
-     It is cleaned from time to time as well.
-     */
+    /// A dictionary which stores how many messages we have received from a connected peripheral.
+    /// It is cleaned from time to time as well.
     var peripheralMessages: [String : [Date]] = [:]
     
-    /**
-     A dictionary which holds the ids of messages relayed and the corresponding sender
-     of said messages. This is used for DSR.
-     */
+    /// A dictionary which holds the ids of messages relayed and the corresponding sender
+    /// of said messages. This is used for DSR.
     var senderOfMessageID: [Int32 : String] = [:]
     
-    /**
-     Seen CBCentrals / This is used for DSR algorithm.
-     */
+    /// Seen CoreBluetooth Central devices
     var seenCBCentral: [CBCentral] = []
     
     /// The initialiser for the ChatBrain.
@@ -104,34 +85,20 @@ class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPerip
         centralManager.delegate = self
     }
     
-    
-    /**
-     Remove a device from discoveredDevices and drop connection to it.
-     - Parameter peripheral: The peripheral to remove and drop connection to.
-     */
+    /// Drop connection and remove references for a peripheral device.
+    /// - Parameter peripheral: Device to forget.
     func cleanUpPeripheral(_ peripheral: CBPeripheral) {
-        
         let connected = centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID])
         
-        /*
-         Cancel the connection from the central manager.
-         */
-        for device in connected {
-            if device == peripheral {
-                centralManager.cancelPeripheralConnection(peripheral)
+        // Drop connection to a connected peripheral device
+        connected
+            .filter { $0 == peripheral }
+            .forEach {
+                centralManager.cancelPeripheralConnection($0)
             }
-        }
         
-        /*
-         Remove all references to the the peripheral.
-         */
-        for (index, device) in discoveredDevices.enumerated() {
-            
-            if device.peripheral == peripheral {
-                discoveredDevices.remove(at: index)
-                return
-            }
-        }
+        // Remove all references to peripheral
+        discoveredDevices.removeAll(where: { $0.peripheral == peripheral })
     }
     
     public func handleScan(result: String) {
@@ -149,37 +116,26 @@ class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPerip
         fetchRequest = ConversationEntity.fetchRequest()
         
         do {
-            /*
-             Get existing conversations from Core Data.
-             */
+            // Get existing conversation from CoreData
             let conversations = try context.fetch(fetchRequest)
             
-            /*
-             Check if a contact with that username already exists.
-             */
-            for c in conversations {
-                if c.author == name {
-                    print("ERROR: Contact has been added already.")
-                    return
-                }
+            // Return if user has been added already
+            if conversations.contains(where: { $0.author == name }) {
+                return
             }
         } catch {
             print("No previously added contacts. Adding first.")
         }
         
-        /*
-         Create the new conversation to be added and saved to Core Data.
-         */
+        // Create a new conversation with the scanned user
         let conversation = ConversationEntity(context: context)
         conversation.author = name
         conversation.publicKey = publicKey
         
-        print("Added new contact to conversation: \(name)")
-        
         do {
             try context.save()
         } catch {
-            print("Error: Could not save context while adding new contact.")
+            fatalError("Could not save recently scanned user")
         }
     }
 }

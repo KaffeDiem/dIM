@@ -222,7 +222,7 @@ extension ChatHandler {
     ///   - characteristic: The chateristic which we receive a new message from.
     ///   - error: Error description if there are any. Also printed to the console.
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let error = error {
+        if let error {
             print("Error receiving data: \(error.localizedDescription)")
         }
         
@@ -259,10 +259,9 @@ extension ChatHandler {
         
         peripheralMessages[uuid]!.append(Date())
         
-        let decoder = JSONDecoder()
         // Decode the message received from a connected peripheral and save it.
         do {
-            let message = try decoder.decode(Message.self, from: data)
+            let message = try JSONDecoder().decode(Message.self, from: data)
             // Handle decoded messages.
             retrieveMessage(message)
             
@@ -277,7 +276,6 @@ extension ChatHandler {
                     )
                 }
             }
-            
         } catch {
             print("JSON Error decoding message: \(error)")
         }
