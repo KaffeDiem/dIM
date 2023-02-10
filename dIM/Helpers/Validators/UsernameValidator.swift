@@ -15,16 +15,6 @@ class UsernameValidator: ObservableObject {
         let name: String
     }
     
-    /// Keys related to username used to access UserDefaults
-    enum Keys: String {
-        case username = "settings.username"
-        case userId = "settings.userid"
-        
-        var value: String {
-            return self.rawValue
-        }
-    }
-    
     /// State describing the current username
     enum State {
         case valid(userInfo: UserInfo)
@@ -40,11 +30,11 @@ class UsernameValidator: ObservableObject {
     
     // MARK: Private variables
     private var usernameStore: String? {
-        UserDefaults.standard.string(forKey: Keys.username.value)
+        UserDefaults.standard.string(forKey: UserDefaultsKey.username.rawValue)
     }
     
     private var userIdStore: String? {
-        UserDefaults.standard.string(forKey: Keys.userId.value)
+        UserDefaults.standard.string(forKey: UserDefaultsKey.userId.rawValue)
     }
     
     private var cancellables = Set<AnyCancellable>()
@@ -86,11 +76,11 @@ class UsernameValidator: ObservableObject {
         let state = validate(username: username)
         switch state {
         case .valid(let userInfo):
-            UserDefaults.standard.set(userInfo.name, forKey: Keys.username.value)
-            UserDefaults.standard.set(userInfo.id, forKey: Keys.userId.value)
+            UserDefaults.standard.set(userInfo.name, forKey: UserDefaultsKey.username.rawValue)
+            UserDefaults.standard.set(userInfo.id, forKey: UserDefaultsKey.userId.rawValue)
         case .demoMode(let userInfo):
-            UserDefaults.standard.set(userInfo.name, forKey: Keys.username.value)
-            UserDefaults.standard.set(userInfo.id, forKey: Keys.userId.value)
+            UserDefaults.standard.set(userInfo.name, forKey: UserDefaultsKey.username.rawValue)
+            UserDefaults.standard.set(userInfo.id, forKey: UserDefaultsKey.userId.rawValue)
             activateDemoMode(for: context)
         default: ()
         }

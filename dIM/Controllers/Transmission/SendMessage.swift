@@ -22,15 +22,10 @@ extension ChatHandler {
     ///   - message: The message that we want to send. It is encrypted in this function.
     ///   - context: The context which we save the message. Used for persistent storage to CoreData.
     func sendMessage(for conversation: ConversationEntity, text message: String, context: NSManagedObjectContext) {
-        
-        let defaults = UserDefaults.standard
-        
-        /*
-         Send a string to all connected devices.
-         */
-        guard message != "" else { return }
-        
-        let username = defaults.string(forKey: "Username")!
+        guard !message.isEmpty else { return }
+        guard let username = UserDefaults.standard.string(forKey: UserDefaultsKey.username.rawValue) else {
+            fatalError("Could not find username while sending a message")
+        }
         
         /*
          Encrypt the message text.

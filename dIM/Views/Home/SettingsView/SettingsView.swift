@@ -33,7 +33,7 @@ struct SettingsView: View {
     private let usernameValidator = UsernameValidator()
     
     /// Read messages setting saved to UserDefaults
-    @AppStorage("settings.readmessages") var readStatusToggle = false
+    @AppStorage(UserDefaultsKey.readMessages.rawValue) var readStatusToggle = false
     
     var body: some View {
         Form {

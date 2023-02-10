@@ -12,6 +12,7 @@
 		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
 		B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */; };
 		B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0C271B2B87005D8098 /* AboutView.swift */; };
+		B027E2F92996341A001D5F18 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B027E2F82996341A001D5F18 /* UserDefaultsKeys.swift */; };
 		B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0357C0A26DBEB950013CAF9 /* QRView.swift */; };
 		B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */; };
 		B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */; };
@@ -55,6 +56,7 @@
 		B020E7D727A944E50098097A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityView.swift; sourceTree = "<group>"; };
 		B0225B0C271B2B87005D8098 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		B027E2F82996341A001D5F18 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		B0357C0A26DBEB950013CAF9 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		B05E1F3226D3B3A800AD9E65 /* dIM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dIM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				B05E1F5C26D3ECDD00AD9E65 /* MessageModel.swift */,
 				B0C6896826E5410D004937D5 /* LocalMessageModel.swift */,
 				B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */,
+				B027E2F82996341A001D5F18 /* UserDefaultsKeys.swift */,
 				B06079B326D54F54007B4DF6 /* ConversationModel.swift */,
 				B07417A226D6CB0800F9C649 /* DeviceModel.swift */,
 			);
@@ -378,6 +381,7 @@
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
 				B05F7A9328F00A2700ABAC7E /* UsernameValidator.swift in Sources */,
+				B027E2F92996341A001D5F18 /* UserDefaultsKeys.swift in Sources */,
 				B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */,
 				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
 				B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */,
