@@ -28,22 +28,14 @@ extension ChatHandler {
             fatalError("Could not find username while sending a message")
         }
         
-        /*
-         Encrypt the message text.
-         */
+        // Encrypt message
         let privateKey = CryptoHandler.getPrivateKey()
         let receiverPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
         let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
         let encryptedData = try! CryptoHandler.encryptMessage(text: message, symmetricKey: symmetricKey)
         
-        /*
-         The unique message ID.
-         */
         let messageId = Int32.random(in: 0...Int32.max)
         
-        /*
-         The encrypted message which is sent to other users.
-         */
         let encryptedMessage = Message(
             id: messageId,
             type: 0,
@@ -52,10 +44,10 @@ extension ChatHandler {
             text: encryptedData
         )
         
+        // Send message to all connected devices
         if let characteristic {
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
-                // Send message to all connected devices
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
                 messageQueueAdd(encryptedMessage)
             } catch {
