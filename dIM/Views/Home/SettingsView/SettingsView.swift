@@ -44,26 +44,31 @@ struct SettingsView: View {
                         .scaledToFit()
                         .frame(width: 65)
                     
-                    TextField("Choose a username...", text: $usernameTextFieldText, onCommit: {
-                        UIApplication.shared.endEditing()
-                        
-                        switch usernameValidator.validate(username: usernameTextFieldText) {
-                        case .valid, .demoMode:
-                            changeUsernameAlertMessageIsShown = true
-                        case .error(message: let errorMessage):
-                            invalidUsernameAlertMessage = errorMessage
-                            invalidUsernameAlertMessageIsShown = true
-                        default: ()
-                        }
-                    })
-                    .keyboardType(.namePhonePad)
-                    .padding()
-                    .cornerRadius(10.0)
+                    if changeUsernameAlertMessageIsShown {
+                        Spacer()
+                        ProgressView()
+                    } else {
+                        TextField("Choose a username...", text: $usernameTextFieldText, onCommit: {
+                            UIApplication.shared.endEditing()
+                            
+                            switch usernameValidator.validate(username: usernameTextFieldText) {
+                            case .valid, .demoMode:
+                                changeUsernameAlertMessageIsShown = true
+                            case .error(message: let errorMessage):
+                                invalidUsernameAlertMessage = errorMessage
+                                invalidUsernameAlertMessageIsShown = true
+                            default: ()
+                            }
+                        })
+                        .keyboardType(.namePhonePad)
+                        .padding()
+                        .cornerRadius(10.0)
+                    }
+                    
+                    Spacer()
                     
                     Text("# " + usernameTextFieldIdentifier)
                         .foregroundColor(.gray)
-                    
-                    Spacer()
                 }
                 .foregroundColor(.accentColor)
             } header: {
