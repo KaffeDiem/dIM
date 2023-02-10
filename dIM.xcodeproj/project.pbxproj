@@ -136,20 +136,20 @@
 		B05E1F3426D3B3A800AD9E65 /* dIM */ = {
 			isa = PBXGroup;
 			children = (
+				B080269F28EDA83B00CBE455 /* Documentation.docc */,
+				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
+				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
+				B074179E26D62A5700F9C649 /* Extensions.swift */,
+				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
+				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
-				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
-				B080269F28EDA83B00CBE455 /* Documentation.docc */,
-				B074179E26D62A5700F9C649 /* Extensions.swift */,
-				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
 				B05F7A9128F00A0E00ABAC7E /* Helpers */,
-				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
 				B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */,
 				B05E1F4C26D3C7F200AD9E65 /* Models */,
 				B05E1F3D26D3B3AB00AD9E65 /* Preview Content */,
-				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
 				B05E1F4926D3B42400AD9E65 /* Views */,
 			);
 			path = dIM;
