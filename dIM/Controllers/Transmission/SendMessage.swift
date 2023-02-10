@@ -52,13 +52,10 @@ extension ChatHandler {
             text: encryptedData
         )
         
-        if let characteristic = self.characteristic {
+        if let characteristic {
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
-                
-                /*
-                 Send the message to all connected peripherals.
-                 */
+                // Send message to all connected devices
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
                 messageQueueAdd(encryptedMessage)
             } catch {
@@ -66,9 +63,7 @@ extension ChatHandler {
             }
         }
         
-        /*
-         Add the message to local storage
-         */
+        // Save the message to local storage
         let localMessage = MessageEntity(context: context)
         
         localMessage.receiver = conversation.author
