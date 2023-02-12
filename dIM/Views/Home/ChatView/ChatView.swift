@@ -68,7 +68,7 @@ struct ChatView: View {
                             }
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                             .contextMenu {
-                                /* Copy button */
+                                // Copy to clipboard
                                 Button(role: .none) {
                                     UIPasteboard.general.setValue(
                                         message.text ?? "Something went wrong copying from dIM",
@@ -76,7 +76,7 @@ struct ChatView: View {
                                 } label: {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 }
-                                /* Resend button (for users own messages) */
+                                // Resend a message which has not been delivered
                                 if message.sender! == username {
                                     Button(role: .none) {
                                         chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
@@ -84,7 +84,7 @@ struct ChatView: View {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     }
                                 }
-                                /* Delete button*/
+                                // Delete button
                                 Button(role: .destructive, action: {
                                     context.delete(message)
                                     do {
@@ -98,7 +98,6 @@ struct ChatView: View {
                                 /* Report button */
                                 Button(role: .destructive, action: {
                                     reportAlertIsShown = true
-                                    print("Alert should be shown")
                                 }, label: {
                                     Label("Report", systemImage: "exclamationmark.bubble")
                                 })
@@ -112,19 +111,16 @@ struct ChatView: View {
                     }
                 }
                 .onAppear {
-                    /*
-                     Scroll to bottom of chat list automatically when view is loaded.
-                     */
+                    // Scroll to bottom on appear
                     if messages.count > 0 {
                         proxy.scrollTo(messages[messages.endIndex-1])
                     }
                 }
             }
-            .id(chatHandler.refreshID) // Force a refresh when an ACK message is received
+            // Minor hack to refresh view when ACK / READ message is received
+            .id(chatHandler.refreshID)
             
-            /*
-             Send message part
-             */
+            // MARK: Send message
             HStack {
                 TextField("Aa", text: $message)
                 .padding()
