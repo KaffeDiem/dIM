@@ -38,7 +38,7 @@ extension AppSession {
         
         let encryptedMessage = Message(
             id: messageId,
-            type: 0,
+            kind: .regular,
             sender: username,
             receiver: conversation.author!,
             text: encryptedData
@@ -121,7 +121,7 @@ extension AppSession {
         
         let readMessage = Message(
             id: Int32.random(in: 0...Int32.max),
-            type: 2,
+            kind: .read,
             sender: usernameWithDigits,
             receiver: conversation.author ?? "Unknown",
             text: text
@@ -150,7 +150,7 @@ extension AppSession {
         }
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
-            type: 1,
+            kind: .acknowledgement,
             sender: usernameWithDigits,
             receiver: message.sender!,
             text: "ACK/\(message.id)"

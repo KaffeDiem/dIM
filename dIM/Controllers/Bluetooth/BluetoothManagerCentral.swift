@@ -259,7 +259,7 @@ extension AppSession {
             if useDSRAlgorithm {
                 // Only save normal messages as these are the only ones
                 // we are interested in.
-                if message.type == 0 {
+                if message.kind == .regular {
                     addMessageToDSRTable(
                         messageID: message.id,
                         bluetoothID: peripheral.identifier.uuidString

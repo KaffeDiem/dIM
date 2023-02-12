@@ -7,36 +7,22 @@
 
 import Foundation
 
-/// Message objects are the objects sent between devices.
-///
-/// We fill in the message struct and send it off formatted as JSON. 
+/// Type of object sent between devices
 struct Message: Codable, Identifiable {
+    enum Kind: Int, Codable {
+        /// Regular message
+        case regular = 0
+        /// Acknowledge that the message has been received. This is sent back to the sender
+        /// of a message if the message was successfully delivered and decrypted.
+        case acknowledgement = 1
+        /// Read message kind which allows users to know that their sent message has been read.
+        /// This is only used if the feature has been enabled in settings.
+        case read = 2
+    }
     
-    /**
-     Some id which uniquely identifies the message.
-     */
     var id: Int32
-    
-    /**
-     Some type of message.
-     0: A normal message
-     1: An ACK message
-     2: A READ message
-     */
-    var type: Int
-    
-    /**
-     The author who wrote the message.
-     */
+    var kind: Kind
     var sender: String
-    
-    /**
-     Who the message is meant for
-     */
     var receiver: String
-    
-    /**
-     The actual content of the message.
-     */
-    var text: String
+    var text: String // Note that text in the message struct is encrypted
 }

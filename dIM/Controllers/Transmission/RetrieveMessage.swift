@@ -38,7 +38,7 @@ extension AppSession {
         guard messageIsForMe else {
             if useDSRAlgorithm {
                 // If the message type is an ACK message.
-                if messageEncrypted.type == 1 {
+                if messageEncrypted.kind == .acknowledgement {
                     // Get the ID from the ACK message
                     let components = messageEncrypted.text.components(separatedBy: "/")
                     let messageID = Int32(components[1])!
