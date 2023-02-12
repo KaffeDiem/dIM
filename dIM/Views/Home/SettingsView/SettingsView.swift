@@ -136,10 +136,14 @@ struct SettingsView: View {
             Button("Change", role: .destructive) {
                 let state = usernameValidator.set(username: usernameTextFieldText, context: context)
                 switch state {
-                case .valid(let userInfo), .demoMode(let userInfo):
+                case .valid(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
                     deleteAllConversations()
+                    CryptoHandler.resetKeys()
+                case .demoMode(let userInfo):
+                    usernameTextFieldText = userInfo.name
+                    usernameTextFieldIdentifier = userInfo.id
                     CryptoHandler.resetKeys()
                 default:
                     setUsernameTextFieldToStoredValue()
