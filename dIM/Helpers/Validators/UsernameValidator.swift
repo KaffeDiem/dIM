@@ -117,10 +117,10 @@ extension UsernameValidator {
         // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
-        let prkey = CryptoHandler.generatePrivateKey()
-        let pukey = prkey.publicKey
-        let pukeyStr = CryptoHandler.exportPublicKey(pukey)
-        conversation.publicKey = pukeyStr
+        let privateKey = CryptoHandler.generatePrivateKey()
+        let publicKey = privateKey.publicKey
+        let publicKeyText = CryptoHandler.exportPublicKey(publicKey)
+        conversation.publicKey = publicKeyText
         
         // And fill that conversation with a message
         let firstMessage = MessageEntity(context: context)
