@@ -11,14 +11,13 @@ import CoreBluetooth
 import Combine
 
 protocol DataControllerDelegate: AnyObject {
-    func didReceiveAndSaveMessage(_ dataController: DataController, message: LocalMessage)
-    func didFail(_ dataController: DataController, error: String)
-    func didFail(_ dataController: DataController, error: Error)
+    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
+    func dataController(_ dataController: DataController, shouldRelay encryptedMessage: Message)
+    func dataController(_ dataController: DataController, didFailWith error: String)
+    func dataController(_ dataController: DataController, didFailWith error: Error)
 }
 
 class LiveDataController: NSObject, DataController {
-    private let context: NSManagedObjectContext
-    
     private let central: CBCentralManager
     private let peripheral: CBPeripheralManager
     
@@ -31,31 +30,31 @@ class LiveDataController: NSObject, DataController {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(context: NSManagedObjectContext) {
+    private let characteristic: CBMutableCharacteristic
+    private let service: CBMutableService
+    
+    override init() {
         self.central = CBCentralManager(delegate: nil, queue: nil)
         self.peripheral = CBPeripheralManager(delegate: nil, queue: nil)
-        self.context = context
+        self.characteristic = CBMutableCharacteristic(
+            type: Session.characteristicsUUID,
+            properties: [.write, .notify],
+            value: nil,
+            permissions: [.writeable, .readable]
+        )
+        
+        self.service = CBMutableService(type: Session.UUID, primary: true)
+        self.service.characteristics = [characteristic]
+        
         super.init()
         
         central.delegate = self
         peripheral.delegate = self
+        peripheral.add(service)
         
         self.usernameWithDigits = usernameValidator.userInfo?.asString
         
         setupBindings()
-        start()
-    }
-    
-    /// Begin scanning for other devices and publish this device
-    private func start() {
-        central.scanForPeripherals(
-            withServices: [Session.UUID],
-            options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
-        
-        peripheral.startAdvertising([
-            CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
-            CBAdvertisementDataLocalNameKey: UsernameValidator().userInfo?.name ?? "-"
-        ])
     }
     
     private func setupBindings() {
@@ -66,82 +65,8 @@ class LiveDataController: NSObject, DataController {
         }.store(in: &cancellables)
     }
     
-    private func retrieve(encryptedMessage: Message) {
-        context.perform { [weak self] in
-            guard let self else { return }
-            do {
-                let fetchRequest = ConversationEntity.fetchRequest()
-                let conversations = try fetchRequest.execute()
-                let conversation = conversations
-                    .first(where: { $0.author == encryptedMessage.sender })
-                // Conversation to add the message to
-                guard let conversation else {
-                    self.delegate?.didFail(self, error: "Message received but sender is not added as contact")
-                    return
-                }
-                
-                let decryptedMessageText = self.decryptMessageToText(
-                    message: encryptedMessage,
-                    conversation: conversation)
-                
-                guard let decryptedMessageText else {
-                    self.delegate?.didFail(self, error: "Did receive message but could not decrypt")
-                    return
-                }
-                
-                guard let usernameWithDigits = self.usernameWithDigits else {
-                    self.delegate?.didFail(self, error: "Could not get current username with digits while receiving message")
-                    return
-                }
-                
-                let date = Date()
-                
-                let localMessage = LocalMessage(
-                    id: encryptedMessage.id,
-                    sender: encryptedMessage.sender,
-                    receiver: usernameWithDigits,
-                    text: decryptedMessageText,
-                    date: date,
-                    status: .received)
-                
-                let messageEntity = MessageEntity(context: self.context)
-                messageEntity.id = localMessage.id
-                messageEntity.receiver = localMessage.receiver
-                messageEntity.sender = localMessage.sender
-                messageEntity.status = localMessage.status.rawValue
-                messageEntity.text = localMessage.text
-                messageEntity.date = localMessage.date
-                
-                conversation.addToMessages(messageEntity)
-                conversation.lastMessage = decryptedMessageText
-                conversation.date = Date()
-                
-                self.delegate?.didReceiveAndSaveMessage(self, message: localMessage)
-                
-                try self.context.save()
-            } catch {
-                self.delegate?.didFail(self, error: "Could not fetch conversations from CoreData")
-            }
-        }
-    }
     
     private func relay(encryptedMessage: Message) {
-        
-    }
-}
-
-// MARK: Helpers
-extension LiveDataController {
-    private func decryptMessageToText(message: Message, conversation: ConversationEntity) -> String? {
-        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
-        return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
-    }
-}
-
-// MARK: Send messages
-extension LiveDataController {
-    func send(text message: String, conversation: ConversationEntity) {
         
     }
 }
@@ -152,9 +77,11 @@ extension LiveDataController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            central.scanForPeripherals(withServices: [Session.UUID])
+            central.scanForPeripherals(
+                withServices: [Session.UUID],
+                options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         default:
-            delegate?.didFail(self, error: "Bluetooth must be turned on")
+            delegate?.dataController(self, didFailWith: "Bluetooth must be powered on")
         }
     }
     
@@ -191,9 +118,8 @@ extension LiveDataController: CBCentralManagerDelegate {
         /*
          Try to connect again once and then stop?
          */
-        
         if let error {
-            delegate?.didFail(self, error: error)
+            delegate?.dataController(self, didFailWith: error)
         }
     }
 }
@@ -202,7 +128,7 @@ extension LiveDataController: CBCentralManagerDelegate {
 extension LiveDataController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let error {
-            delegate?.didFail(self, error: error)
+            delegate?.dataController(self, didFailWith: error)
             return
         }
         
@@ -213,7 +139,7 @@ extension LiveDataController: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let error {
-            delegate?.didFail(self, error: error)
+            delegate?.dataController(self, didFailWith: error)
             return
         }
         
@@ -238,7 +164,7 @@ extension LiveDataController: CBPeripheralDelegate {
         error: Error?
     ) {
         if let error {
-            delegate?.didFail(self, error: error)
+            delegate?.dataController(self, didFailWith: error)
             return
         }
         
@@ -253,13 +179,14 @@ extension LiveDataController: CBPeripheralDelegate {
             previouslySeenMessages.append(encryptedMessage.id)
             
             let messageIsForMe = encryptedMessage.receiver == usernameWithDigits
+            // If message is for me receive and handle, otherwise pass it on
             if messageIsForMe {
-                #warning("Receive message for me")
+                delegate?.dataController(self, didReceive: encryptedMessage)
             } else {
-                #warning("Relay message")
+                self.peripheral.updateValue(data, for: self.characteristic, onSubscribedCentrals: nil)
             }
         } catch {
-            delegate?.didFail(self, error: error)
+            delegate?.dataController(self, didFailWith: error)
         }
     }
 }
@@ -268,8 +195,20 @@ extension LiveDataController: CBPeripheralDelegate {
 // CBCentralManager handles being discovered by other devices and connecting to them.
 extension LiveDataController: CBPeripheralManagerDelegate {
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
-        ()
+        switch peripheral.state {
+        case .poweredOn:
+            peripheral.startAdvertising([
+                CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
+                CBAdvertisementDataLocalNameKey: UsernameValidator().userInfo?.name ?? "-"
+            ])
+        default:
+            ()
+        }
     }
     
-//    func periphemana
+    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+        if let error {
+            delegate?.dataController(self, didFailWith: error)
+        }
+    }
 }

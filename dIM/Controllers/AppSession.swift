@@ -20,7 +20,7 @@ import CoreData
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
 class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     /// A simple counter to show amount of relayed messages this session.
     /// It is reset when the app is force-closed or the device is restarted.
@@ -50,7 +50,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     /// The peripheralManager acts as our Bluetooth clients and establishes
     /// connections to other BT servers. It also sends messages.
     var peripheralManager: CBPeripheralManager!
-
+    
     /// The characteristic which defines our chat functionality for the
     /// Bluetooth API.
     var characteristic: CBMutableCharacteristic?
@@ -70,19 +70,19 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     /// Seen CoreBluetooth Central devices
     var seenCBCentral: [CBCentral] = []
     
+    private let dataController: LiveDataController
+    private let usernameValidator = UsernameValidator()
+    
     /// The initialiser for the AppSession.
     /// Sets up the `centralManager` and the `peripheralManager`.
     /// - Parameter context: The context for persistent storage to `CoreData`
     init(context: NSManagedObjectContext) {
         self.context = context
+        self.dataController = LiveDataController()
         
         super.init()
         
-        // Set up the central and peripheral manager objects to be used across the app.
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
-        
-        centralManager.delegate = self
+        dataController.delegate = self
     }
     
     /// Drop connection and remove references for a peripheral device.
@@ -138,4 +138,98 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             fatalError("Could not save recently scanned user")
         }
     }
+    
+    func send(text message: String, conversation: ConversationEntity) {
+        
+    }
+    
+    private func handle(error: String) {
+        
+    }
+    
+    private func receive(encryptedMessage: Message) {
+        context.perform { [weak self] in
+            guard let self else { return }
+            do {
+                let fetchRequest = ConversationEntity.fetchRequest()
+                let conversations = try fetchRequest.execute()
+                let conversation = conversations
+                    .first(where: { $0.author == encryptedMessage.sender })
+                // Conversation to add the message to
+                guard let conversation else {
+                    self.handle(error: "Message received but sender is not added as a contact")
+                    return
+                }
+
+                let decryptedMessageText = self.decryptMessageToText(
+                    message: encryptedMessage,
+                    conversation: conversation)
+
+                guard let decryptedMessageText else {
+                    self.handle(error: "Received message which could not be decrypted")
+                    return
+                }
+
+                guard let usernameWithDigits = self.usernameValidator.userInfo?.asString else {
+                    self.handle(error: "Could not get current username")
+                    return
+                }
+
+                let date = Date()
+
+                let localMessage = LocalMessage(
+                    id: encryptedMessage.id,
+                    sender: encryptedMessage.sender,
+                    receiver: usernameWithDigits,
+                    text: decryptedMessageText,
+                    date: date,
+                    status: .received)
+
+                let messageEntity = MessageEntity(context: self.context)
+                messageEntity.id = localMessage.id
+                messageEntity.receiver = localMessage.receiver
+                messageEntity.sender = localMessage.sender
+                messageEntity.status = localMessage.status.rawValue
+                messageEntity.text = localMessage.text
+                messageEntity.date = localMessage.date
+
+                conversation.addToMessages(messageEntity)
+                conversation.lastMessage = decryptedMessageText
+                conversation.date = Date()
+
+                try self.context.save()
+            } catch {
+                self.handle(error: "Could not fetch conversations from CoreData")
+            }
+        }
+    }
 }
+
+extension AppSession: DataControllerDelegate {
+    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
+        receive(encryptedMessage: encryptedMessage)
+    }
+    
+    func dataController(_ dataController: DataController, shouldRelay encryptedMessage: Message) {
+        ()
+    }
+    
+    func dataController(_ dataController: DataController, didFailWith error: String) {
+        ()
+    }
+    
+    func dataController(_ dataController: DataController, didFailWith error: Error) {
+        ()
+    }
+    
+}
+
+// MARK: Helpers
+extension AppSession {
+    private func decryptMessageToText(message: Message, conversation: ConversationEntity) -> String? {
+        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
+        return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
+    }
+}
+

@@ -7,6 +7,4 @@
 
 import Foundation
 
-protocol DataController {
-    
-}
+protocol DataController {}
