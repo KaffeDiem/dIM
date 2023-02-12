@@ -64,9 +64,7 @@ struct ChatView: View {
                     LazyVStack {
                         ForEach(messages, id: \.self) { message in
                             HStack {
-                                
                                 MessageBubble(username: username, message: message)
-                                
                             }
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                             .contextMenu {

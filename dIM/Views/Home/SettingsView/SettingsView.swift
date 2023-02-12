@@ -125,7 +125,7 @@ struct SettingsView: View {
         }
         // Change username alert
         .alert("Change username", isPresented: $changeUsernameAlertMessageIsShown) {
-            Button("OK") {
+            Button("Change", role: .destructive) {
                 let state = usernameValidator.set(username: usernameTextFieldText, context: context)
                 switch state {
                 case .valid(let userInfo), .demoMode(let userInfo):
@@ -140,7 +140,7 @@ struct SettingsView: View {
                 setUsernameTextFieldToStoredValue()
             }
         } message: {
-            Text("By changing your username you cannot send or receive messages from your current contacts. You will have to add each other again.")
+            Text("Changing your username will reset dIM Chat and remove your contacts. Do this carefully.")
         }
     }
     
