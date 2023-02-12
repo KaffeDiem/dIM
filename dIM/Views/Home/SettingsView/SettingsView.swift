@@ -32,6 +32,14 @@ struct SettingsView: View {
     
     private let usernameValidator = UsernameValidator()
     
+    /// All conversations stored to CoreData
+    @FetchRequest(
+        entity: ConversationEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \ConversationEntity.date, ascending: false)
+        ]
+    ) var conversations: FetchedResults<ConversationEntity>
+    
     /// Read messages setting saved to UserDefaults
     @AppStorage(UserDefaultsKey.readMessages.rawValue) var readStatusToggle = false
     
@@ -131,6 +139,7 @@ struct SettingsView: View {
                 case .valid(let userInfo), .demoMode(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
+                    deleteAllConversations()
                     CryptoHandler.resetKeys()
                 default:
                     setUsernameTextFieldToStoredValue()
@@ -147,5 +156,16 @@ struct SettingsView: View {
     private func setUsernameTextFieldToStoredValue() {
         usernameTextFieldText = usernameValidator.userInfo?.name ?? ""
         usernameTextFieldIdentifier = usernameValidator.userInfo?.id ?? ""
+    }
+    
+    private func deleteAllConversations() {
+        conversations.forEach { conversation in
+            context.delete(conversation)
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Context could not be saved after deleting all conversations")
+        }
     }
 }

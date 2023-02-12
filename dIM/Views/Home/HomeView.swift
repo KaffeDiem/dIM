@@ -69,14 +69,14 @@ struct HomeView: View {
                                     print("Context could not be saved.")
                                 }
                             } label: {
-                                Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
+                                Label("Clear", systemImage: "exclamationmark.bubble.fill")
                             }
                             .tint(.accentColor)
                             
                             Button(role: .destructive) {
                                 deleteContact(for: conversation)
                             } label: {
-                                Label("Delete Conversation", systemImage: "person.fill.xmark")
+                                Label("Delete", systemImage: "person.fill.xmark")
                             }
                         }
                     }
