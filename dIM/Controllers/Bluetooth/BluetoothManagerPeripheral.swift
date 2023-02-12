@@ -8,7 +8,7 @@
 import Foundation
 import CoreBluetooth
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: PeripheralManager callback functions. Handles the client side of Bluetooth.
 

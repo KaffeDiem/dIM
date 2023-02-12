@@ -13,7 +13,7 @@ import CoreBluetooth
  for this client.
  */
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Relay messages functionality.
     

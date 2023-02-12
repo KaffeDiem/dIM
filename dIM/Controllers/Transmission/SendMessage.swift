@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Sending messages.
     

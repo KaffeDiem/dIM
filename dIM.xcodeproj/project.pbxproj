@@ -10,7 +10,6 @@
 		B0024A9329954CBD00ADB06F /* Extensions+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */; };
 		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
 		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
-		B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */; };
 		B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0C271B2B87005D8098 /* AboutView.swift */; };
 		B027E2F92996341A001D5F18 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B027E2F82996341A001D5F18 /* UserDefaultsKeys.swift */; };
 		B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0357C0A26DBEB950013CAF9 /* QRView.swift */; };
@@ -21,7 +20,7 @@
 		B05E1F3F26D3B3AB00AD9E65 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B05E1F3E26D3B3AB00AD9E65 /* Preview Assets.xcassets */; };
 		B05E1F4226D3B3AB00AD9E65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B05E1F4026D3B3AB00AD9E65 /* LaunchScreen.storyboard */; };
 		B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F4A26D3B44300AD9E65 /* ChatView.swift */; };
-		B05E1F4F26D3C9C100AD9E65 /* ChatHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F4E26D3C9C100AD9E65 /* ChatHandler.swift */; };
+		B05E1F4F26D3C9C100AD9E65 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F4E26D3C9C100AD9E65 /* AppSession.swift */; };
 		B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5026D3CADC00AD9E65 /* ServiceModel.swift */; };
 		B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */; };
 		B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */; };
@@ -53,7 +52,6 @@
 		B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Bundle.swift"; sourceTree = "<group>"; };
 		B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		B020E7D727A944E50098097A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityView.swift; sourceTree = "<group>"; };
 		B0225B0C271B2B87005D8098 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B027E2F82996341A001D5F18 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		B0357C0A26DBEB950013CAF9 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
@@ -66,7 +64,7 @@
 		B05E1F4126D3B3AB00AD9E65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B05E1F4326D3B3AB00AD9E65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B05E1F4A26D3B44300AD9E65 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		B05E1F4E26D3C9C100AD9E65 /* ChatHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHandler.swift; sourceTree = "<group>"; };
+		B05E1F4E26D3C9C100AD9E65 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
 		B05E1F5026D3CADC00AD9E65 /* ServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceModel.swift; sourceTree = "<group>"; };
 		B05E1F5226D3D3BF00AD9E65 /* ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionView.swift; sourceTree = "<group>"; };
 		B05E1F5426D3DB3400AD9E65 /* BluetoothManagerCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManagerCentral.swift; sourceTree = "<group>"; };
@@ -187,7 +185,7 @@
 		B05E1F4D26D3C7FF00AD9E65 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B05E1F4E26D3C9C100AD9E65 /* ChatHandler.swift */,
+				B05E1F4E26D3C9C100AD9E65 /* AppSession.swift */,
 				B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */,
 				B0D15B6B26D9138E0099F8F5 /* Transmission */,
 				B06E299E26D5358000FBB67E /* Bluetooth */,
@@ -252,7 +250,6 @@
 			isa = PBXGroup;
 			children = (
 				B0225B0C271B2B87005D8098 /* AboutView.swift */,
-				B0225B0A271B2B2C005D8098 /* ConnectivityView.swift */,
 			);
 			path = SettingsDetailView;
 			sourceTree = "<group>";
@@ -373,7 +370,6 @@
 				B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */,
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
-				B0225B0B271B2B2C005D8098 /* ConnectivityView.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
@@ -401,7 +397,7 @@
 				B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetupView.swift in Sources */,
 				B05E1F5D26D3ECDD00AD9E65 /* MessageModel.swift in Sources */,
-				B05E1F4F26D3C9C100AD9E65 /* ChatHandler.swift in Sources */,
+				B05E1F4F26D3C9C100AD9E65 /* AppSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

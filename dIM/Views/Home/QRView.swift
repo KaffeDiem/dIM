@@ -17,7 +17,7 @@ struct QRView: View {
     /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var chatHandler: ChatHandler
+    @EnvironmentObject var appSession: AppSession
     
     /// The username fetched from `UserDefaults`
     private let username: String
@@ -127,7 +127,7 @@ struct QRView: View {
         qrCodeScannerIsShown = false
         switch result {
         case .success(let result):
-            chatHandler.handleScan(result: result.string)
+            appSession.handleScan(result: result.string)
         case .failure(let error):
             print(error.localizedDescription)
         }

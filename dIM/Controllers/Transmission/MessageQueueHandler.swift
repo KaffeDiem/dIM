@@ -8,7 +8,7 @@
 import Foundation
 import CoreBluetooth
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Message queue functionality.
     

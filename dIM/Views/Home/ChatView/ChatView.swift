@@ -19,9 +19,9 @@ struct ChatView: View {
     @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
-    /// The `chatHandler` object is used to send and receive messages.
+    /// The `appSession` object is used to send and receive messages.
     /// It handles the logic behind this view.
-    @EnvironmentObject var chatHandler: ChatHandler
+    @EnvironmentObject var appSession: AppSession
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
@@ -79,7 +79,7 @@ struct ChatView: View {
                                 // Resend a message which has not been delivered
                                 if message.sender! == username {
                                     Button(role: .none) {
-                                        chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
+                                        appSession.sendMessage(for: conversation, text: message.text!, context: context)
                                     } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     }
@@ -118,7 +118,7 @@ struct ChatView: View {
                 }
             }
             // Minor hack to refresh view when ACK / READ message is received
-            .id(chatHandler.refreshID)
+            .id(appSession.refreshID)
             
             // MARK: Send message
             HStack {
@@ -128,7 +128,7 @@ struct ChatView: View {
                 .submitLabel(.send)
                 .onSubmit({
                     if message.count < 261 {
-                        chatHandler.sendMessage(for: conversation, text: message, context: context)
+                        appSession.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 })
@@ -144,7 +144,7 @@ struct ChatView: View {
                 
                 Button(action: {
                     if message.count < 261 {
-                        chatHandler.sendMessage(for: conversation, text: message, context: context)
+                        appSession.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 }, label: {
@@ -161,12 +161,12 @@ struct ChatView: View {
              it in settings.
              */
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                chatHandler.sendReadMessage(conversation)
+                appSession.sendReadMessage(conversation)
             }
         }
         .onDisappear() {
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                chatHandler.sendReadMessage(conversation)
+                appSession.sendReadMessage(conversation)
             }
         }
     }

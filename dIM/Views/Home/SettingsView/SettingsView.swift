@@ -19,8 +19,8 @@ struct SettingsView: View {
     /// The `UserDefaults` for getting information from persistent storage.
     private let defaults = UserDefaults.standard
     
-    /// The `ChatBrain` to get things from the logic layer.
-    @EnvironmentObject var chatHandler: ChatHandler
+    /// The `AppSession` to get things from the logic layer.
+    @EnvironmentObject var appSession: AppSession
     
     @State private var usernameTextFieldText = ""
     @State private var usernameTextFieldIdentifier = ""
@@ -104,10 +104,10 @@ struct SettingsView: View {
             }
             
             Section {
-                Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
+                Label(appSession.discoveredDevices.count < 0 ? "No devices connected." : "\(appSession.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
-                Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
+                Label("\(appSession.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
                     .imageScale(.large)
             } header: {
                 Text("Connectivity")
@@ -153,11 +153,13 @@ struct SettingsView: View {
         }
     }
     
+    /// Revert username to what is stored in UserDefaults
     private func setUsernameTextFieldToStoredValue() {
         usernameTextFieldText = usernameValidator.userInfo?.name ?? ""
         usernameTextFieldIdentifier = usernameValidator.userInfo?.id ?? ""
     }
     
+    /// Delete all conversations (very destructive)
     private func deleteAllConversations() {
         conversations.forEach { conversation in
             context.delete(conversation)

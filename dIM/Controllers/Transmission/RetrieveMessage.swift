@@ -11,7 +11,7 @@ import SwiftUI
 import CoreData
 
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Receiving messages.
 

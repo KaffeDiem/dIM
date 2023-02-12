@@ -18,8 +18,8 @@ import CoreData
 /// objects as well as conversations. When the app is launched all the information
 /// is stored in memory and written to the persistent storage as needed.
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
-/// - Note: In code the ChatBrain has been divided into files for seperation and isolation of features.
-class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+/// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
+class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     let context: NSManagedObjectContext
     
     /// A simple counter to show amount of relayed messages this session.
@@ -70,7 +70,7 @@ class ChatHandler: NSObject, ObservableObject, CBCentralManagerDelegate, CBPerip
     /// Seen CoreBluetooth Central devices
     var seenCBCentral: [CBCentral] = []
     
-    /// The initialiser for the ChatBrain.
+    /// The initialiser for the AppSession.
     /// Sets up the `centralManager` and the `peripheralManager`.
     /// - Parameter context: The context for persistent storage to `CoreData`
     init(context: NSManagedObjectContext) {
