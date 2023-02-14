@@ -12,9 +12,9 @@ import Combine
 
 protocol DataControllerDelegate: AnyObject {
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
-    func dataController(_ dataController: DataController, shouldRelay encryptedMessage: Message)
     func dataController(_ dataController: DataController, didFailWith error: String)
     func dataController(_ dataController: DataController, didFailWith error: Error)
+    func dataControllerDidRelayMessage(_ dataController: DataController)
 }
 
 class LiveDataController: NSObject, DataController {
@@ -63,11 +63,6 @@ class LiveDataController: NSObject, DataController {
                 self?.usernameWithDigits = usernameWithDigits
             }
         }.store(in: &cancellables)
-    }
-    
-    
-    private func relay(encryptedMessage: Message) {
-        
     }
 }
 

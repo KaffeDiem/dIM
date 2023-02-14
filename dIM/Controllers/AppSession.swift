@@ -206,12 +206,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 }
 
 extension AppSession: DataControllerDelegate {
-    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
-        receive(encryptedMessage: encryptedMessage)
+    func dataControllerDidRelayMessage(_ dataController: DataController) {
+        ()
     }
     
-    func dataController(_ dataController: DataController, shouldRelay encryptedMessage: Message) {
-        ()
+    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
+        receive(encryptedMessage: encryptedMessage)
     }
     
     func dataController(_ dataController: DataController, didFailWith error: String) {
