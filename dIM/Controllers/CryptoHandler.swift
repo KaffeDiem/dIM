@@ -19,9 +19,7 @@ class CryptoHandler {
     static func getPublicKey() -> String {
         let defaults = UserDefaults.standard
         
-        /*
-         Return the public key if it exists.
-         */
+        /// Return already existing key
         if let privateKey = defaults.string(forKey: UserDefaultsKey.privateKey.rawValue) {
             let privateKey = try! importPrivateKey(privateKey)
             
@@ -29,17 +27,13 @@ class CryptoHandler {
             return publicKeyExport
         }
         
-        /*
-         Create a new key pair if none are found.
-         */
+        /// Create and save new key pair of none are found
         let privateKey = generatePrivateKey()
         
         let privateKeyExport = exportPrivateKey(privateKey)
         let publicKeyExport = exportPublicKey(privateKey.publicKey)
         
-        /*
-         Save the private key to persistent memory as a string.
-         */
+        /// Save key to UserDefaults
         defaults.setValue(privateKeyExport, forKey: UserDefaultsKey.privateKey.rawValue)
         
         return publicKeyExport
@@ -59,8 +53,7 @@ class CryptoHandler {
     /// It can be accessed with `privatekey.publickey`
     /// - Returns: Your new private key.
     static func generatePrivateKey() -> P256.KeyAgreement.PrivateKey {
-        let privateKey = P256.KeyAgreement.PrivateKey()
-        return privateKey
+        P256.KeyAgreement.PrivateKey()
     }
 
     /// Converts a private key object into a string since objects cannot be
@@ -163,7 +156,7 @@ class CryptoHandler {
     /// Reset public and private keys
     /// - Warning: Calling this function is disruptive and users will no longer be able to send and receive messages.
     static func resetKeys() {
-        let defaults = UserDefaults.standard
         UserDefaults.standard.removeObject(forKey: UserDefaultsKey.privateKey.rawValue)
+        let _ = getPublicKey()
     }
 }

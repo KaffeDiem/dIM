@@ -19,8 +19,8 @@ struct SettingsView: View {
     /// The `UserDefaults` for getting information from persistent storage.
     private let defaults = UserDefaults.standard
     
-    /// The `ChatBrain` to get things from the logic layer.
-    @EnvironmentObject var chatHandler: ChatHandler
+    /// The `AppSession` to get things from the logic layer.
+    @EnvironmentObject var appSession: AppSession
     
     @State private var usernameTextFieldText = ""
     @State private var usernameTextFieldIdentifier = ""
@@ -31,6 +31,14 @@ struct SettingsView: View {
     @State private var changeUsernameAlertMessageIsShown = false
     
     private let usernameValidator = UsernameValidator()
+    
+    /// All conversations stored to CoreData
+    @FetchRequest(
+        entity: ConversationEntity.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \ConversationEntity.date, ascending: false)
+        ]
+    ) var conversations: FetchedResults<ConversationEntity>
     
     /// Read messages setting saved to UserDefaults
     @AppStorage(UserDefaultsKey.readMessages.rawValue) var readStatusToggle = false
@@ -49,7 +57,7 @@ struct SettingsView: View {
                         ProgressView()
                     } else {
                         TextField("Choose a username...", text: $usernameTextFieldText, onCommit: {
-                            UIApplication.shared.endEditing()
+                            hideKeyboard()
                             
                             switch usernameValidator.validate(username: usernameTextFieldText) {
                             case .valid, .demoMode:
@@ -96,10 +104,10 @@ struct SettingsView: View {
             }
             
             Section {
-                Label(chatHandler.discoveredDevices.count < 0 ? "No devices connected." : "\(chatHandler.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
+                Label(appSession.discoveredDevices.count < 0 ? "No devices connected." : "\(appSession.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
-                Label("\(chatHandler.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
+                Label("\(appSession.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
                     .imageScale(.large)
             } header: {
                 Text("Connectivity")
@@ -125,10 +133,15 @@ struct SettingsView: View {
         }
         // Change username alert
         .alert("Change username", isPresented: $changeUsernameAlertMessageIsShown) {
-            Button("OK") {
+            Button("Change", role: .destructive) {
                 let state = usernameValidator.set(username: usernameTextFieldText, context: context)
                 switch state {
-                case .valid(let userInfo), .demoMode(let userInfo):
+                case .valid(let userInfo):
+                    usernameTextFieldText = userInfo.name
+                    usernameTextFieldIdentifier = userInfo.id
+                    deleteAllConversations()
+                    CryptoHandler.resetKeys()
+                case .demoMode(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
                     CryptoHandler.resetKeys()
@@ -140,12 +153,25 @@ struct SettingsView: View {
                 setUsernameTextFieldToStoredValue()
             }
         } message: {
-            Text("By changing your username you cannot send or receive messages from your current contacts. You will have to add each other again.")
+            Text("Changing your username will reset dIM Chat and remove your contacts. Do this carefully.")
         }
     }
     
+    /// Revert username to what is stored in UserDefaults
     private func setUsernameTextFieldToStoredValue() {
         usernameTextFieldText = usernameValidator.userInfo?.name ?? ""
         usernameTextFieldIdentifier = usernameValidator.userInfo?.id ?? ""
+    }
+    
+    /// Delete all conversations (very destructive)
+    private func deleteAllConversations() {
+        conversations.forEach { conversation in
+            context.delete(conversation)
+        }
+        do {
+            try context.save()
+        } catch {
+            print("Context could not be saved after deleting all conversations")
+        }
     }
 }

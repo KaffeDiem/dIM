@@ -12,9 +12,9 @@ import SwiftUI
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
 struct HomeView: View {
     
-    /// Initialize the chatHandler which handles logic of Bluetooth
+    /// Initialize the appSession which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var chatHandler: ChatHandler
+    @StateObject var appSession: AppSession
     
     @ObservedObject var viewModel = HomeViewModel()
     
@@ -44,7 +44,7 @@ struct HomeView: View {
                     ForEach(conversations, id: \.self) { conversation in
                         NavigationLink {
                             ChatView(conversation: conversation)
-                                .environmentObject(chatHandler)
+                                .environmentObject(appSession)
                         } label: {
                             VStack {
                                 Text(viewModel.getAuthor(for: conversation) ?? "Unknown")
@@ -69,14 +69,14 @@ struct HomeView: View {
                                     print("Context could not be saved.")
                                 }
                             } label: {
-                                Label("Clear Conversation", systemImage: "exclamationmark.bubble.fill")
+                                Label("Clear", systemImage: "exclamationmark.bubble.fill")
                             }
                             .tint(.accentColor)
                             
                             Button(role: .destructive) {
                                 deleteContact(for: conversation)
                             } label: {
-                                Label("Delete Conversation", systemImage: "person.fill.xmark")
+                                Label("Delete", systemImage: "person.fill.xmark")
                             }
                         }
                     }
@@ -94,7 +94,7 @@ struct HomeView: View {
                 VStack {
                     Text("Chats")
                         .font(.headline)
-                    if chatHandler.discoveredDevices.count < 1 {
+                    if appSession.discoveredDevices.count < 1 {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right.slash")
                                 .symbolRenderingMode(.palette)
@@ -106,18 +106,18 @@ struct HomeView: View {
                     } else {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(chatHandler.discoveredDevices.count) in range").font(.subheadline)
+                            Text("\(appSession.discoveredDevices.count) in range").font(.subheadline)
                         }
                     }
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView().environmentObject(chatHandler), label: {
+                NavigationLink(destination: SettingsView().environmentObject(appSession), label: {
                     Image(systemName: "gearshape.fill")
                 })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: QRView().environmentObject(chatHandler), label: {
+                NavigationLink(destination: QRView().environmentObject(appSession), label: {
                     Image(systemName: "qrcode")
                 })
             }

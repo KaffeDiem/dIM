@@ -11,7 +11,7 @@ import SwiftUI
 import CoreData
 
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Receiving messages.
 
@@ -23,33 +23,22 @@ extension ChatHandler {
     /// to confirm that we have received it.
     /// - Parameter messageEncrypted: The message that we have received. Then we determine if it is for us.
     func retrieveMessage(_ messageEncrypted: Message) {
-        
-        /*
-         Check if the message has been seen before
-         */
-        guard !seenMessages.contains(messageEncrypted.id) else { return }
-        
-        /*
-         Add message to list of previously seen messages.
-         */
+        // Do nothing if the message has been seen already
+        guard !seenMessages.contains(messageEncrypted.id) else {
+            return
+        }
+        // Add message to list of previously seen messages
         seenMessages.append(messageEncrypted.id)
         
-        /*
-         Determine if the message is for me
-         */
-        let defaults = UserDefaults.standard
-        let username = defaults.string(forKey: "Username")
+        let validator = UsernameValidator()
+        let usernameWithDigits = validator.userInfo?.asString
+        let messageIsForMe: Bool = messageEncrypted.receiver == usernameWithDigits
         
-        let MessageForMe: Bool = messageEncrypted.receiver == username
-        
-        /*
-         If the message is not for me then relay it.
-         */
-        guard MessageForMe else {
-            
+        // If message is not for me relay it
+        guard messageIsForMe else {
             if useDSRAlgorithm {
                 // If the message type is an ACK message.
-                if messageEncrypted.type == 1 {
+                if messageEncrypted.kind == .acknowledgement {
                     // Get the ID from the ACK message
                     let components = messageEncrypted.text.components(separatedBy: "/")
                     let messageID = Int32(components[1])!
@@ -60,12 +49,10 @@ extension ChatHandler {
                          */
                         let senderBluetoothID = getSenderOfMessage(messageID: messageID)
                         relayMessage(messageEncrypted, senderBluetoothID)
-                        
                         return
                     }
                 }
             }
-            
             relayMessage(messageEncrypted)
             return
         }
@@ -103,7 +90,7 @@ extension ChatHandler {
                 
                 let localMessage = MessageEntity(context: self.context)
                 localMessage.id = messageEncrypted.id
-                localMessage.receiver = username
+                localMessage.receiver = usernameWithDigits
                 localMessage.sender = messageEncrypted.sender
                 localMessage.status = Status.received.rawValue
                 localMessage.text = decryptedText
@@ -145,8 +132,8 @@ extension ChatHandler {
     ///   - conversation: The conversation in which the message is to be handled.
     /// - Returns: A boolean that confirms that the type of message is a `READ` type.
     func receivedRead(message: Message, conversation: ConversationEntity) -> Bool {
+        // Check if message is a READ type
         var components = message.text.components(separatedBy: "/")
-        
         guard components.first == "READ" && components.count > 1 else {
             return false
         }
@@ -181,18 +168,13 @@ extension ChatHandler {
     ///   - conversation: The conversation in which it is handled.
     /// - Returns: A boolean confirming that it is or is not an `ACK` message.
     func receivedAck(message: Message, conversation: ConversationEntity) -> Bool {
-        
+        // Check if message is of ACK type
         let components = message.text.components(separatedBy: "/")
-        
-        /*
-         Check that the message is an ACK message.
-         */
         guard components.first == "ACK" && components.count == 2 else {
             return false
         }
         
         let messages = conversation.messages?.allObjects as! [MessageEntity]
-        
         for message in messages {
             if message.id == Int(components[1])! {
                 message.status = Status.delivered.rawValue
@@ -201,17 +183,10 @@ extension ChatHandler {
         
         self.refreshID = UUID()
         try? self.context.save()
-        
         return true
     }
     
-    
-    // MARK: Helper functions
-    
-    /*
-     Given a message and a conversation, decrypt the text and send it back.
-     */
-    /// A helper function to decrypt a message to a string.
+    /// Decrypt a message to a string.
     /// - Parameters:
     ///   - message: The message to decrypt.
     ///   - conversation: The conversation to decrypt the message for.

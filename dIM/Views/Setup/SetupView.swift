@@ -33,7 +33,7 @@ struct SetupView: View {
     var body: some View {
         NavigationView {
             if usernameValidator.isUsernameValid {
-                HomeView(chatHandler: ChatHandler(context: context))
+                HomeView(appSession: AppSession(context: context))
                     .navigationBarTitle("")
                     .navigationBarBackButtonHidden(true)
             } else {

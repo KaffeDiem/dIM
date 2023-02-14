@@ -17,21 +17,28 @@ struct QRView: View {
     /// different visuals depending on the colorscheme.
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var chatHandler: ChatHandler
+    @EnvironmentObject var appSession: AppSession
     
     /// The username fetched from `UserDefaults`
-    private let username = UserDefaults.standard.string(forKey: "Username")
+    private let username: String
     
     /// Contect for drawing of the QR code.
     private let context = CIContext()
     /// Filter for drawing the QR code. Built-in function.
     private let filter = CIFilter.qrCodeGenerator()
     
+    init() {
+        let validator = UsernameValidator()
+        guard let username = validator.userInfo?.asString else {
+            fatalError("QR view was opened but no username has been set")
+        }
+        self.username = username
+    }
+    
     /// Show camera for scanning QR codes.
-    @State private var showScanner = false
+    @State private var qrCodeScannerIsShown = false
     
     var body: some View {
-       
         VStack {
             
             Spacer()
@@ -50,7 +57,7 @@ struct QRView: View {
                  The form of the QR code is:
                  dim://username//publickey
                  */
-                Image(uiImage: generateQRCode(from: "dim://\(username ?? "Unknown")//\(CryptoHandler.getPublicKey())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username)//\(CryptoHandler.getPublicKey())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
@@ -64,7 +71,7 @@ struct QRView: View {
                 .foregroundColor(.accentColor)
             
             Button {
-                showScanner = true
+                qrCodeScannerIsShown = true
             } label: {
                 Text("Scan")
                     .padding()
@@ -78,14 +85,14 @@ struct QRView: View {
                         )
                     )
                     .cornerRadius(10.0)
-            }.sheet(isPresented: $showScanner, content: {
+            }.sheet(isPresented: $qrCodeScannerIsShown, content: {
                 ZStack {
                     CodeScannerView(codeTypes: [.qr], completion: handleScan)
                     VStack {
                         HStack {
                             Spacer()
                             Button {
-                                showScanner = false
+                                qrCodeScannerIsShown = false
                             } label: {
                                 Image(systemName: "xmark")
                                     .foregroundColor(.white)
@@ -117,10 +124,10 @@ struct QRView: View {
     /// Handles the result of the QR scan.
     /// - Parameter result: Result of the QR scan or an error.
     private func handleScan(result: Result<ScanResult, ScanError>) {
-        showScanner = false
+        qrCodeScannerIsShown = false
         switch result {
         case .success(let result):
-            chatHandler.handleScan(result: result.string)
+            appSession.handleScan(result: result.string)
         case .failure(let error):
             print(error.localizedDescription)
         }

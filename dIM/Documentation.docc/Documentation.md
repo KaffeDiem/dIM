@@ -10,9 +10,9 @@ The app is built using SwiftUI. This document will cover the most essential feat
 
 ## Essentials
 
-- ``ChatHandler`` handles sending and receiving messages through Bluetooth. 
+- ``AppSession`` handles sending and receiving messages through Bluetooth. 
 
-- ``CryptoHandler`` handles encryption of messages sent and received in the ``ChatHandler``.
+- ``CryptoHandler`` handles encryption of messages sent and received in the ``AppSession``.
 
 ## Topics
 

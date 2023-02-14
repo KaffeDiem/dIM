@@ -19,9 +19,9 @@ struct ChatView: View {
     @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
-    /// The `chatHandler` object is used to send and receive messages.
+    /// The `appSession` object is used to send and receive messages.
     /// It handles the logic behind this view.
-    @EnvironmentObject var chatHandler: ChatHandler
+    @EnvironmentObject var appSession: AppSession
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
@@ -32,7 +32,7 @@ struct ChatView: View {
     /// Temporary storage of the textfield entry.
     @State var message: String = ""
     
-    @State var repoartAlertShouldShow = false
+    @State var reportAlertIsShown = false
     
     /// Current username
     private let username: String
@@ -50,7 +50,7 @@ struct ChatView: View {
         )
         
         let usernameValidator = UsernameValidator()
-        if let username = usernameValidator.userInfo?.name {
+        if let username = usernameValidator.userInfo?.asString {
             self.username = username
         } else {
             fatalError("Unexpectedly did not find any username while opening a chat view")
@@ -64,28 +64,27 @@ struct ChatView: View {
                     LazyVStack {
                         ForEach(messages, id: \.self) { message in
                             HStack {
-                                
                                 MessageBubble(username: username, message: message)
-                                
                             }
                             .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
                             .contextMenu {
-                                /* Copy button */
-                                Button(role: .none, action: {
-                                    UIPasteboard.general.setValue(message.text ?? "Something went wrong copying from dIM",
-                                                                  forPasteboardType: "public.plain-text")
-                                }, label: {
+                                // Copy to clipboard
+                                Button(role: .none) {
+                                    UIPasteboard.general.setValue(
+                                        message.text ?? "Something went wrong copying from dIM",
+                                        forPasteboardType: "public.plain-text")
+                                } label: {
                                     Label("Copy", systemImage: "doc.on.doc")
-                                })
-                                /* Resend button (for users own messages) */
+                                }
+                                // Resend a message which has not been delivered
                                 if message.sender! == username {
-                                    Button(role: .none, action: {
-                                        chatHandler.sendMessage(for: conversation, text: message.text!, context: context)
-                                    }, label: {
+                                    Button(role: .none) {
+                                        appSession.sendMessage(for: conversation, text: message.text!, context: context)
+                                    } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
-                                    })
                                     }
-                                /* Delete button*/
+                                }
+                                // Delete button
                                 Button(role: .destructive, action: {
                                     context.delete(message)
                                     do {
@@ -98,13 +97,12 @@ struct ChatView: View {
                                 })
                                 /* Report button */
                                 Button(role: .destructive, action: {
-                                    repoartAlertShouldShow = true
-                                    print("Alert should be shown")
+                                    reportAlertIsShown = true
                                 }, label: {
                                     Label("Report", systemImage: "exclamationmark.bubble")
                                 })
                             }
-                            .alert("Report Message", isPresented: $repoartAlertShouldShow) {
+                            .alert("Report Message", isPresented: $reportAlertIsShown) {
                                 Button("OK", role: .cancel) {}
                             } message: {
                                 Text("dIM stores all data on yours and the senders device. Therefore you should block the user who has sent this message to you if you deem it inappropriate.\nIllegal content should be reported to the authorities.")
@@ -113,19 +111,16 @@ struct ChatView: View {
                     }
                 }
                 .onAppear {
-                    /*
-                     Scroll to bottom of chat list automatically when view is loaded.
-                     */
+                    // Scroll to bottom on appear
                     if messages.count > 0 {
                         proxy.scrollTo(messages[messages.endIndex-1])
                     }
                 }
             }
-            .id(chatHandler.refreshID) // Force a refresh when an ACK message is received
+            // Minor hack to refresh view when ACK / READ message is received
+            .id(appSession.refreshID)
             
-            /*
-             Send message part
-             */
+            // MARK: Send message
             HStack {
                 TextField("Aa", text: $message)
                 .padding()
@@ -133,7 +128,7 @@ struct ChatView: View {
                 .submitLabel(.send)
                 .onSubmit({
                     if message.count < 261 {
-                        chatHandler.sendMessage(for: conversation, text: message, context: context)
+                        appSession.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 })
@@ -149,7 +144,7 @@ struct ChatView: View {
                 
                 Button(action: {
                     if message.count < 261 {
-                        chatHandler.sendMessage(for: conversation, text: message, context: context)
+                        appSession.sendMessage(for: conversation, text: message, context: context)
                         message = ""
                     }
                 }, label: {
@@ -165,28 +160,14 @@ struct ChatView: View {
              Send READ acknowledgements messages if the user has enabled
              it in settings.
              */
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatHandler.sendReadMessage(conversation)
+            if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
+                appSession.sendReadMessage(conversation)
             }
         }
         .onDisappear() {
-            if UserDefaults.standard.bool(forKey: "settings.readmessages") {
-                chatHandler.sendReadMessage(conversation)
+            if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
+                appSession.sendReadMessage(conversation)
             }
         }
-    }
-}
-
-
-/// A simple shape of a bubbble.
-struct Bubble: Shape {
-    /// A boolean confirming that the message is sent by us or not.
-    var chat: Bool
-    /// Drawing of the actual path.
-    /// - Parameter rect: The rectangle size to draw.
-    /// - Returns: A path which is used for drawing.
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .topLeft, chat ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        return Path(path.cgPath)
     }
 }

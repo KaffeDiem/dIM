@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-extension ChatHandler {
+extension AppSession {
     
     // MARK: Sending messages.
     
@@ -23,41 +23,31 @@ extension ChatHandler {
     ///   - context: The context which we save the message. Used for persistent storage to CoreData.
     func sendMessage(for conversation: ConversationEntity, text message: String, context: NSManagedObjectContext) {
         guard !message.isEmpty else { return }
-        guard let username = UserDefaults.standard.string(forKey: UserDefaultsKey.username.rawValue) else {
+        let validator = UsernameValidator()
+        guard let username = validator.userInfo?.asString else {
             fatalError("Could not find username while sending a message")
         }
         
-        /*
-         Encrypt the message text.
-         */
+        // Encrypt message
         let privateKey = CryptoHandler.getPrivateKey()
         let receiverPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
         let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
         let encryptedData = try! CryptoHandler.encryptMessage(text: message, symmetricKey: symmetricKey)
         
-        /*
-         The unique message ID.
-         */
         let messageId = Int32.random(in: 0...Int32.max)
         
-        /*
-         The encrypted message which is sent to other users.
-         */
         let encryptedMessage = Message(
             id: messageId,
-            type: 0,
+            kind: .regular,
             sender: username,
             receiver: conversation.author!,
             text: encryptedData
         )
         
-        if let characteristic = self.characteristic {
+        // Send message to all connected devices
+        if let characteristic {
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
-                
-                /*
-                 Send the message to all connected peripherals.
-                 */
                 peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
                 messageQueueAdd(encryptedMessage)
             } catch {
@@ -65,9 +55,7 @@ extension ChatHandler {
             }
         }
         
-        /*
-         Add the message to local storage
-         */
+        // Save the message to local storage
         let localMessage = MessageEntity(context: context)
         
         localMessage.receiver = conversation.author
@@ -106,7 +94,6 @@ extension ChatHandler {
          no read status has been sent yet.
          */
         var received: [MessageEntity] = []
-        
         let messages: [MessageEntity] = conversation.messages!.allObjects as! [MessageEntity]
         
         for message in messages {
@@ -116,38 +103,35 @@ extension ChatHandler {
             }
         }
         
-        /*
-         Return if there are no messages to send.
-         */
+        // Return if there are no messages to send
         guard received.count > 0 else {
             return
         }
         
-        /*
-         Compose a single READ message to send.
-         */
+        // Create one single READ message for all the messages ids
         var text: String = "READ/"
-        
         for message in received {
             text = text + String(message.id) + "/"
         }
         
+        let validator = UsernameValidator()
+        guard let usernameWithDigits = validator.userInfo?.asString else {
+            fatalError("A READ message was sent but no username has been set")
+        }
+        
         let readMessage = Message(
             id: Int32.random(in: 0...Int32.max),
-            type: 2,
-            sender: UserDefaults.standard.string(forKey: "Username")!,
+            kind: .read,
+            sender: usernameWithDigits,
             receiver: conversation.author ?? "Unknown",
             text: text
         )
         
         if let characteristic = self.characteristic {
-    
             seenMessages.append(readMessage.id)
             do {
                 let readMessageEncoded = try JSONEncoder().encode(readMessage)
-                
                 peripheralManager.updateValue(readMessageEncoded, for: characteristic, onSubscribedCentrals: nil)
-                
             } catch {
                 print("Error encoding message: \(readMessage) -> \(error)")
             }
@@ -160,10 +144,14 @@ extension ChatHandler {
     /// shortest route possible.
     /// - Parameter message: The message which we want to send an ACK message for.
     func sendAckMessage(_ message: MessageEntity) {
+        let validator = UsernameValidator()
+        guard let usernameWithDigits = validator.userInfo?.asString else {
+            fatalError("An ACK message was sent but no username has been set")
+        }
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
-            type: 1,
-            sender: UserDefaults.standard.string(forKey: "Username")!,
+            kind: .acknowledgement,
+            sender: usernameWithDigits,
             receiver: message.sender!,
             text: "ACK/\(message.id)"
         )
