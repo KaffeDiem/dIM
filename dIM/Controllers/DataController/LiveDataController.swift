@@ -10,13 +10,34 @@ import CoreData
 import CoreBluetooth
 import Combine
 
+enum DataControllerError: Error, LocalizedError {
+    case bluetoothTurnedOff
+    case sentEmptyMessage
+    case unknown
+    
+    public var errorDescription: String? {
+        switch self {
+        case .bluetoothTurnedOff:
+            return NSLocalizedString("Bluetooth must be turned on", comment: "Bluetooth off")
+        case .sentEmptyMessage:
+            return NSLocalizedString("There should be a message text when sending a message", comment: "No message text")
+        default:
+            return NSLocalizedString("An unknown error has occured", comment: "Unknown error")
+        }
+    }
+}
+
 protocol DataControllerDelegate: AnyObject {
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
-    func dataController(_ dataController: DataController, didFailWith error: String)
     func dataController(_ dataController: DataController, didFailWith error: Error)
     func dataControllerDidRelayMessage(_ dataController: DataController)
 }
 
+/// The responsibility of the DataController is to handle all Bluetooth related
+/// communication. All implementation details should be hidden from the outside,
+/// so much that we would not care if Bluetooth was used.
+/// The DataController communicates back through simple delegate methods, as such
+/// one should implement the ``DataControllerDelegate``.
 class LiveDataController: NSObject, DataController {
     private let central: CBCentralManager
     private let peripheral: CBPeripheralManager
@@ -64,6 +85,52 @@ class LiveDataController: NSObject, DataController {
             }
         }.store(in: &cancellables)
     }
+    
+    func send(_ text: String, to conversation: ConversationEntity) throws -> Message {
+        guard !text.isEmpty else {
+            throw DataControllerError.sentEmptyMessage
+        }
+        guard let username = usernameValidator.userInfo?.asString else {
+            fatalError("Cannot find username while sending a message. This is not allowed.")
+        }
+        guard let receiver = conversation.author else {
+            fatalError("Cannot find receiver. This is not allowed.")
+        }
+        guard let receiverPublicKeyText = conversation.publicKey else {
+            fatalError("Cannot find public key of receiver. This is not allowed.")
+        }
+        
+        let privateKey = CryptoHandler.getPrivateKey()
+        let receiverPublicKey = try! CryptoHandler.importPublicKey(receiverPublicKeyText)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+        let encryptedText = try! CryptoHandler.encryptMessage(
+            text: text, symmetricKey: symmetricKey)
+        
+        let messageId = Int32.random(in: 0...Int32.max)
+        let encryptedMessage = Message(
+            id: messageId,
+            kind: .regular,
+            sender: username,
+            receiver: receiver,
+            text: encryptedText
+        )
+        
+        // Send the encrypted message to all connected peripherals
+        do {
+            let messageEncoded = try JSONEncoder().encode(encryptedMessage)
+            self.peripheral.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+        } catch {
+            throw error
+        }
+        
+        return Message(
+            id: messageId,
+            kind: .regular,
+            sender: username,
+            receiver: receiver,
+            text: text
+        )
+    }
 }
 
 // MARK: CBCentralManagerDelegate
@@ -76,7 +143,7 @@ extension LiveDataController: CBCentralManagerDelegate {
                 withServices: [Session.UUID],
                 options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         default:
-            delegate?.dataController(self, didFailWith: "Bluetooth must be powered on")
+            delegate?.dataController(self, didFailWith: DataControllerError.bluetoothTurnedOff)
         }
     }
     

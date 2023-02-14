@@ -140,7 +140,29 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     }
     
     func send(text message: String, conversation: ConversationEntity) {
+        let messageForStorage: Message
+        do {
+            messageForStorage = try dataController.send(message, to: conversation)
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
         
+        // Save the message to local storage
+        let localMessage = MessageEntity(context: context)
+        
+        localMessage.receiver = messageForStorage.receiver
+        localMessage.status = Status.sent.rawValue
+        localMessage.text = messageForStorage.text
+        localMessage.date = Date()
+        localMessage.id = messageForStorage.id
+        localMessage.sender = messageForStorage.sender
+        
+        conversation.lastMessage = "You: " + messageForStorage.text
+        conversation.date = Date()
+        conversation.addToMessages(localMessage)
+        
+        try? context.save()
     }
     
     private func handle(error: String) {
