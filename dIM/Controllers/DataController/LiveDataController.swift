@@ -18,11 +18,11 @@ enum DataControllerError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .bluetoothTurnedOff:
-            return NSLocalizedString("Bluetooth must be turned on", comment: "Bluetooth off")
+            return NSLocalizedString("You should turn Bluetooth on.", comment: "Bluetooth off")
         case .sentEmptyMessage:
-            return NSLocalizedString("There should be a message text when sending a message", comment: "No message text")
+            return NSLocalizedString("You cannot send empty messages.", comment: "No message text")
         default:
-            return NSLocalizedString("An unknown error has occured", comment: "Unknown error")
+            return NSLocalizedString("An unknown error has occured.", comment: "Unknown error")
         }
     }
 }
@@ -41,6 +41,10 @@ protocol DataControllerDelegate: AnyObject {
 class LiveDataController: NSObject, DataController {
     private let central: CBCentralManager
     private let peripheral: CBPeripheralManager
+    
+    /// CoreBluetooth requires a reference to connected peripherals.
+    /// They will be stored here.
+    private var disoveredPeripherals: [CBPeripheral] = []
     
     private let usernameValidator = UsernameValidator()
     private var usernameWithDigits: String?
@@ -153,13 +157,19 @@ extension LiveDataController: CBCentralManagerDelegate {
         advertisementData: [String : Any],
         rssi RSSI: NSNumber
     ) {
-        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
+        
+//        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
+        
         // Connect to a peripheral device only if it is not already connected.
         switch peripheral.state {
         case .connected, .connecting:
             ()
         default:
             central.connect(peripheral)
+            if !disoveredPeripherals.contains(peripheral) {
+                disoveredPeripherals.append(peripheral)
+            }
+            print(#function, disoveredPeripherals.count)
         }
     }
     
@@ -169,7 +179,10 @@ extension LiveDataController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        ()
+        if let error {
+            delegate?.dataController(self, didFailWith: error)
+        }
+        disoveredPeripherals.removeAll(where: { $0 == peripheral })
     }
     
     func centralManager(
@@ -246,6 +259,7 @@ extension LiveDataController: CBPeripheralDelegate {
                 delegate?.dataController(self, didReceive: encryptedMessage)
             } else {
                 self.peripheral.updateValue(data, for: self.characteristic, onSubscribedCentrals: nil)
+                delegate?.dataControllerDidRelayMessage(self)
             }
         } catch {
             delegate?.dataController(self, didFailWith: error)
@@ -264,7 +278,7 @@ extension LiveDataController: CBPeripheralManagerDelegate {
                 CBAdvertisementDataLocalNameKey: UsernameValidator().userInfo?.name ?? "-"
             ])
         default:
-            ()
+            delegate?.dataController(self, didFailWith: DataControllerError.bluetoothTurnedOff)
         }
     }
     

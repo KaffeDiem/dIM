@@ -16,6 +16,8 @@ struct SetupView: View {
     @Environment(\.managedObjectContext) var context
     @Environment(\.colorScheme) private var colorScheme
     
+    @EnvironmentObject private var appSession: AppSession
+    
     /// True if the keyboard is shown. Used for animations.
     @FocusState private var keyboardShown: Bool
     
@@ -33,7 +35,7 @@ struct SetupView: View {
     var body: some View {
         NavigationView {
             if usernameValidator.isUsernameValid {
-                HomeView(appSession: AppSession(context: context))
+                HomeView()
                     .navigationBarTitle("")
                     .navigationBarBackButtonHidden(true)
             } else {
@@ -121,6 +123,7 @@ struct SetupView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .banner(data: $appSession.bannerData, isPresented: $appSession.bannerDataShouldShow)
     }
 }
 

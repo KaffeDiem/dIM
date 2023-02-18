@@ -14,7 +14,7 @@ struct HomeView: View {
     
     /// Initialize the appSession which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var appSession: AppSession
+    @EnvironmentObject var appSession: AppSession
     
     @ObservedObject var viewModel = HomeViewModel()
     

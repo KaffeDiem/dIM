@@ -9,6 +9,7 @@ import Foundation
 import CoreBluetooth
 import SwiftUI
 import CoreData
+import Combine
 
 /// The Bluetooth Manager handles all searching for, creating connection to
 /// and sending/receiving messages to/from other Bluetooth devices.
@@ -20,7 +21,20 @@ import CoreData
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
 class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
-    private let context: NSManagedObjectContext
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    @Published var bannerDataShouldShow = false
+    @Published var bannerData: BannerModifier.BannerData = .init(title: "", message: "") {
+        didSet {
+            withAnimation(.spring()) {
+                bannerDataShouldShow = true
+            }
+        }
+    }
+    
+    /// Managed object context for saving to CoreData
+    let context: NSManagedObjectContext
     
     /// A simple counter to show amount of relayed messages this session.
     /// It is reset when the app is force-closed or the device is restarted.
@@ -83,6 +97,11 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         super.init()
         
         dataController.delegate = self
+        
+        setupBindings()
+    }
+    
+    private func setupBindings() {
     }
     
     /// Drop connection and remove references for a peripheral device.
@@ -165,8 +184,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         try? context.save()
     }
     
-    private func handle(error: String) {
-        
+    private func showBanner(_ bannerData: BannerModifier.BannerData) {
+        self.bannerData = bannerData
+    }
+    
+    private func showErrorMessage(_ error: String) {
+        showBanner(.init(title: "Error", message: error, kind: .error))
     }
     
     private func receive(encryptedMessage: Message) {
@@ -179,7 +202,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                     .first(where: { $0.author == encryptedMessage.sender })
                 // Conversation to add the message to
                 guard let conversation else {
-                    self.handle(error: "Message received but sender is not added as a contact")
+                    self.showErrorMessage("Message received but sender is not added as a contact")
                     return
                 }
 
@@ -188,12 +211,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                     conversation: conversation)
 
                 guard let decryptedMessageText else {
-                    self.handle(error: "Received message which could not be decrypted")
+                    self.showErrorMessage("Received message which could not be decrypted")
                     return
                 }
 
                 guard let usernameWithDigits = self.usernameValidator.userInfo?.asString else {
-                    self.handle(error: "Could not get current username")
+                    self.showErrorMessage("Could not get current username")
                     return
                 }
 
@@ -221,7 +244,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 
                 try self.context.save()
             } catch {
-                self.handle(error: "Could not fetch conversations from CoreData")
+                self.showErrorMessage("Could not fetch conversations from CoreData")
             }
         }
     }
@@ -229,21 +252,16 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 
 extension AppSession: DataControllerDelegate {
     func dataControllerDidRelayMessage(_ dataController: DataController) {
-        ()
+        routedCounter += 1
     }
     
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
         receive(encryptedMessage: encryptedMessage)
     }
     
-    func dataController(_ dataController: DataController, didFailWith error: String) {
-        ()
-    }
-    
     func dataController(_ dataController: DataController, didFailWith error: Error) {
-        ()
+        self.showErrorMessage(error.localizedDescription)
     }
-    
 }
 
 // MARK: Helpers

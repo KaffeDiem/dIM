@@ -42,6 +42,8 @@
 		B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatus.swift */; };
 		B0B183CC29992E4D005CA662 /* LiveDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183CB29992E4D005CA662 /* LiveDataController.swift */; };
 		B0B183CF29996FD2005CA662 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183CE29996FD2005CA662 /* DataController.swift */; };
+		B0B183DC29A09070005CA662 /* BannerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183DB29A09070005CA662 /* BannerModifier.swift */; };
+		B0B183DE29A0925A005CA662 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183DD29A0925A005CA662 /* Extensions+View.swift */; };
 		B0B86E262995137C00CCC465 /* Extensions+HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
 		B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6C26D913A40099F8F5 /* SendMessage.swift */; };
@@ -87,6 +89,8 @@
 		B0B0D06926FCFD4200E2512B /* MessageStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatus.swift; sourceTree = "<group>"; };
 		B0B183CB29992E4D005CA662 /* LiveDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDataController.swift; sourceTree = "<group>"; };
 		B0B183CE29996FD2005CA662 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		B0B183DB29A09070005CA662 /* BannerModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerModifier.swift; sourceTree = "<group>"; };
+		B0B183DD29A0925A005CA662 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HideKeyboard.swift"; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 		B05F7A9128F00A0E00ABAC7E /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B0B183DA29A09056005CA662 /* ViewModifiers */,
 				B05F7A9028F009F300ABAC7E /* Validators */,
 				B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */,
 			);
@@ -228,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */,
+				B0B183DD29A0925A005CA662 /* Extensions+View.swift */,
 				B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */,
 			);
 			path = "Extensions+CustomUI";
@@ -249,6 +255,14 @@
 				B0B183CE29996FD2005CA662 /* DataController.swift */,
 			);
 			path = DataController;
+			sourceTree = "<group>";
+		};
+		B0B183DA29A09056005CA662 /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				B0B183DB29A09070005CA662 /* BannerModifier.swift */,
+			);
+			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 		B0B94FF9279D545700AD199D /* ChatViewDetails */ = {
@@ -383,6 +397,7 @@
 				B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */,
 				B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */,
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
+				B0B183DE29A0925A005CA662 /* Extensions+View.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
@@ -398,6 +413,7 @@
 				B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
+				B0B183DC29A09070005CA662 /* BannerModifier.swift in Sources */,
 				B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */,
 				B06079B426D54F54007B4DF6 /* ConversationModel.swift in Sources */,
 				B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */,
