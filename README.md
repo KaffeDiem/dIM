@@ -1,5 +1,5 @@
 
-> dIM is under a major refactor project, you can see the WIP PR here #32
+> dIM is under a major refactor project, you can see the WIP PR [here #32](https://github.com/KaffeDiem/dIM/pull/32)
 
 # Decentralized Instant Messenger (dIM) 
 dIM is an open-source instant messenger built first and foremost for iOS. It will also run on iPad but support is limited.
