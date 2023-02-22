@@ -158,9 +158,6 @@ extension LiveDataController: CBCentralManagerDelegate {
         advertisementData: [String : Any],
         rssi RSSI: NSNumber
     ) {
-        
-//        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        
         // Connect to a peripheral device only if it is not already connected.
         switch peripheral.state {
         case .connected, .connecting:
@@ -192,9 +189,6 @@ extension LiveDataController: CBCentralManagerDelegate {
         didFailToConnect peripheral: CBPeripheral,
         error: Error?
     ) {
-        /*
-         Try to connect again once and then stop?
-         */
         if let error {
             delegate?.dataController(self, didFailWith: error)
         }
@@ -215,7 +209,7 @@ extension LiveDataController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        ()
+        delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -238,7 +232,9 @@ extension LiveDataController: CBPeripheralDelegate {
         didUpdateNotificationStateFor characteristic: CBCharacteristic,
         error: Error?
     ) {
-        ()
+        if let error {
+            delegate?.dataController(self, didFailWith: error)
+        }
     }
     
     func peripheral(

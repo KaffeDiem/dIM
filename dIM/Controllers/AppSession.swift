@@ -48,6 +48,8 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     // Used for the queue functionality.
     @Published var messageQueue: [queuedMessage] = []
     
+    @Published private(set) var connectedDevicesAmount = 0
+    
     
     // Holds a reference to all devices discovered. If no reference
     // is held then the Bluetooth connection may be dropped.
@@ -252,7 +254,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 
 extension AppSession: DataControllerDelegate {
     func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int) {
-        print(#function, deviceAmount)
+        connectedDevicesAmount = deviceAmount
     }
     
     func dataControllerDidRelayMessage(_ dataController: DataController) {
