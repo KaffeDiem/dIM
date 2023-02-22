@@ -138,7 +138,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         do {
             messageForStorage = try dataController.send(message, to: conversation)
         } catch {
-            print(error.localizedDescription)
+            showErrorMessage(error.localizedDescription)
             return
         }
         
@@ -156,7 +156,11 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         conversation.date = Date()
         conversation.addToMessages(localMessage)
         
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            showErrorMessage(error.localizedDescription)
+        }
     }
     
     private func showBanner(_ bannerData: BannerModifier.BannerData) {
@@ -164,7 +168,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     }
     
     private func showErrorMessage(_ error: String) {
-        showBanner(.init(title: "Error", message: error, kind: .error))
+        showBanner(.init(title: "Something went wrong", message: error, kind: .error))
     }
     
     private func receive(encryptedMessage: Message) {
@@ -175,9 +179,8 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                 let conversations = try fetchRequest.execute()
                 let conversation = conversations
                     .first(where: { $0.author == encryptedMessage.sender })
-                // Conversation to add the message to
                 guard let conversation else {
-                    self.showErrorMessage("Message received but sender is not added as a contact")
+                    self.showErrorMessage("Received a message for you, but the sender has not been added as a contact.")
                     return
                 }
 
@@ -186,12 +189,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                     conversation: conversation)
 
                 guard let decryptedMessageText else {
-                    self.showErrorMessage("Received message which could not be decrypted")
+                    self.showErrorMessage("Received a message which could not be decrypted.")
                     return
                 }
 
                 guard let usernameWithDigits = self.usernameValidator.userInfo?.asString else {
-                    self.showErrorMessage("Could not get current username")
+                    self.showErrorMessage("Could not find your current username.")
                     return
                 }
 
@@ -219,7 +222,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 
                 try self.context.save()
             } catch {
-                self.showErrorMessage("Could not fetch conversations from CoreData")
+                self.showErrorMessage("Could not save newly received message.")
             }
         }
     }

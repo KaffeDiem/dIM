@@ -40,8 +40,8 @@ protocol DataControllerDelegate: AnyObject {
 /// The DataController communicates back through simple delegate methods, as such
 /// one should implement the ``DataControllerDelegate``.
 class LiveDataController: NSObject, DataController {
-    private let central: CBCentralManager
-    private let peripheral: CBPeripheralManager
+    private let centralManager: CBCentralManager
+    private let peripheralManager: CBPeripheralManager
     
     /// CoreBluetooth requires a reference to connected peripherals.
     private var disoveredPeripherals: [CBPeripheral] = []
@@ -60,8 +60,8 @@ class LiveDataController: NSObject, DataController {
     private let service: CBMutableService
     
     override init() {
-        self.central = CBCentralManager(delegate: nil, queue: nil)
-        self.peripheral = CBPeripheralManager(delegate: nil, queue: nil)
+        self.centralManager = CBCentralManager(delegate: nil, queue: nil)
+        self.peripheralManager = CBPeripheralManager(delegate: nil, queue: nil)
         self.characteristic = CBMutableCharacteristic(
             type: Session.characteristicsUUID,
             properties: [.write, .notify],
@@ -74,9 +74,9 @@ class LiveDataController: NSObject, DataController {
         
         super.init()
         
-        central.delegate = self
-        peripheral.delegate = self
-        peripheral.add(service)
+        centralManager.delegate = self
+        peripheralManager.delegate = self
+        peripheralManager.add(service)
         
         self.usernameWithDigits = usernameValidator.userInfo?.asString
         
@@ -128,7 +128,7 @@ class LiveDataController: NSObject, DataController {
         // Send the encrypted message to all connected peripherals
         do {
             let messageEncoded = try JSONEncoder().encode(encryptedMessage)
-            self.peripheral.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+            self.peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
         } catch {
             throw error
         }
@@ -150,9 +150,7 @@ extension LiveDataController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            central.scanForPeripherals(
-                withServices: [Session.UUID],
-                options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+            centralManager.scanForPeripherals(withServices: [Session.UUID], options: nil)
         default:
             delegate?.dataController(self, didFailWith: DataControllerError.bluetoothTurnedOff)
         }
@@ -173,7 +171,6 @@ extension LiveDataController: CBCentralManagerDelegate {
             if !disoveredPeripherals.contains(peripheral) {
                 disoveredPeripherals.append(peripheral)
             }
-            print(#function, disoveredPeripherals.count)
         }
     }
     
@@ -215,7 +212,7 @@ extension LiveDataController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
+        delegate?.dataController(self, isConnectedTo: centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -230,7 +227,7 @@ extension LiveDataController: CBPeripheralDelegate {
             }
         }
         
-        delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
+        delegate?.dataController(self, isConnectedTo: centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
     func peripheral(
@@ -254,7 +251,7 @@ extension LiveDataController: CBPeripheralDelegate {
         }
         
         guard let data = characteristic.value else {
-           return
+            return
         }
         
         do {
@@ -268,7 +265,7 @@ extension LiveDataController: CBPeripheralDelegate {
             if messageIsForMe {
                 delegate?.dataController(self, didReceive: encryptedMessage)
             } else {
-                self.peripheral.updateValue(data, for: self.characteristic, onSubscribedCentrals: nil)
+                self.peripheralManager.updateValue(data, for: self.characteristic, onSubscribedCentrals: nil)
                 delegate?.dataControllerDidRelayMessage(self)
             }
         } catch {
@@ -283,7 +280,7 @@ extension LiveDataController: CBPeripheralManagerDelegate {
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
         case .poweredOn:
-            peripheral.startAdvertising([
+            peripheralManager.startAdvertising([
                 CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
                 CBAdvertisementDataLocalNameKey: UsernameValidator().userInfo?.name ?? "-"
             ])
