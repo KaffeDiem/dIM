@@ -28,6 +28,7 @@ enum DataControllerError: Error, LocalizedError {
 }
 
 protocol DataControllerDelegate: AnyObject {
+    func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int)
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
     func dataController(_ dataController: DataController, didFailWith error: Error)
     func dataControllerDidRelayMessage(_ dataController: DataController)
@@ -183,6 +184,7 @@ extension LiveDataController: CBCentralManagerDelegate {
             delegate?.dataController(self, didFailWith: error)
         }
         disoveredPeripherals.removeAll(where: { $0 == peripheral })
+        delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
     func centralManager(
@@ -212,6 +214,10 @@ extension LiveDataController: CBPeripheralDelegate {
         }
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        ()
+    }
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let error {
             delegate?.dataController(self, didFailWith: error)
@@ -223,6 +229,8 @@ extension LiveDataController: CBPeripheralDelegate {
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
+        
+        delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
     func peripheral(

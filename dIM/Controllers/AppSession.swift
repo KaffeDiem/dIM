@@ -251,6 +251,10 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 }
 
 extension AppSession: DataControllerDelegate {
+    func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int) {
+        print(#function, deviceAmount)
+    }
+    
     func dataControllerDidRelayMessage(_ dataController: DataController) {
         routedCounter += 1
     }
