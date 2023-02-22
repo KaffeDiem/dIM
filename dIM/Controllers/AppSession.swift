@@ -95,29 +95,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     init(context: NSManagedObjectContext) {
         self.context = context
         self.dataController = LiveDataController()
-        
         super.init()
         
         dataController.delegate = self
     }
     
-    /// Drop connection and remove references for a peripheral device.
-    /// - Parameter peripheral: Device to forget.
-    func cleanUpPeripheral(_ peripheral: CBPeripheral) {
-        let connected = centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID])
-        
-        // Drop connection to a connected peripheral device
-        connected
-            .filter { $0 == peripheral }
-            .forEach {
-                centralManager.cancelPeripheralConnection($0)
-            }
-        
-        // Remove all references to peripheral
-        discoveredDevices.removeAll(where: { $0.peripheral == peripheral })
-    }
-    
-    public func addUserFromQrScan(_ result: String) {
+    func addUserFromQrScan(_ result: String) {
         do {
             try ScanHandler.retrieve(result: result, context: context)
         } catch ScanHandler.ScanHandlerError.userPreviouslyAdded {
