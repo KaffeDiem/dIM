@@ -36,6 +36,8 @@ struct ChatView: View {
     
     /// Current username
     private let username: String
+    
+    @FocusState private var textFieldIsFocused: Bool
         
     init(conversation: ConversationEntity) {
         self.conversation = conversation
@@ -123,16 +125,17 @@ struct ChatView: View {
             // MARK: Send message
             HStack {
                 TextField("Aa", text: $message)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .submitLabel(.send)
-                .onSubmit({
-                    if message.count < 261 {
-                        appSession.sendMessage(for: conversation, text: message, context: context)
-                        message = ""
-                    }
-                })
-
+                    .focused($textFieldIsFocused)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .submitLabel(.send)
+                    .onSubmit({
+                        if message.count < 261 {
+                            appSession.sendMessage(for: conversation, text: message, context: context)
+                            message = ""
+                        }
+                    })
+                
                 if message.count > 260 {
                     Text("\(message.count)/260")
                         .padding(.trailing)
@@ -154,8 +157,9 @@ struct ChatView: View {
             }
         }
         .navigationTitle((conversation.author!.components(separatedBy: "#")).first ?? "Unknown")
-    
+        
         .onAppear() {
+            textFieldIsFocused = true
             /*
              Send READ acknowledgements messages if the user has enabled
              it in settings.

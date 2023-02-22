@@ -251,7 +251,7 @@ extension AppSession {
         
         // Decode the message received from a connected peripheral and save it.
         do {
-            let message = try JSONDecoder().decode(Message.self, from: data)
+            let message = try Message.decode(data: data)
             // Handle decoded messages.
             retrieveMessage(message)
             

@@ -41,6 +41,7 @@
 		B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */; };
 		B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */; };
 		B0B0D06A26FCFD4200E2512B /* MessageStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatus.swift */; };
+		B0B183D7299CCE4A005CA662 /* Extensions+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183D6299CCE4A005CA662 /* Extensions+Decodable.swift */; };
 		B0B183CC29992E4D005CA662 /* LiveDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183CB29992E4D005CA662 /* LiveDataController.swift */; };
 		B0B183CF29996FD2005CA662 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183CE29996FD2005CA662 /* DataController.swift */; };
 		B0B183DC29A09070005CA662 /* BannerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183DB29A09070005CA662 /* BannerModifier.swift */; };
@@ -93,6 +94,7 @@
 		B0B183CE29996FD2005CA662 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		B0B183DB29A09070005CA662 /* BannerModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerModifier.swift; sourceTree = "<group>"; };
 		B0B183DD29A0925A005CA662 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
+		B0B183D6299CCE4A005CA662 /* Extensions+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Decodable.swift"; sourceTree = "<group>"; };
 		B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HideKeyboard.swift"; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0D15B6C26D913A40099F8F5 /* SendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessage.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 			children = (
 				B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */,
 				B0B183DD29A0925A005CA662 /* Extensions+View.swift */,
+				B0B183D6299CCE4A005CA662 /* Extensions+Decodable.swift */,
 				B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */,
 			);
 			path = "Extensions+CustomUI";
@@ -402,6 +405,7 @@
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
 				B0B183DE29A0925A005CA662 /* Extensions+View.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
+				B0B183D7299CCE4A005CA662 /* Extensions+Decodable.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B0D15B6D26D913A40099F8F5 /* SendMessage.swift in Sources */,
