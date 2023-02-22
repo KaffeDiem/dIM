@@ -127,7 +127,7 @@ struct QRView: View {
         qrCodeScannerIsShown = false
         switch result {
         case .success(let result):
-            appSession.handleScan(result: result.string)
+            appSession.addUserFromQrScan(result.string)
         case .failure(let error):
             print(error.localizedDescription)
         }

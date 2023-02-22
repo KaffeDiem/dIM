@@ -99,11 +99,6 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         super.init()
         
         dataController.delegate = self
-        
-        setupBindings()
-    }
-    
-    private func setupBindings() {
     }
     
     /// Drop connection and remove references for a peripheral device.
@@ -122,42 +117,20 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         discoveredDevices.removeAll(where: { $0.peripheral == peripheral })
     }
     
-    public func handleScan(result: String) {
-        let component = result.components(separatedBy: "//")
-        
-        guard component.count == 3 else {
-            print("QR code error: Format of scanned QR code is wrong.")
+    public func addUserFromQrScan(_ result: String) {
+        do {
+            try ScanHandler.retrieve(result: result, context: context)
+        } catch ScanHandler.ScanHandlerError.userPreviouslyAdded {
+            showBanner(.init(title: "User added", message: "User already exists.", kind: .normal))
+            return
+        } catch ScanHandler.ScanHandlerError.invalidFormat {
+            showBanner(.init(title: "Oops", message: "The scanned QR code does not look correct.", kind: .error))
+            return
+        } catch {
+            showErrorMessage(error.localizedDescription)
             return
         }
-        
-        let name = component[1]
-        let publicKey = component[2]
-        
-        let fetchRequest: NSFetchRequest<ConversationEntity>
-        fetchRequest = ConversationEntity.fetchRequest()
-        
-        do {
-            // Get existing conversation from CoreData
-            let conversations = try context.fetch(fetchRequest)
-            
-            // Return if user has been added already
-            if conversations.contains(where: { $0.author == name }) {
-                return
-            }
-        } catch {
-            print("No previously added contacts. Adding first.")
-        }
-        
-        // Create a new conversation with the scanned user
-        let conversation = ConversationEntity(context: context)
-        conversation.author = name
-        conversation.publicKey = publicKey
-        
-        do {
-            try context.save()
-        } catch {
-            fatalError("Could not save recently scanned user")
-        }
+        showBanner(.init(title: "User added", message: "All good! The user has been added.", kind: .success))
     }
     
     func send(text message: String, conversation: ConversationEntity) {

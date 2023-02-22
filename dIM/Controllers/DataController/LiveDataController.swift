@@ -44,7 +44,6 @@ class LiveDataController: NSObject, DataController {
     private let peripheral: CBPeripheralManager
     
     /// CoreBluetooth requires a reference to connected peripherals.
-    /// They will be stored here.
     private var disoveredPeripherals: [CBPeripheral] = []
     
     private let usernameValidator = UsernameValidator()
@@ -52,6 +51,7 @@ class LiveDataController: NSObject, DataController {
     
     weak var delegate: DataControllerDelegate?
     
+    /// A list of previously seen messages used to not send messages repeatedly.
     private var previouslySeenMessages = [Int32]()
     
     private var cancellables = Set<AnyCancellable>()
@@ -91,6 +91,11 @@ class LiveDataController: NSObject, DataController {
         }.store(in: &cancellables)
     }
     
+    /// Send a message to another dIM user.
+    /// - Parameters:
+    ///   - text: The message text.
+    ///   - conversation: The conversation, which holds necessary information for sending a message.
+    /// - Returns: The sent message.
     func send(_ text: String, to conversation: ConversationEntity) throws -> Message {
         guard !text.isEmpty else {
             throw DataControllerError.sentEmptyMessage
@@ -128,6 +133,7 @@ class LiveDataController: NSObject, DataController {
             throw error
         }
         
+        // Return the unencrypted sent message.
         return Message(
             id: messageId,
             kind: .regular,
