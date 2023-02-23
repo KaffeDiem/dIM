@@ -145,18 +145,18 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             showErrorMessage(error.localizedDescription)
         }
     }
+    
+    func showBanner(_ bannerData: BannerModifier.BannerData) {
+        self.bannerData = bannerData
+    }
+    
+    func showErrorMessage(_ error: String) {
+        showBanner(.init(title: "Something went wrong", message: error, kind: .error))
+    }
 }
     
 // MARK: Private methods
 extension AppSession {
-    private func showBanner(_ bannerData: BannerModifier.BannerData) {
-        self.bannerData = bannerData
-    }
-    
-    private func showErrorMessage(_ error: String) {
-        showBanner(.init(title: "Something went wrong", message: error, kind: .error))
-    }
-    
     private func receive(encryptedMessage: Message) {
         context.perform { [weak self] in
             guard let self else { return }

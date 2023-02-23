@@ -34,7 +34,7 @@ struct MessageBubble: View {
     }
     
     var body: some View {
-        if username == message.sender! {
+        if username == message.sender {
             Spacer()
         }
         
@@ -44,20 +44,22 @@ struct MessageBubble: View {
             .background(
                 username == message.sender ? Asset.dimOrangeLight.swiftUIColor : Asset.greyDark.swiftUIColor
             )
-            .clipShape(Bubble(chat: username == message.sender!))
+            .clipShape(Bubble(chat: username == message.sender))
             .padding(.leading)
             
-        if username != message.sender! {
-            Text("\(dateFormatter.string(from: message.date!))")
-                .font(.footnote)
-                .foregroundColor(.gray)
+        if username != message.sender {
+            if let messageDate = message.date {
+                Text("\(dateFormatter.string(from: messageDate))")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+            }
         }
         
-        if username != message.sender! {
+        if username != message.sender {
             Spacer()
         }
     
-        if username == message.sender! {
+        if username == message.sender {
             MessageStatus(message: message)
                 .foregroundColor(.accentColor)
                 .padding(.trailing)

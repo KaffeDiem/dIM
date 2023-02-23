@@ -81,7 +81,7 @@ struct ChatView: View {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 }
                                 // Resend a message which has not been delivered
-                                if message.sender! == username {
+                                if message.sender == username {
                                     Button(role: .none) {
                                         appSession.send(text: message.text ?? "", conversation: conversation)
                                     } label: {
@@ -94,12 +94,12 @@ struct ChatView: View {
                                     do {
                                         try context.save()
                                     } catch {
-                                        print("Error: Saving the context after deleting a message went wrong.")
+                                        appSession.showErrorMessage(error.localizedDescription)
                                     }
                                 }, label: {
                                     Label("Delete", systemImage: "minus.square")
                                 })
-                                /* Report button */
+                                // Report button
                                 Button(role: .destructive, action: {
                                     reportAlertIsShown = true
                                 }, label: {
@@ -121,8 +121,7 @@ struct ChatView: View {
                     }
                 }
             }
-            // Minor hack to refresh view when ACK / READ message is received
-            .id(appSession.refreshID)
+            .id(appSession.refreshID) // Refresh view when an ACK or READ message is received (minor hack)
             .removeFocusOnTap()
             
             // MARK: Send message
@@ -139,13 +138,8 @@ struct ChatView: View {
                 Button {
                     send(message: message)
                 } label: {
-                    if message.isEmpty {
-                        Image(systemName: "arrow.up.circle")
-                            .imageScale(.large)
-                    } else {
-                        Image(systemName: "arrow.up.circle.fill")
-                            .imageScale(.large)
-                    }
+                    Image(systemName: message.isEmpty ? "arrow.up.circle" : "arrow.up.circle.fill")
+                        .imageScale(.large)
                 }
                 .padding(.trailing)
             }
