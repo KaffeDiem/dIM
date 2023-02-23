@@ -10,40 +10,61 @@ import CryptoKit
 
 /// Handles all encryption of messages as well as public and private keys.
 class CryptoHandler {
+    enum CryptoHandlerError: Error, LocalizedError {
+        case conversationKeyNotFound
+        case keyInWrongFormat
+        case textCannotBeUtf8Converted
+        case textCannotBeEncrypted
+        case userPrivateKeyNotFound
+            
+        public var errorDescription: String? {
+            switch self {
+            case .conversationKeyNotFound:
+                return NSLocalizedString("No cryptography key found for this conversation.", comment: "No key found")
+            case .keyInWrongFormat:
+                return NSLocalizedString("Public/Private key is in wrong format.", comment: "Wrong key format")
+            case .textCannotBeEncrypted:
+                return NSLocalizedString("The message text cannot be encrypted.", comment: "Not able to encrypt message text")
+            case .textCannotBeUtf8Converted:
+                return NSLocalizedString("Cannot convert text to UTF8 format.", comment: "UTF8 conversion failure")
+            case .userPrivateKeyNotFound:
+                return NSLocalizedString("Your private key could not be found.", comment: "Private key not found")
+            }
+        }
+    }
+    
     /// Gets your public key for generation of the QR code.
     ///
-    /// Gets the saved public key from `UserDefaults` if there is one.
-    /// Otherwise it will generate a new public key.
+    /// - Note: Always returns a public key as a string. If one has never been
+    /// generated this function will take care of that.
     ///
     /// - Returns: Your public key as a string.
-    static func getPublicKey() -> String {
+    static func fetchPublicKeyString() -> String {
         let defaults = UserDefaults.standard
         
         /// Return already existing key
-        if let privateKey = defaults.string(forKey: UserDefaultsKey.privateKey.rawValue) {
-            let privateKey = try! importPrivateKey(privateKey)
-            
-            let publicKeyExport = exportPublicKey(privateKey.publicKey)
-            return publicKeyExport
+        if let privateKeyText = defaults.string(forKey: UserDefaultsKey.privateKey.rawValue),
+            let privateKey = try? convertPrivateKeyStringToKey(privateKeyText) {
+            let publicKeyText = convertPublicKeyToString(privateKey.publicKey)
+            return publicKeyText
         }
         
-        /// Create and save new key pair of none are found
+        /// Generate and save a new key pair
         let privateKey = generatePrivateKey()
-        
-        let privateKeyExport = exportPrivateKey(privateKey)
-        let publicKeyExport = exportPublicKey(privateKey.publicKey)
-        
-        /// Save key to UserDefaults
-        defaults.setValue(privateKeyExport, forKey: UserDefaultsKey.privateKey.rawValue)
-        
-        return publicKeyExport
+        let privateKeyText = convertPrivateKeyToString(privateKey)
+        let publicKeyText = convertPublicKeyToString(privateKey.publicKey)
+        defaults.setValue(privateKeyText, forKey: UserDefaultsKey.privateKey.rawValue)
+        return publicKeyText
     }
 
 
-    /// Returns your private key which is saved as a string in `UserDefaults`.
+    /// Returns the current users private key which is saved as a string in `UserDefaults`.
     /// - Returns: Your private key as a private key object.
-    static func getPrivateKey() -> P256.KeyAgreement.PrivateKey {
-        return try! importPrivateKey(UserDefaults.standard.string(forKey: UserDefaultsKey.privateKey.rawValue)!)
+    static func fetchPrivateKey() throws -> P256.KeyAgreement.PrivateKey {
+        guard let privateKey = UserDefaults.standard.string(forKey: UserDefaultsKey.privateKey.rawValue) else {
+            throw CryptoHandlerError.userPrivateKeyNotFound
+        }
+        return try convertPrivateKeyStringToKey(privateKey)
     }
 
     /// Generate a new private key for you.
@@ -60,7 +81,7 @@ class CryptoHandler {
     /// saved to storage.
     /// - Parameter privateKey: The private key to convert.
     /// - Returns: The private key as a string.
-    static func exportPrivateKey(_ privateKey: P256.KeyAgreement.PrivateKey) -> String {
+    static func convertPrivateKeyToString(_ privateKey: P256.KeyAgreement.PrivateKey) -> String {
         let rawPrivateKey = privateKey.rawRepresentation
         let privateKeyBase64 = rawPrivateKey.base64EncodedString()
         let percentEncodedPrivateKey = privateKeyBase64.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -71,7 +92,7 @@ class CryptoHandler {
     /// saved to storage.
     /// - Parameter publicKey: The public key to convert.
     /// - Returns: The public key as a string.
-    static func exportPublicKey(_ publicKey: P256.KeyAgreement.PublicKey) -> String {
+    static func convertPublicKeyToString(_ publicKey: P256.KeyAgreement.PublicKey) -> String {
         let rawPublicKey = publicKey.rawRepresentation
         let base64PublicKey = rawPublicKey.base64EncodedString()
         let encodedPublicKey = base64PublicKey.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -82,9 +103,9 @@ class CryptoHandler {
     /// - Parameter privateKey: The private key as a string to convert.
     /// - Throws: Throws if the private key string cannot be converted to an object due to wrong formatting.
     /// - Returns: The private key as an object.
-    static func importPrivateKey(_ privateKey: String) throws -> P256.KeyAgreement.PrivateKey {
-        let privateKeyBase64 = privateKey.removingPercentEncoding!
-        let rawPrivateKey = Data(base64Encoded: privateKeyBase64)!
+    static func convertPrivateKeyStringToKey(_ privateKey: String) throws -> P256.KeyAgreement.PrivateKey {
+        guard let privateKeyBase64 = privateKey.removingPercentEncoding else { throw CryptoHandlerError.keyInWrongFormat }
+        guard let rawPrivateKey = Data(base64Encoded: privateKeyBase64) else { throw CryptoHandlerError.keyInWrongFormat }
         return try P256.KeyAgreement.PrivateKey(rawRepresentation: rawPrivateKey)
     }
 
@@ -92,11 +113,11 @@ class CryptoHandler {
     /// - Parameter publicKey: The public key as a string to convert.
     /// - Throws: Throws if the public key string cannot be converted to an object due to wrong formatting.
     /// - Returns: The public key as an object.
-    static func importPublicKey(_ publicKey: String) throws -> P256.KeyAgreement.PublicKey {
-        let base64PublicKey = publicKey.removingPercentEncoding!
-        let rawPublicKey = Data(base64Encoded: base64PublicKey)!
-        let publicKey = try P256.KeyAgreement.PublicKey(rawRepresentation: rawPublicKey)
-        return publicKey
+    static func convertPublicKeyStringToKey(_ publicKey: String?) throws -> P256.KeyAgreement.PublicKey {
+        guard let publicKey else { throw CryptoHandlerError.conversationKeyNotFound }
+        guard let publicKeyBase64 = publicKey.removingPercentEncoding else { throw CryptoHandlerError.keyInWrongFormat }
+        guard let rawPublicKey = Data(base64Encoded: publicKeyBase64) else { throw CryptoHandlerError.keyInWrongFormat }
+        return try P256.KeyAgreement.PublicKey(rawRepresentation: rawPublicKey)
     }
 
 
@@ -108,13 +129,12 @@ class CryptoHandler {
     /// - Returns: The symmetric key to use for encryption.
     static func deriveSymmetricKey(privateKey: P256.KeyAgreement.PrivateKey, publicKey: P256.KeyAgreement.PublicKey) throws -> SymmetricKey {
         let sharedSecret = try privateKey.sharedSecretFromKeyAgreement(with: publicKey)
-        let symmetricKey = sharedSecret.hkdfDerivedSymmetricKey(
+        return sharedSecret.hkdfDerivedSymmetricKey(
             using: SHA256.self,
             salt: "My Key Agreement Salt".data(using: .utf8)!,
             sharedInfo: Data(),
             outputByteCount: 32
         )
-        return symmetricKey
     }
 
     /// Encrypt a string given a symmetric key.
@@ -124,9 +144,10 @@ class CryptoHandler {
     /// - Throws: If the encryption failed for some reason.
     /// - Returns: An encrypted string which is unreadable.
     static func encryptMessage(text: String, symmetricKey: SymmetricKey) throws -> String {
-        let textData = text.data(using: .utf8)!
+        guard let textData = text.data(using: .utf8) else { throw CryptoHandlerError.textCannotBeUtf8Converted }
         let encrypted = try AES.GCM.seal(textData, using: symmetricKey)
-        return encrypted.combined!.base64EncodedString()
+        guard let encryptedData = encrypted.combined else { throw CryptoHandlerError.textCannotBeEncrypted}
+        return encryptedData.base64EncodedString()
     }
 
     /// Decrypt a message that you have received.
@@ -157,6 +178,6 @@ class CryptoHandler {
     /// - Warning: Calling this function is disruptive and users will no longer be able to send and receive messages.
     static func resetKeys() {
         UserDefaults.standard.removeObject(forKey: UserDefaultsKey.privateKey.rawValue)
-        let _ = getPublicKey()
+        let _ = fetchPublicKeyString()
     }
 }

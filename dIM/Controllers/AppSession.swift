@@ -170,14 +170,9 @@ extension AppSession {
                     return
                 }
 
-                let decryptedMessageText = self.decryptMessageToText(
+                let decryptedMessageText = try self.decryptMessageToText(
                     message: encryptedMessage,
                     conversation: conversation)
-
-                guard let decryptedMessageText else {
-                    self.showErrorMessage("Received a message which could not be decrypted.")
-                    return
-                }
 
                 guard let usernameWithDigits = self.usernameValidator.userInfo?.asString else {
                     self.showErrorMessage("Could not find your current username.")
@@ -207,7 +202,6 @@ extension AppSession {
                 conversation.date = Date()
 
                 try self.context.save()
-                
                 #warning("Implement ACK message")
                 self.sendNotificationWith(text: localMessage.text, from: localMessage.sender)
             } catch {
@@ -237,9 +231,9 @@ extension AppSession: DataControllerDelegate {
 
 // MARK: Helpers
 extension AppSession {
-    private func decryptMessageToText(message: Message, conversation: ConversationEntity) -> String? {
-        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
+    private func decryptMessageToText(message: Message, conversation: ConversationEntity) throws -> String {
+        let publicKeyOfSender = try CryptoHandler.convertPublicKeyStringToKey(conversation.publicKey)
+        let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.fetchPrivateKey(), publicKey: publicKeyOfSender)
         return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }
     

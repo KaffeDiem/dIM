@@ -114,14 +114,14 @@ class UsernameValidator: ObservableObject {
 extension UsernameValidator {
     /// Activate demo mode for App Store review process
     private func activateDemoMode(for context: NSManagedObjectContext) {
-        let _ = CryptoHandler.getPublicKey()
+        let _ = CryptoHandler.fetchPublicKeyString()
         
         // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
         let privateKey = CryptoHandler.generatePrivateKey()
         let publicKey = privateKey.publicKey
-        let publicKeyText = CryptoHandler.exportPublicKey(publicKey)
+        let publicKeyText = CryptoHandler.convertPublicKeyToString(publicKey)
         conversation.publicKey = publicKeyText
         
         // And fill that conversation with a message

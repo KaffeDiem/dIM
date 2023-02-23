@@ -25,7 +25,7 @@ enum DataControllerError: Error, LocalizedError {
         case .noConnectedDevices:
             return NSLocalizedString("There are no connected devices.", comment: "No connection")
         default:
-            return NSLocalizedString("An unknown error has occured.", comment: "Unknown error")
+            return NSLocalizedString("An unknown error has occured in the DataController.", comment: "Unknown error")
         }
     }
 }
@@ -113,10 +113,10 @@ class LiveDataController: NSObject, DataController {
             fatalError("Cannot find public key of receiver. This is not allowed.")
         }
         
-        let privateKey = CryptoHandler.getPrivateKey()
-        let receiverPublicKey = try! CryptoHandler.importPublicKey(receiverPublicKeyText)
-        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
-        let encryptedText = try! CryptoHandler.encryptMessage(
+        let privateKey = try CryptoHandler.fetchPrivateKey()
+        let receiverPublicKey = try CryptoHandler.convertPublicKeyStringToKey(receiverPublicKeyText)
+        let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+        let encryptedText = try CryptoHandler.encryptMessage(
             text: text, symmetricKey: symmetricKey)
         
         let messageId = Int32.random(in: 0...Int32.max)

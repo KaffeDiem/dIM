@@ -193,8 +193,8 @@ extension AppSession {
     /// - Returns: The decrypted content of the message or nil if it cannot be decrypted.
     func decryptRetrievedMessageToString(message: Message, conversation: ConversationEntity) -> String? {
         
-        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
+        let senderPublicKey = try! CryptoHandler.convertPublicKeyStringToKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.fetchPrivateKey(), publicKey: senderPublicKey)
         
         return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }
