@@ -102,6 +102,8 @@ class UsernameValidator: ObservableObject {
         guard username.count >= 4 else { return .error(message: "Username is too short") }
         guard username.count <= 16 else { return .error(message: "Username is too long") }
         guard !username.contains(" ") else { return .error(message: "Username cannot include spaces")}
+        guard !username.contains("#") else { return .error(message: "Username cannot include #")}
+        guard !username.contains("/") else { return .error(message: "Username cannot include /")}
         
         let id = String(Int.random(in: 1000 ... 9999))
         return .valid(userInfo: .init(id: id, name: username))

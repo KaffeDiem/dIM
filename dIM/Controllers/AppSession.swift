@@ -104,7 +104,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         do {
             try ScanHandler.retrieve(result: result, context: context)
         } catch ScanHandler.ScanHandlerError.userPreviouslyAdded {
-            showBanner(.init(title: "User added", message: "User already exists.", kind: .normal))
+            showBanner(.init(title: "Oops", message: "That user has been added previously.", kind: .normal))
             return
         } catch ScanHandler.ScanHandlerError.invalidFormat {
             showBanner(.init(title: "Oops", message: "The scanned QR code does not look correct.", kind: .error))
@@ -117,9 +117,9 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     }
     
     func send(text message: String, conversation: ConversationEntity) {
-        let messageForStorage: Message
+        let messageToBeStored: Message
         do {
-            messageForStorage = try dataController.send(message, to: conversation)
+            messageToBeStored = try dataController.send(message, to: conversation)
         } catch {
             showErrorMessage(error.localizedDescription)
             return
@@ -128,14 +128,14 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         // Save the message to local storage
         let localMessage = MessageEntity(context: context)
         
-        localMessage.receiver = messageForStorage.receiver
+        localMessage.receiver = messageToBeStored.receiver
         localMessage.status = Status.sent.rawValue
-        localMessage.text = messageForStorage.text
+        localMessage.text = messageToBeStored.text
         localMessage.date = Date()
-        localMessage.id = messageForStorage.id
-        localMessage.sender = messageForStorage.sender
+        localMessage.id = messageToBeStored.id
+        localMessage.sender = messageToBeStored.sender
         
-        conversation.lastMessage = "You: " + messageForStorage.text
+        conversation.lastMessage = "You: " + messageToBeStored.text
         conversation.date = Date()
         conversation.addToMessages(localMessage)
         
@@ -145,7 +145,10 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             showErrorMessage(error.localizedDescription)
         }
     }
+}
     
+// MARK: Private methods
+extension AppSession {
     private func showBanner(_ bannerData: BannerModifier.BannerData) {
         self.bannerData = bannerData
     }
@@ -204,6 +207,9 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                 conversation.date = Date()
 
                 try self.context.save()
+                
+                #warning("Implement ACK message")
+                self.sendNotificationWith(text: localMessage.text, from: localMessage.sender)
             } catch {
                 self.showErrorMessage("Could not save newly received message.")
             }
@@ -235,6 +241,28 @@ extension AppSession {
         let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
         let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
         return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
+    }
+    
+    /// Send a notification to the user if the app is closed and and we retrieve a message.
+    /// - Parameter message: The message that the user has received.
+    private func sendNotificationWith(text: String, from sender: String) {
+        let content = UNMutableNotificationContent()
+        content.title = sender.components(separatedBy: "#").first ?? "Maybe: \(sender)"
+        content.body = text
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: 0.01,
+            repeats: false
+        )
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+
+        UNUserNotificationCenter.current().add(request)
     }
 }
 

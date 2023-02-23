@@ -19,9 +19,9 @@ struct BannerModifier: ViewModifier {
             
             var color: Color {
                 switch self {
-                case .error: return .red
-                case .normal: return .accentColor
-                case .success: return .green
+                case .error: return Color("alertFailure")
+                case .normal: return Color("alertNeutral")
+                case .success: return Color("alertSuccess")
                 }
             }
         }
@@ -45,7 +45,6 @@ struct BannerModifier: ViewModifier {
             content
             if shouldShow {
                 VStack {
-                    Spacer()
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(data.title)
@@ -59,11 +58,12 @@ struct BannerModifier: ViewModifier {
                     .padding(12)
                     .background(data.kind.color)
                     .cornerRadius(8)
+                    Spacer()
                 }
                 .zIndex(99)
                 .animation(.default, value: shouldShow)
                 .padding()
-                .transition(AnyTransition.move(edge: .bottom).combined(with: .opacity))
+                .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
                 .onTapGesture {
                     withAnimation(.easeOut) {
                         shouldShow = false

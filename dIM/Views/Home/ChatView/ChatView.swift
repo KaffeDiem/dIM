@@ -81,7 +81,7 @@ struct ChatView: View {
                                 // Resend a message which has not been delivered
                                 if message.sender! == username {
                                     Button(role: .none) {
-                                        appSession.sendMessage(for: conversation, text: message.text!, context: context)
+                                        appSession.send(text: message.text ?? "", conversation: conversation)
                                     } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     }
@@ -131,7 +131,7 @@ struct ChatView: View {
                     .submitLabel(.send)
                     .onSubmit({
                         if message.count < 261 {
-                            appSession.sendMessage(for: conversation, text: message, context: context)
+                            appSession.send(text: message, conversation: conversation)
                             message = ""
                         }
                     })
@@ -147,7 +147,7 @@ struct ChatView: View {
                 
                 Button(action: {
                     if message.count < 261 {
-                        appSession.sendMessage(for: conversation, text: message, context: context)
+                        appSession.send(text: message, conversation: conversation)
                         message = ""
                     }
                 }, label: {
