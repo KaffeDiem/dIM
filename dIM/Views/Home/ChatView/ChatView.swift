@@ -37,8 +37,8 @@ struct ChatView: View {
     /// Current username
     private let username: String
     
-    @FocusState private var textFieldIsFocused: Bool
-        
+    private let title: String
+    
     init(conversation: ConversationEntity) {
         self.conversation = conversation
         
@@ -57,6 +57,8 @@ struct ChatView: View {
         } else {
             fatalError("Unexpectedly did not find any username while opening a chat view")
         }
+        
+        self.title = conversation.author?.components(separatedBy: "#").first ?? "Unknown"
     }
     
     var body: some View {
@@ -121,49 +123,37 @@ struct ChatView: View {
             }
             // Minor hack to refresh view when ACK / READ message is received
             .id(appSession.refreshID)
+            .removeFocusOnTap()
             
             // MARK: Send message
             HStack {
-                TextField("Aa", text: $message)
-                    .focused($textFieldIsFocused)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .submitLabel(.send)
-                    .onSubmit({
-                        if message.count < 261 {
-                            appSession.send(text: message, conversation: conversation)
-                            message = ""
-                        }
-                    })
-                
-                if message.count > 260 {
-                    Text("\(message.count)/260")
-                        .padding(.trailing)
-                        .foregroundColor(.red)
-                } else {
-                    Text("\(message.count)/260")
-                        .padding(.trailing)
-                }
-                
-                Button(action: {
-                    if message.count < 261 {
-                        appSession.send(text: message, conversation: conversation)
-                        message = ""
+                DIMChatTextField(placeholder: "Aa") { text in
+                    withAnimation(.spring()) {
+                        message = text
                     }
-                }, label: {
-                    Image(systemName: "paperplane.circle.fill")
-                        .padding(.trailing)
-                })
+                } onSubmit: { text in
+                    send(message: message)
+                }
+                .padding()
+                
+                Button {
+                    send(message: message)
+                } label: {
+                    if message.isEmpty {
+                        Image(systemName: "arrow.up.circle")
+                            .imageScale(.large)
+                    } else {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .imageScale(.large)
+                    }
+                }
+                .padding(.trailing)
             }
         }
-        .navigationTitle((conversation.author!.components(separatedBy: "#")).first ?? "Unknown")
+        .navigationTitle(title)
         
         .onAppear() {
-            textFieldIsFocused = true
-            /*
-             Send READ acknowledgements messages if the user has enabled
-             it in settings.
-             */
+            // Send READ messages if enabled in settings
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
                 appSession.sendReadMessage(conversation)
             }
@@ -172,6 +162,13 @@ struct ChatView: View {
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
                 appSession.sendReadMessage(conversation)
             }
+        }
+    }
+    
+    private func send(message: String) {
+        if message.count < 261 {
+            appSession.send(text: message, conversation: conversation)
+            self.message = ""
         }
     }
 }
