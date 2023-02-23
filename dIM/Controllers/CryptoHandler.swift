@@ -8,7 +8,11 @@
 import UIKit
 import CryptoKit
 
-/// Handles all encryption of messages as well as public and private keys.
+/// Largely a helper class with functions related to encryption keys
+/// and handling of private/public key pairs for the user.
+///
+/// - Note: Could use a major refactor in the future, there is no reason for all these functions
+/// to be publicly available.
 class CryptoHandler {
     enum CryptoHandlerError: Error, LocalizedError {
         case conversationKeyNotFound
