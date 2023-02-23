@@ -26,5 +26,10 @@ Clone the project and deploy it to an iPhone. Please note that the Bluetooth cap
 
 If the username is set to `APPLEDEMO` a conversation will show up. This can be used to test the UI in a simulator (and is also used in the Apple App Store review process).
 
+#### Generating assets
+This project makes use of [SwiftGen](https://github.com/SwiftGen/SwiftGen#configuration-file). If you are not familiar with SwiftGen it is a tool that allows for type-safe assets. 
+
+To add new assets simply add them in the `assets.xcassets` file and run `> swiftgen`. Type-safe assets will now be located in `Assets+Generated.swift`.
+
 ### Build documentation 
 Open the project, navigate to `Product -> Build Documentation`. This will create a DocC archive for you to explore. 
