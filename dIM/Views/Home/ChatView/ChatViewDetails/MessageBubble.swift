@@ -42,7 +42,7 @@ struct MessageBubble: View {
             .padding(12)
             .foregroundColor(.white)
             .background(
-                username == message.sender ? Color("dimOrangeLIGHT") : Color("setup-grayDARK")
+                username == message.sender ? Asset.dimOrangeLight.swiftUIColor : Asset.greyDark.swiftUIColor
             )
             .clipShape(Bubble(chat: username == message.sender!))
             .padding(.leading)

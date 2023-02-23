@@ -79,7 +79,7 @@ struct QRView: View {
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .background(
                         LinearGradient(
-                            gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                            gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
                             startPoint: .leading,
                             endPoint: .trailing
                         )

@@ -19,9 +19,9 @@ struct BannerModifier: ViewModifier {
             
             var color: Color {
                 switch self {
-                case .error: return Color("alertFailure")
-                case .normal: return Color("alertNeutral")
-                case .success: return Color("alertSuccess")
+                case .error: return Asset.alertFailure.swiftUIColor
+                case .normal: return Asset.alertNeutral.swiftUIColor
+                case .success: return Asset.alertSuccess.swiftUIColor
                 }
             }
         }

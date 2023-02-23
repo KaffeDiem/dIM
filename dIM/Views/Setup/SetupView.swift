@@ -55,7 +55,7 @@ struct SetupView: View {
                             .keyboardType(.namePhonePad)
                             .padding()
                             .background(
-                                colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                                colorScheme == .dark ? Asset.greyDark.swiftUIColor : Asset.greyLight.swiftUIColor
                             )
                             .cornerRadius(10.0)
                             .focused($keyboardShown)
@@ -96,7 +96,7 @@ struct SetupView: View {
                                 .frame(minWidth: 0, maxWidth: .infinity)
                                 .background(
                                     LinearGradient(
-                                        gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                        gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )
