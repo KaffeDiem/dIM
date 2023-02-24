@@ -146,7 +146,7 @@ class LiveDataController: NSObject, DataController {
         )
     }
     
-    func sendAcknowledgement(message: Message) throws {
+    func sendAcknowledgementOrRead(message: Message) throws {
         previouslySeenMessages.append(message.id)
         let messageEncoded = try JSONEncoder().encode(message)
         peripheralManager.updateValue(
@@ -192,7 +192,6 @@ extension LiveDataController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print(#function)
         if let error {
             delegate?.dataController(self, didFailWith: error)
         }
@@ -205,7 +204,6 @@ extension LiveDataController: CBCentralManagerDelegate {
         didFailToConnect peripheral: CBPeripheral,
         error: Error?
     ) {
-        print(#function)
         disoveredPeripherals.removeAll(where: { $0 == peripheral })
         if let error {
             delegate?.dataController(self, didFailWith: error)

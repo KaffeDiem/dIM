@@ -103,17 +103,14 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     func addUserFromQrScan(_ result: String) {
         do {
             try ScanHandler.retrieve(result: result, context: context)
+            showBanner(.init(title: "User added", message: "All good! The user has been added.", kind: .success))
         } catch ScanHandler.ScanHandlerError.userPreviouslyAdded {
             showBanner(.init(title: "Oops", message: "That user has been added previously.", kind: .normal))
-            return
         } catch ScanHandler.ScanHandlerError.invalidFormat {
             showBanner(.init(title: "Oops", message: "The scanned QR code does not look correct.", kind: .error))
-            return
         } catch {
             showErrorMessage(error.localizedDescription)
-            return
         }
-        showBanner(.init(title: "User added", message: "All good! The user has been added.", kind: .success))
     }
     
     func send(text message: String, conversation: ConversationEntity) {
@@ -141,6 +138,48 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         
         do {
             try context.save()
+        } catch {
+            showErrorMessage(error.localizedDescription)
+        }
+    }
+    
+    /// Send read type message once the user has read a given message.
+    ///
+    /// - Note: The format of the read message is `READ/id1/id2/` where the
+    /// ids are of those which has now been read.
+    ///
+    /// - Parameter conversation: The given conversation in which we have read the messages.
+    func sendReadMessages(for conversation: ConversationEntity) {
+        guard let usernameWithDigits = usernameValidator.userInfo?.asString else {
+            fatalError("Tried to send read messages before username was set.")
+        }
+        guard let receiver = conversation.author else {
+            showBanner(.init(title: "Oops", message: "Could not find contact", kind: .normal))
+        }
+        guard let messageEntities = conversation.messages?.allObjects as? [MessageEntity] else {
+            showBanner(.init(title: "Oops", message: "No messages found in this conversation.", kind: .normal))
+            return
+        }
+        
+        let messageEntitiesWithReceivedStatus = messageEntities
+            .filter { MessageStatus(rawValue: $0.status) == .received }
+        
+        guard messageEntitiesWithReceivedStatus.count > 0 else { return }
+        
+        var readMessageText: String = "READ/"
+        for messageEntity in messageEntitiesWithReceivedStatus {
+            readMessageText += "\(messageEntity.id)/"
+        }
+        
+        let messageRead = Message(
+            id: Int32.random(in: 0...Int32.max),
+            kind: .read,
+            sender: usernameWithDigits,
+            receiver: receiver,
+            text: readMessageText)
+        
+        do {
+            try dataController.sendAcknowledgementOrRead(message: messageRead)
         } catch {
             showErrorMessage(error.localizedDescription)
         }
@@ -231,7 +270,7 @@ extension AppSession {
             text: ackText)
         
         do {
-            try dataController.sendAcknowledgement(message: ackMessage)
+            try dataController.sendAcknowledgementOrRead(message: ackMessage)
         } catch {
             showErrorMessage(error.localizedDescription)
         }
