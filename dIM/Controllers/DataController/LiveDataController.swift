@@ -145,6 +145,15 @@ class LiveDataController: NSObject, DataController {
             text: text
         )
     }
+    
+    func sendAcknowledgement(message: Message) throws {
+        previouslySeenMessages.append(message.id)
+        let messageEncoded = try JSONEncoder().encode(message)
+        peripheralManager.updateValue(
+            messageEncoded,
+            for: characteristic,
+            onSubscribedCentrals: nil)
+    }
 }
 
 // MARK: CBCentralManagerDelegate

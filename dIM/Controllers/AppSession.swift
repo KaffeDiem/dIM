@@ -202,11 +202,38 @@ extension AppSession {
                 conversation.date = Date()
 
                 try self.context.save()
-                #warning("Implement ACK message")
-                self.sendNotificationWith(text: localMessage.text, from: localMessage.sender)
+                
+                DispatchQueue.main.async {
+                    self.sendAcknowledgement(of: messageEntity)
+                    self.sendNotificationWith(text: localMessage.text, from: localMessage.sender)
+                }
             } catch {
                 self.showErrorMessage("Could not save newly received message.")
             }
+        }
+    }
+    
+    private func sendAcknowledgement(of message: MessageEntity) {
+        guard let usernameWithDigits = usernameValidator.userInfo?.asString else {
+            fatalError("ACK sent but username has not been set. This is not allowed.")
+        }
+        
+        guard let receiver = message.sender else {
+            fatalError("Cannot send ACK when there is no receiver. This is not allowed.")
+        }
+        
+        let ackText = "ACK/\(message.id)"
+        let ackMessage = Message(
+            id: Int32.random(in: 0...Int32.max),
+            kind: .acknowledgement,
+            sender: usernameWithDigits,
+            receiver: receiver,
+            text: ackText)
+        
+        do {
+            try dataController.sendAcknowledgement(message: ackMessage)
+        } catch {
+            showErrorMessage(error.localizedDescription)
         }
     }
 }
