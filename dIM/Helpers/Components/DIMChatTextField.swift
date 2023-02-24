@@ -9,39 +9,18 @@ import SwiftUI
 
 struct DIMChatTextField: View {
     typealias OnSubmit = (_ text: String) -> Void
-    typealias OnChange = (_ text: String) -> Void
     
-    private let placeholder: String
-    private let image: UIImage?
+    @Binding var text: String
+    let image: UIImage? = nil
+    let placeholder: String
+    let characterLimitShown: Bool
+    let onSubmit: OnSubmit?
     
-    @State private var text: String = ""
-    @State private var borderColor: Color
-    private let borderColorActive: Color
-    private let borderColorInactive: Color
-    private let characterLimitShown: Bool
-    
-    private var onChange: OnSubmit?
-    private var onSubmit: OnSubmit?
+    @State private var borderColor: Color = Asset.greyLight.swiftUIColor
+    private let borderColorActive: Color = Asset.dimOrangeLight.swiftUIColor
+    private let borderColorInactive: Color = Asset.greyLight.swiftUIColor
     
     @FocusState private var isFocused: Bool
-    
-    init(
-        image: UIImage? = nil,
-        placeholder: String? = nil,
-        onChange: OnChange? = nil,
-        onSubmit: OnSubmit? = nil,
-        characterLimitShown: Bool = true
-    ) {
-        self.image = image
-        self.placeholder = placeholder ?? ""
-        self.onChange = onChange
-        self.onSubmit = onSubmit
-        self.characterLimitShown = characterLimitShown
-        
-        self.borderColorInactive = Asset.greyLight.swiftUIColor
-        self.borderColorActive = Asset.dimOrangeLight.swiftUIColor
-        self.borderColor = borderColorInactive
-    }
     
     var body: some View {
         HStack(spacing: 8) {
@@ -60,11 +39,6 @@ struct DIMChatTextField: View {
             })
             .focused($isFocused)
             .padding([.leading, .top, .bottom], 12)
-            .onChange(of: text) { text in
-                if let onChange {
-                    onChange(text)
-                }
-            }
             .onSubmit {
                 if let onSubmit {
                     onSubmit(text)
@@ -89,11 +63,5 @@ struct DIMChatTextField: View {
         .onAppear {
             isFocused = true
         }
-    }
-}
-
-struct DIMChatTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        DIMChatTextField(image: .init(named: "scribble"), placeholder: "Placeholder")
     }
 }

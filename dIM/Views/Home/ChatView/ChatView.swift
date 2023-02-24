@@ -126,11 +126,7 @@ struct ChatView: View {
             
             // MARK: Send message
             HStack {
-                DIMChatTextField(placeholder: "Aa") { text in
-                    withAnimation(.spring()) {
-                        message = text
-                    }
-                } onSubmit: { text in
+                DIMChatTextField(text: $message, placeholder: "Aa", characterLimitShown: true) { text in
                     send(message: message)
                 }
                 .padding()
