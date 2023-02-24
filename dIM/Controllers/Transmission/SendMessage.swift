@@ -33,9 +33,9 @@ extension AppSession {
         let messages: [MessageEntity] = conversation.messages!.allObjects as! [MessageEntity]
         
         for message in messages {
-            if Status(rawValue: message.status) == Status.received {
+            if MessageStatus(rawValue: message.status) == .received {
                 received.append(message)
-                message.status = Status.receivedReadSent.rawValue
+                message.status = MessageStatus.receivedReadSent.rawValue
             }
         }
         

@@ -129,7 +129,7 @@ extension UsernameValidator {
         firstMessage.id = 123456
         firstMessage.receiver = "DEMOAPPLETESTUSERNAME"
         firstMessage.sender = conversation.author
-        firstMessage.status = Status.received.rawValue
+        firstMessage.status = MessageStatus.received.rawValue
         firstMessage.text = "Hi there, how are you?"
         firstMessage.date = Date()
         

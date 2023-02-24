@@ -46,7 +46,7 @@ struct LocalMessage: Identifiable, Hashable {
     var date: Date
     
     /// The current status of the message.
-    var status: Status = .sent
+    var status: MessageStatus = .sent
     
     /// Change message status to delivered
     mutating func messageDelivered() {

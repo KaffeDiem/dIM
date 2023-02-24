@@ -129,7 +129,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         let localMessage = MessageEntity(context: context)
         
         localMessage.receiver = messageToBeStored.receiver
-        localMessage.status = Status.sent.rawValue
+        localMessage.status = MessageStatus.sent.rawValue
         localMessage.text = messageToBeStored.text
         localMessage.date = Date()
         localMessage.id = messageToBeStored.id
@@ -252,7 +252,7 @@ extension AppSession: DataControllerDelegate {
     }
     
     func dataController(_ dataController: DataController, didFailWith error: Error) {
-        self.showErrorMessage(error.localizedDescription)
+        showErrorMessage(error.localizedDescription)
     }
 }
 

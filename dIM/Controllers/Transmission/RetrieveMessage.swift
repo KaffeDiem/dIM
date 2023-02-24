@@ -92,7 +92,7 @@ extension AppSession {
                 localMessage.id = messageEncrypted.id
                 localMessage.receiver = usernameWithDigits
                 localMessage.sender = messageEncrypted.sender
-                localMessage.status = Status.received.rawValue
+                localMessage.status = MessageStatus.received.rawValue
                 localMessage.text = decryptedText
                 localMessage.date = Date()
                     
@@ -151,7 +151,7 @@ extension AppSession {
         
         for message in messages {
             if intComponents.contains(message.id) {
-                message.status = Status.read.rawValue
+                message.status = MessageStatus.read.rawValue
             }
         }
       
@@ -177,7 +177,7 @@ extension AppSession {
         let messages = conversation.messages?.allObjects as! [MessageEntity]
         for message in messages {
             if message.id == Int(components[1])! {
-                message.status = Status.delivered.rawValue
+                message.status = MessageStatus.delivered.rawValue
             }
         }
         

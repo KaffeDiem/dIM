@@ -60,7 +60,7 @@ struct MessageBubble: View {
         }
     
         if username == message.sender {
-            MessageStatus(message: message)
+            MessageStatusChatIcon(status: .init(rawValue: message.status) ?? .unknown)
                 .foregroundColor(.accentColor)
                 .padding(.trailing)
         }
