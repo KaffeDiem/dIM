@@ -125,11 +125,11 @@ struct ChatView: View {
             .removeFocusOnTap()
             
             // MARK: Send message
-            HStack {
+            HStack(spacing: 12) {
                 DIMChatTextField(text: $message, placeholder: "Aa", characterLimitShown: true) { text in
                     send(message: message)
                 }
-                .padding()
+                .padding([.leading, .bottom, .top])
                 
                 Button {
                     send(message: message)
