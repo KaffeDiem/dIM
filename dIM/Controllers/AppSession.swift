@@ -154,7 +154,8 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             fatalError("Tried to send read messages before username was set.")
         }
         guard let receiver = conversation.author else {
-            showBanner(.init(title: "Oops", message: "Could not find contact", kind: .normal))
+            showBanner(.init(title: "Oops", message: "Could not find contact and thus not send read message.", kind: .normal))
+            return
         }
         guard let messageEntities = conversation.messages?.allObjects as? [MessageEntity] else {
             showBanner(.init(title: "Oops", message: "No messages found in this conversation.", kind: .normal))
@@ -197,6 +198,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 // MARK: Private methods
 extension AppSession {
     private func receive(encryptedMessage: Message) {
+        #warning("Check for ACK and READ messages and handle them")
         context.perform { [weak self] in
             guard let self else { return }
             do {

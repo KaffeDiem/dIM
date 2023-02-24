@@ -135,6 +135,7 @@ struct ChatView: View {
                     send(message: message)
                 } label: {
                     Image(systemName: message.isEmpty ? "arrow.up.circle" : "arrow.up.circle.fill")
+                        .animation(.spring(), value: message.isEmpty)
                         .imageScale(.large)
                 }
                 .padding(.trailing)
