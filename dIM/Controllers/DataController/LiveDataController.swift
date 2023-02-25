@@ -192,9 +192,6 @@ extension LiveDataController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if let error {
-            delegate?.dataController(self, didFailWith: error)
-        }
         disoveredPeripherals.removeAll(where: { $0 == peripheral })
         delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
