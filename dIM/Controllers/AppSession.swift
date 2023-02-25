@@ -210,13 +210,18 @@ extension AppSession {
                     return
                 }
         
+                #warning("Refactor checking of read/ack")
+                #warning("Should the LiveDataController handle that part?")
                 // Check for acknowledgement message
                 let messageComponents = encryptedMessage.text.components(separatedBy: "/")
                 if messageComponents.first == "ACK" && messageComponents.count == 2 {
                     self.receiveAcknowledgement(message: encryptedMessage, conversation: conversation)
                     return
                 }
-                #warning("Check for READ message")
+                if messageComponents.first == "READ" && messageComponents.count > 1 {
+                    self.receiveRead(message: encryptedMessage, conversation: conversation)
+                    return
+                }
 
                 let decryptedMessageText = try self.decryptMessageToText(
                     message: encryptedMessage,
@@ -276,7 +281,44 @@ extension AppSession {
         }
         
         self.refreshID = UUID()
-        try? self.context.save()
+        do {
+            try context.save()
+        } catch {
+            showErrorMessage(error.localizedDescription)
+        }
+    }
+    
+    #warning("Refactor method")
+    private func receiveRead(message: Message, conversation: ConversationEntity) {
+        // Check if message is a READ type
+        var components = message.text.components(separatedBy: "/")
+        guard components.first == "READ" && components.count > 1 else {
+            return
+        }
+        
+        /*
+         Remove first element as it is then just an array of
+         message IDs which has been read.
+         */
+        components.removeFirst()
+        components.removeLast()
+        
+        let intComponents = components.map {Int32($0)!}
+        
+        let messages = conversation.messages?.allObjects as! [MessageEntity]
+        
+        for message in messages {
+            if intComponents.contains(message.id) {
+                message.status = MessageStatus.read.rawValue
+            }
+        }
+      
+        self.refreshID = UUID()
+        do {
+            try context.save()
+        } catch {
+            showErrorMessage(error.localizedDescription)
+        }
     }
     
     private func sendAcknowledgement(of message: MessageEntity) {

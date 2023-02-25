@@ -146,12 +146,12 @@ struct ChatView: View {
         .onAppear() {
             // Send READ messages if enabled in settings
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessage(conversation)
+                appSession.sendReadMessages(for: conversation)
             }
         }
         .onDisappear() {
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessage(conversation)
+                appSession.sendReadMessages(for: conversation)
             }
         }
     }

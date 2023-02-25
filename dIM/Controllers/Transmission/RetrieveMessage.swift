@@ -111,7 +111,7 @@ extension AppSession {
                 currentConversation!.addToMessages(localMessage)
                 currentConversation!.lastMessage = localMessage.text!
                 currentConversation!.date = Date()
-                self.sendAckMessage(localMessage)
+//                self.sendAckMessage(localMessage)
                 
                 self.sendNotification(what: localMessage)
                 
