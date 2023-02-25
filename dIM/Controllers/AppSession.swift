@@ -198,7 +198,6 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 // MARK: Private methods
 extension AppSession {
     private func receive(encryptedMessage: Message) {
-        #warning("Check for ACK and READ messages and handle them")
         context.perform { [weak self] in
             guard let self else { return }
             do {
@@ -210,6 +209,14 @@ extension AppSession {
                     self.showErrorMessage("Received a message for you, but the sender has not been added as a contact.")
                     return
                 }
+        
+                // Check for acknowledgement message
+                let messageComponents = encryptedMessage.text.components(separatedBy: "/")
+                if messageComponents.first == "ACK" && messageComponents.count == 2 {
+                    self.receiveAcknowledgement(message: encryptedMessage, conversation: conversation)
+                    return
+                }
+                #warning("Check for READ message")
 
                 let decryptedMessageText = try self.decryptMessageToText(
                     message: encryptedMessage,
@@ -252,6 +259,24 @@ extension AppSession {
                 self.showErrorMessage("Could not save newly received message.")
             }
         }
+    }
+    
+    #warning("Refactor method")
+    private func receiveAcknowledgement(message: Message, conversation: ConversationEntity) {
+        let components = message.text.components(separatedBy: "/")
+        guard components.first == "ACK" && components.count == 2 else {
+            return
+        }
+        
+        let messages = conversation.messages?.allObjects as! [MessageEntity]
+        for message in messages {
+            if message.id == Int(components[1])! {
+                message.status = MessageStatus.delivered.rawValue
+            }
+        }
+        
+        self.refreshID = UUID()
+        try? self.context.save()
     }
     
     private func sendAcknowledgement(of message: MessageEntity) {

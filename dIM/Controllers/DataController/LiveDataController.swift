@@ -293,6 +293,7 @@ extension LiveDataController: CBPeripheralManagerDelegate {
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
         case .poweredOn:
+            peripheralManager.removeAllServices()
             peripheralManager.add(service)
             peripheralManager.startAdvertising([
                 CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
