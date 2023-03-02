@@ -1,11 +1,14 @@
 
-> dIM is under a major refactor project, you can see the WIP PR [here #32](https://github.com/KaffeDiem/dIM/pull/32)
-
 # Decentralized Instant Messenger (dIM) 
 dIM is an open-source instant messenger built first and foremost for iOS. It will also run on iPad but support is limited.
 It works without an internet connection and messages are sent and received through Bluetooth. For it to work optimally it will require other dIM users nearby. More information [can be found here](https://www.dimchat.org). 
 
 ![icon](./images/icon.png "dIM")
+
+### Platform support
+- iOS 16.0*
+- iPadOS 16.0* (not supported very well)
+- MacOS (through Catalyst)
 
 ### Feature overview
 - Send and receive messages to contacts
@@ -19,7 +22,7 @@ It works without an internet connection and messages are sent and received throu
 - [ ] Groups chats
 - [ ] Deep links
 - [ ] In-app notifications
-- [ ] Automate the documentation on PR approval 
+- [ ] Automate the documentation on PR approval
 
 ### Getting started
 Clone the project and deploy it to an iPhone. Please note that the Bluetooth capabilities does not work in the simulator, therefore a physical device is necessary to test sending and receiving messages.
