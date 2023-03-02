@@ -37,8 +37,8 @@ struct ChatView: View {
     /// Current username
     private let username: String
     
-    @FocusState private var textFieldIsFocused: Bool
-        
+    private let title: String
+    
     init(conversation: ConversationEntity) {
         self.conversation = conversation
         
@@ -57,6 +57,8 @@ struct ChatView: View {
         } else {
             fatalError("Unexpectedly did not find any username while opening a chat view")
         }
+        
+        self.title = conversation.author?.components(separatedBy: "#").first ?? "Unknown"
     }
     
     var body: some View {
@@ -79,9 +81,9 @@ struct ChatView: View {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 }
                                 // Resend a message which has not been delivered
-                                if message.sender! == username {
+                                if message.sender == username {
                                     Button(role: .none) {
-                                        appSession.sendMessage(for: conversation, text: message.text!, context: context)
+                                        appSession.send(text: message.text ?? "", conversation: conversation)
                                     } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     }
@@ -92,12 +94,12 @@ struct ChatView: View {
                                     do {
                                         try context.save()
                                     } catch {
-                                        print("Error: Saving the context after deleting a message went wrong.")
+                                        appSession.showErrorMessage(error.localizedDescription)
                                     }
                                 }, label: {
                                     Label("Delete", systemImage: "minus.square")
                                 })
-                                /* Report button */
+                                // Report button
                                 Button(role: .destructive, action: {
                                     reportAlertIsShown = true
                                 }, label: {
@@ -119,59 +121,45 @@ struct ChatView: View {
                     }
                 }
             }
-            // Minor hack to refresh view when ACK / READ message is received
-            .id(appSession.refreshID)
+            .id(appSession.refreshID) // Refresh view when an ACK or READ message is received (minor hack)
+            .removeFocusOnTap()
             
             // MARK: Send message
-            HStack {
-                TextField("Aa", text: $message)
-                    .focused($textFieldIsFocused)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .submitLabel(.send)
-                    .onSubmit({
-                        if message.count < 261 {
-                            appSession.sendMessage(for: conversation, text: message, context: context)
-                            message = ""
-                        }
-                    })
-                
-                if message.count > 260 {
-                    Text("\(message.count)/260")
-                        .padding(.trailing)
-                        .foregroundColor(.red)
-                } else {
-                    Text("\(message.count)/260")
-                        .padding(.trailing)
+            HStack(spacing: 12) {
+                DIMChatTextField(text: $message, placeholder: "Aa", characterLimitShown: true) { text in
+                    send(message: message)
                 }
+                .padding([.leading, .bottom, .top])
                 
-                Button(action: {
-                    if message.count < 261 {
-                        appSession.sendMessage(for: conversation, text: message, context: context)
-                        message = ""
-                    }
-                }, label: {
-                    Image(systemName: "paperplane.circle.fill")
-                        .padding(.trailing)
-                })
+                Button {
+                    send(message: message)
+                } label: {
+                    Image(systemName: message.isEmpty ? "arrow.up.circle" : "arrow.up.circle.fill")
+                        .animation(.spring(), value: message.isEmpty)
+                        .imageScale(.large)
+                }
+                .padding(.trailing)
             }
         }
-        .navigationTitle((conversation.author!.components(separatedBy: "#")).first ?? "Unknown")
+        .navigationTitle(title)
         
         .onAppear() {
-            textFieldIsFocused = true
-            /*
-             Send READ acknowledgements messages if the user has enabled
-             it in settings.
-             */
+            // Send READ messages if enabled in settings
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessage(conversation)
+                appSession.sendReadMessages(for: conversation)
             }
         }
         .onDisappear() {
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessage(conversation)
+                appSession.sendReadMessages(for: conversation)
             }
+        }
+    }
+    
+    private func send(message: String) {
+        if message.count < 261 {
+            appSession.send(text: message, conversation: conversation)
+            self.message = ""
         }
     }
 }

@@ -16,6 +16,8 @@ struct SetupView: View {
     @Environment(\.managedObjectContext) var context
     @Environment(\.colorScheme) private var colorScheme
     
+    @EnvironmentObject private var appSession: AppSession
+    
     /// True if the keyboard is shown. Used for animations.
     @FocusState private var keyboardShown: Bool
     
@@ -33,7 +35,7 @@ struct SetupView: View {
     var body: some View {
         NavigationView {
             if usernameValidator.isUsernameValid {
-                HomeView(appSession: AppSession(context: context))
+                HomeView()
                     .navigationBarTitle("")
                     .navigationBarBackButtonHidden(true)
             } else {
@@ -53,7 +55,7 @@ struct SetupView: View {
                             .keyboardType(.namePhonePad)
                             .padding()
                             .background(
-                                colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT")
+                                colorScheme == .dark ? Asset.greyDark.swiftUIColor : Asset.greyLight.swiftUIColor
                             )
                             .cornerRadius(10.0)
                             .focused($keyboardShown)
@@ -94,7 +96,7 @@ struct SetupView: View {
                                 .frame(minWidth: 0, maxWidth: .infinity)
                                 .background(
                                     LinearGradient(
-                                        gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                        gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )
@@ -121,6 +123,7 @@ struct SetupView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .banner(data: $appSession.bannerData, isPresented: $appSession.bannerDataShouldShow)
     }
 }
 

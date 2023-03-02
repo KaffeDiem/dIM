@@ -102,6 +102,8 @@ class UsernameValidator: ObservableObject {
         guard username.count >= 4 else { return .error(message: "Username is too short") }
         guard username.count <= 16 else { return .error(message: "Username is too long") }
         guard !username.contains(" ") else { return .error(message: "Username cannot include spaces")}
+        guard !username.contains("#") else { return .error(message: "Username cannot include #")}
+        guard !username.contains("/") else { return .error(message: "Username cannot include /")}
         
         let id = String(Int.random(in: 1000 ... 9999))
         return .valid(userInfo: .init(id: id, name: username))
@@ -112,14 +114,14 @@ class UsernameValidator: ObservableObject {
 extension UsernameValidator {
     /// Activate demo mode for App Store review process
     private func activateDemoMode(for context: NSManagedObjectContext) {
-        let _ = CryptoHandler.getPublicKey()
+        let _ = CryptoHandler.fetchPublicKeyString()
         
         // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
         let privateKey = CryptoHandler.generatePrivateKey()
         let publicKey = privateKey.publicKey
-        let publicKeyText = CryptoHandler.exportPublicKey(publicKey)
+        let publicKeyText = CryptoHandler.convertPublicKeyToString(publicKey)
         conversation.publicKey = publicKeyText
         
         // And fill that conversation with a message
@@ -127,7 +129,7 @@ extension UsernameValidator {
         firstMessage.id = 123456
         firstMessage.receiver = "DEMOAPPLETESTUSERNAME"
         firstMessage.sender = conversation.author
-        firstMessage.status = Status.received.rawValue
+        firstMessage.status = MessageStatus.received.rawValue
         firstMessage.text = "Hi there, how are you?"
         firstMessage.date = Date()
         

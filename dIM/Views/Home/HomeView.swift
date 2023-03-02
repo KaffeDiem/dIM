@@ -14,7 +14,7 @@ struct HomeView: View {
     
     /// Initialize the appSession which handles logic of Bluetooth
     /// and sending / receiving messages.
-    @StateObject var appSession: AppSession
+    @EnvironmentObject var appSession: AppSession
     
     @ObservedObject var viewModel = HomeViewModel()
     
@@ -86,17 +86,15 @@ struct HomeView: View {
                     .environmentObject(UIStateCarousel)
             }
         }
-        /*
-         Toolbar in the navigation header for SettingsView and ChatView.
-         */
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
                     Text("Chats")
                         .font(.headline)
-                    if appSession.discoveredDevices.count < 1 {
+                    if appSession.connectedDevicesAmount < 1 {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                                .imageScale(.small)
                                 .symbolRenderingMode(.palette)
                                 .foregroundStyle(.red, .orange, .white)
                             Text("Not connected")
@@ -106,7 +104,8 @@ struct HomeView: View {
                     } else {
                         HStack {
                             Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("\(appSession.discoveredDevices.count) in range").font(.subheadline)
+                                .imageScale(.small)
+                            Text("\(appSession.connectedDevicesAmount) in range").font(.subheadline)
                         }
                     }
                 }

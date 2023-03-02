@@ -53,7 +53,7 @@ extension AppSession {
             case .connected, .connecting:
                 return
             default:
-                cleanUpPeripheral(peripheral)
+                ()
             }
         }
         
@@ -110,8 +110,6 @@ extension AppSession {
                 CBCentralManagerScanOptionAllowDuplicatesKey: true
             ]
         )
-        
-        cleanUpPeripheral(peripheral)
     }
     
     /// Callback function whenever a peripheral updates its RSSI.
@@ -278,6 +276,5 @@ extension AppSession {
     ///   - invalidatedServices: The service which it invalidates.
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         print("Peripheral modified services: \(peripheral.name!) \n^ and is cleaned")
-        cleanUpPeripheral(peripheral)
     }
 }

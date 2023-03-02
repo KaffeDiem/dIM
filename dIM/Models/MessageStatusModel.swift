@@ -7,11 +7,8 @@
 
 import Foundation
 
-/**
- An enum used to represent the status of a message locally.
- This is used to keep track of of the status of local messages.
- */
-enum Status: Int32 {
+/// Status of a message
+enum MessageStatus: Int32 {
     case sent
     case delivered
     case read

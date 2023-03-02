@@ -92,7 +92,7 @@ extension AppSession {
                 localMessage.id = messageEncrypted.id
                 localMessage.receiver = usernameWithDigits
                 localMessage.sender = messageEncrypted.sender
-                localMessage.status = Status.received.rawValue
+                localMessage.status = MessageStatus.received.rawValue
                 localMessage.text = decryptedText
                 localMessage.date = Date()
                     
@@ -111,7 +111,7 @@ extension AppSession {
                 currentConversation!.addToMessages(localMessage)
                 currentConversation!.lastMessage = localMessage.text!
                 currentConversation!.date = Date()
-                self.sendAckMessage(localMessage)
+//                self.sendAckMessage(localMessage)
                 
                 self.sendNotification(what: localMessage)
                 
@@ -151,7 +151,7 @@ extension AppSession {
         
         for message in messages {
             if intComponents.contains(message.id) {
-                message.status = Status.read.rawValue
+                message.status = MessageStatus.read.rawValue
             }
         }
       
@@ -177,7 +177,7 @@ extension AppSession {
         let messages = conversation.messages?.allObjects as! [MessageEntity]
         for message in messages {
             if message.id == Int(components[1])! {
-                message.status = Status.delivered.rawValue
+                message.status = MessageStatus.delivered.rawValue
             }
         }
         
@@ -193,8 +193,8 @@ extension AppSession {
     /// - Returns: The decrypted content of the message or nil if it cannot be decrypted.
     func decryptRetrievedMessageToString(message: Message, conversation: ConversationEntity) -> String? {
         
-        let senderPublicKey = try! CryptoHandler.importPublicKey(conversation.publicKey!)
-        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.getPrivateKey(), publicKey: senderPublicKey)
+        let senderPublicKey = try! CryptoHandler.convertPublicKeyStringToKey(conversation.publicKey!)
+        let symmetricKey = try! CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.fetchPrivateKey(), publicKey: senderPublicKey)
         
         return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }

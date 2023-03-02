@@ -64,7 +64,7 @@ struct SnapCarousel: View {
                                         .frame(maxWidth: .infinity)
                                         .background(
                                             LinearGradient(
-                                                gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                                                gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
                                                 startPoint: .leading,
                                                 endPoint: .trailing
                                             )
@@ -79,7 +79,7 @@ struct SnapCarousel: View {
                         .padding(20)
                     }
                     .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                    .background(colorScheme == .dark ? Color("setup-grayDARK") : Color("setup-grayLIGHT"))
+                    .background(colorScheme == .dark ? Asset.greyDark.swiftUIColor : Asset.greyLight.swiftUIColor)
                     .cornerRadius(20)
                     .transition(AnyTransition.slide)
                     .animation(.spring())

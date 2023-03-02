@@ -57,7 +57,7 @@ struct QRView: View {
                  The form of the QR code is:
                  dim://username//publickey
                  */
-                Image(uiImage: generateQRCode(from: "dim://\(username)//\(CryptoHandler.getPublicKey())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username)//\(CryptoHandler.fetchPublicKeyString())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
@@ -79,7 +79,7 @@ struct QRView: View {
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .background(
                         LinearGradient(
-                            gradient: Gradient(colors: [Color("dimOrangeDARK"), Color("dimOrangeLIGHT")]),
+                            gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -127,7 +127,7 @@ struct QRView: View {
         qrCodeScannerIsShown = false
         switch result {
         case .success(let result):
-            appSession.handleScan(result: result.string)
+            appSession.addUserFromQrScan(result.string)
         case .failure(let error):
             print(error.localizedDescription)
         }

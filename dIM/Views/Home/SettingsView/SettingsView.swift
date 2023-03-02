@@ -104,7 +104,9 @@ struct SettingsView: View {
             }
             
             Section {
-                Label(appSession.discoveredDevices.count < 0 ? "No devices connected." : "\(appSession.discoveredDevices.count) devices connected.", systemImage: "ipad.and.iphone")
+                Label(
+                    appSession.connectedDevicesAmount < 0 ? "No devices connected." : "\(appSession.connectedDevicesAmount) devices connected.",
+                    systemImage: "ipad.and.iphone")
                     .imageScale(.large)
                 
                 Label("\(appSession.routedCounter) messages routed in this session.", systemImage: "arrow.left.arrow.right")
