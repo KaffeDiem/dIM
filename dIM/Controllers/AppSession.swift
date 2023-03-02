@@ -105,7 +105,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             try ScanHandler.retrieve(result: result, context: context)
             showBanner(.init(title: "User added", message: "All good! The user has been added.", kind: .success))
         } catch ScanHandler.ScanHandlerError.userPreviouslyAdded {
-            showBanner(.init(title: "Oops", message: "That user has been added previously.", kind: .normal))
+            showBanner(.init(title: "Oops", message: "The user has been added ", kind: .normal))
         } catch ScanHandler.ScanHandlerError.invalidFormat {
             showBanner(.init(title: "Oops", message: "The scanned QR code does not look correct.", kind: .error))
         } catch {
@@ -138,6 +138,11 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         
         do {
             try context.save()
+        } catch DataControllerError.noConnectedDevices {
+            showBanner(.init(
+                title: "Message in queue",
+                message: "There are currently no connected devices. The message will be delivered later.",
+                kind: .normal))
         } catch {
             showErrorMessage(error.localizedDescription)
         }
@@ -201,27 +206,8 @@ extension AppSession {
         context.perform { [weak self] in
             guard let self else { return }
             do {
-                let fetchRequest = ConversationEntity.fetchRequest()
-                let conversations = try fetchRequest.execute()
-                let conversation = conversations
-                    .first(where: { $0.author == encryptedMessage.sender })
-                guard let conversation else {
-                    self.showErrorMessage("Received a message for you, but the sender has not been added as a contact.")
-                    return
-                }
-        
-                #warning("Refactor checking of read/ack")
-                #warning("Should the LiveDataController handle that part?")
-                // Check for acknowledgement message
-                let messageComponents = encryptedMessage.text.components(separatedBy: "/")
-                if messageComponents.first == "ACK" && messageComponents.count == 2 {
-                    self.receiveAcknowledgement(message: encryptedMessage, conversation: conversation)
-                    return
-                }
-                if messageComponents.first == "READ" && messageComponents.count > 1 {
-                    self.receiveRead(message: encryptedMessage, conversation: conversation)
-                    return
-                }
+                let conversation = self.getConversationFor(message: encryptedMessage)
+                guard let conversation else { return }
 
                 let decryptedMessageText = try self.decryptMessageToText(
                     message: encryptedMessage,
@@ -267,57 +253,69 @@ extension AppSession {
     }
     
     #warning("Refactor method")
-    private func receiveAcknowledgement(message: Message, conversation: ConversationEntity) {
-        let components = message.text.components(separatedBy: "/")
-        guard components.first == "ACK" && components.count == 2 else {
-            return
-        }
-        
-        let messages = conversation.messages?.allObjects as! [MessageEntity]
-        for message in messages {
-            if message.id == Int(components[1])! {
-                message.status = MessageStatus.delivered.rawValue
+    private func receiveAcknowledgement(message: Message) {
+        context.perform {
+            let conversation = self.getConversationFor(message: message)
+            guard let conversation else {
+                return
             }
-        }
-        
-        self.refreshID = UUID()
-        do {
-            try context.save()
-        } catch {
-            showErrorMessage(error.localizedDescription)
+            
+            let components = message.text.components(separatedBy: "/")
+            guard components.first == "ACK" && components.count == 2 else {
+                return
+            }
+            
+            let messages = conversation.messages?.allObjects as! [MessageEntity]
+            for message in messages {
+                if message.id == Int(components[1])! {
+                    message.status = MessageStatus.delivered.rawValue
+                }
+            }
+            
+            self.refreshID = UUID()
+            do {
+                try self.context.save()
+            } catch {
+                self.showErrorMessage(error.localizedDescription)
+            }
         }
     }
     
     #warning("Refactor method")
-    private func receiveRead(message: Message, conversation: ConversationEntity) {
-        // Check if message is a READ type
-        var components = message.text.components(separatedBy: "/")
-        guard components.first == "READ" && components.count > 1 else {
-            return
-        }
-        
-        /*
-         Remove first element as it is then just an array of
-         message IDs which has been read.
-         */
-        components.removeFirst()
-        components.removeLast()
-        
-        let intComponents = components.map {Int32($0)!}
-        
-        let messages = conversation.messages?.allObjects as! [MessageEntity]
-        
-        for message in messages {
-            if intComponents.contains(message.id) {
-                message.status = MessageStatus.read.rawValue
+    private func receiveRead(message: Message) {
+        context.perform {
+            let conversation = self.getConversationFor(message: message)
+            guard let conversation else { return }
+            
+            // Check if message is a READ type
+            var components = message.text.components(separatedBy: "/")
+            guard components.first == "READ" && components.count > 1 else {
+                return
             }
-        }
-      
-        self.refreshID = UUID()
-        do {
-            try context.save()
-        } catch {
-            showErrorMessage(error.localizedDescription)
+            
+            /*
+             Remove first element as it is then just an array of
+             message IDs which has been read.
+             */
+            components.removeFirst()
+            components.removeLast()
+            
+            let intComponents = components.map {Int32($0)!}
+            
+            let messages = conversation.messages?.allObjects as! [MessageEntity]
+            
+            for message in messages {
+                if intComponents.contains(message.id) {
+                    message.status = MessageStatus.read.rawValue
+                }
+            }
+            
+            self.refreshID = UUID()
+            do {
+                try self.context.save()
+            } catch {
+                self.showErrorMessage(error.localizedDescription)
+            }
         }
     }
     
@@ -359,6 +357,14 @@ extension AppSession: DataControllerDelegate {
         receive(encryptedMessage: encryptedMessage)
     }
     
+    func dataController(_ dataController: DataController, didReceiveAcknowledgement message: Message) {
+        receiveAcknowledgement(message: message)
+    }
+    
+    func dataController(_ dataController: DataController, didReceiveRead message: Message) {
+        receiveRead(message: message)
+    }
+    
     func dataController(_ dataController: DataController, didFailWith error: Error) {
         showErrorMessage(error.localizedDescription)
     }
@@ -366,6 +372,20 @@ extension AppSession: DataControllerDelegate {
 
 // MARK: Helpers
 extension AppSession {
+    /// Fetch a given conversation entity from CoreData where a message should belong.
+    private func getConversationFor(message: Message) -> ConversationEntity? {
+        let fetchRequest = ConversationEntity.fetchRequest()
+        let conversations = try? fetchRequest.execute()
+        guard let conversations else { return nil }
+        let conversation = conversations
+            .first(where: { $0.author == message.sender })
+        if let conversation {
+            return conversation
+        } else {
+            self.showErrorMessage("Received a message for you, but the sender has not been added as a contact.")
+            return nil
+        }
+    }
     private func decryptMessageToText(message: Message, conversation: ConversationEntity) throws -> String {
         let publicKeyOfSender = try CryptoHandler.convertPublicKeyStringToKey(conversation.publicKey)
         let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.fetchPrivateKey(), publicKey: publicKeyOfSender)

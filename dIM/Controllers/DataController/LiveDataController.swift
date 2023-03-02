@@ -33,6 +33,8 @@ enum DataControllerError: Error, LocalizedError {
 protocol DataControllerDelegate: AnyObject {
     func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int)
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
+    func dataController(_ dataController: DataController, didReceiveAcknowledgement message: Message)
+    func dataController(_ dataController: DataController, didReceiveRead message: Message)
     func dataController(_ dataController: DataController, didFailWith error: Error)
     func dataControllerDidRelayMessage(_ dataController: DataController)
 }
@@ -273,8 +275,18 @@ extension LiveDataController: CBPeripheralDelegate {
             let messageIsForMe = encryptedMessage.receiver == usernameWithDigits
             // If message is for me receive and handle, otherwise pass it on
             if messageIsForMe {
-                delegate?.dataController(self, didReceive: encryptedMessage)
+                let messageComponents = encryptedMessage.text.components(separatedBy: "/")
+                // Decide type of message and handle accordingly
+                switch messageComponents.first {
+                case "ACK":
+                    delegate?.dataController(self, didReceiveAcknowledgement: encryptedMessage)
+                case "READ":
+                    delegate?.dataController(self, didReceiveRead: encryptedMessage)
+                default:
+                    delegate?.dataController(self, didReceive: encryptedMessage)
+                }
             } else {
+                // Send message to all connected peripherals
                 self.peripheralManager.updateValue(data, for: self.characteristic, onSubscribedCentrals: nil)
                 delegate?.dataControllerDidRelayMessage(self)
             }
