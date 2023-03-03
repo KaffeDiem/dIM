@@ -10,6 +10,14 @@ import CoreBluetooth
 import SwiftUI
 import CoreData
 import Combine
+import SwiftUINavigationManager
+
+enum Route {
+    case main
+    case settings
+    case qr
+    case chat
+}
 
 /// The Bluetooth Manager handles all searching for, creating connection to
 /// and sending/receiving messages to/from other Bluetooth devices.
@@ -22,6 +30,7 @@ import Combine
 /// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
 class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     
+    @Published var navigationManager = NavigationManager<Route>()
     private var cancellables = Set<AnyCancellable>()
     
     @Published var bannerDataShouldShow = false

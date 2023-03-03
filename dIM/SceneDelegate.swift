@@ -31,6 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         migrateIfNecessary()
         
         let contentView = SetupView()
+            .environmentObject(appSession.navigationManager)
             .environment(\.managedObjectContext, context)
             .environmentObject(appSession)
         

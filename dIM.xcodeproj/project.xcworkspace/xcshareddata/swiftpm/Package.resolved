@@ -8,6 +8,15 @@
         "revision" : "c27a66149b7483fe42e2ec6aad61d5c3fffe522d",
         "version" : "2.1.1"
       }
+    },
+    {
+      "identity" : "swiftuinavigationmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KaffeDiem/SwiftUINavigationManager",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9fd3b4415741cd1a7b35232dc5c8f4b88ec7a3f6"
+      }
     }
   ],
   "version" : 2

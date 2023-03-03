@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B0024A9329954CBD00ADB06F /* Extensions+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */; };
+		B019E3BF29B1E4F400F6BE12 /* SwiftUINavigationManager in Frameworks */ = {isa = PBXBuildFile; productRef = B019E3BE29B1E4F400F6BE12 /* SwiftUINavigationManager */; };
 		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
 		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
 		B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0C271B2B87005D8098 /* AboutView.swift */; };
@@ -115,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B019E3BF29B1E4F400F6BE12 /* SwiftUINavigationManager in Frameworks */,
 				B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +358,7 @@
 			name = dIM;
 			packageProductDependencies = (
 				B09FAD1C2789EFFA0030B777 /* CodeScanner */,
+				B019E3BE29B1E4F400F6BE12 /* SwiftUINavigationManager */,
 			);
 			productName = bluetoothChat;
 			productReference = B05E1F3226D3B3A800AD9E65 /* dIM.app */;
@@ -386,6 +389,7 @@
 			mainGroup = B05E1F2926D3B3A800AD9E65;
 			packageReferences = (
 				B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				B019E3BD29B1E4F400F6BE12 /* XCRemoteSwiftPackageReference "SwiftUINavigationManager" */,
 			);
 			productRefGroup = B05E1F3326D3B3A800AD9E65 /* Products */;
 			projectDirPath = "";
@@ -675,6 +679,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B019E3BD29B1E4F400F6BE12 /* XCRemoteSwiftPackageReference "SwiftUINavigationManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/KaffeDiem/SwiftUINavigationManager";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -686,6 +698,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B019E3BE29B1E4F400F6BE12 /* SwiftUINavigationManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B019E3BD29B1E4F400F6BE12 /* XCRemoteSwiftPackageReference "SwiftUINavigationManager" */;
+			productName = SwiftUINavigationManager;
+		};
 		B09FAD1C2789EFFA0030B777 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */;

@@ -34,7 +34,6 @@ struct HomeView: View {
     
     /// Body and content of the HomeView.
     var body: some View {
-        
         VStack {
             if !conversationsIsEmpty() {
                 /*
@@ -122,6 +121,13 @@ struct HomeView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(for: Route.self) { route in
+            switch route {
+            case .main: HomeView()
+            default: Text("Default")
+            }
+        }
+        .makeNavigation(appSession.navigationManager)
     }
     
     private func deleteContact(for conversation: ConversationEntity) {

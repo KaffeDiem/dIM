@@ -33,97 +33,94 @@ struct SetupView: View {
     @State private var usernameTextFieldState: UsernameValidator.State = .undetermined
     
     var body: some View {
-        NavigationView {
-            if usernameValidator.isUsernameValid {
-                HomeView()
-                    .navigationBarTitle("")
-                    .navigationBarBackButtonHidden(true)
-            } else {
+        if usernameValidator.isUsernameValid {
+            HomeView()
+                .navigationBarTitle("")
+                .navigationBarBackButtonHidden(true)
+                .banner(data: $appSession.bannerData, isPresented: $appSession.bannerDataShouldShow)
+        } else {
+            VStack {
+                // Explanatory carousel
+                if carouselShown {
+                    SnapCarousel()
+                        .environmentObject(carouselViewModel)
+                        .transition(.opacity)
+                }
+                
+                // TextField for setting username
                 VStack {
-                    // Explanatory carousel
-                    if carouselShown {
-                        SnapCarousel()
-                            .environmentObject(carouselViewModel)
-                            .transition(.opacity)
+                    TextField("Enter username", text: $usernameTextField) {
+                        hideKeyboard()
+                    }
+                    .keyboardType(.namePhonePad)
+                    .padding()
+                    .background(
+                        colorScheme == .dark ? Asset.greyDark.swiftUIColor : Asset.greyLight.swiftUIColor
+                    )
+                    .cornerRadius(10.0)
+                    .focused($keyboardShown)
+                    .onChange(of: keyboardShown) { newValue in
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            self.carouselShown.toggle()
+                        }
                     }
                     
-                    // TextField for setting username
-                    VStack {
-                        TextField("Enter username", text: $usernameTextField) {
-                            hideKeyboard()
-                        }
-                            .keyboardType(.namePhonePad)
+                    // Show a warning if username is invalid
+                    if case .error(let errorMessage) = usernameValidator.validate(username: usernameTextField) {
+                        Text(usernameTextField.isEmpty ? "" : errorMessage)
+                            .font(.footnote)
+                            .foregroundColor(.accentColor)
+                    }
+                }
+                .animation(.spring())
+                .padding()
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
+                
+                Spacer()
+                
+                VStack {
+                    // EULA part.
+                    HStack {
+                        Text("By continuing you agree to the")
+                        Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
+                    }
+                    
+                    // Enter button
+                    Button {
+                        usernameValidator.set(username: usernameTextField, context: context)
+                    } label: {
+                        Text("Continue")
                             .padding()
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
                             .background(
-                                colorScheme == .dark ? Asset.greyDark.swiftUIColor : Asset.greyLight.swiftUIColor
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
                             .cornerRadius(10.0)
-                            .focused($keyboardShown)
-                            .onChange(of: keyboardShown) { newValue in
-                                withAnimation(.easeInOut(duration: 0.5)) {
-                                    self.carouselShown.toggle()
-                                }
-                            }
-                        
-                        // Show a warning if username is invalid
-                        if case .error(let errorMessage) = usernameValidator.validate(username: usernameTextField) {
-                            Text(usernameTextField.isEmpty ? "" : errorMessage)
-                                .font(.footnote)
-                                .foregroundColor(.accentColor)
-                        }
                     }
-                    .animation(.spring())
-                    .padding()
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    
-                    Spacer()
-                    
-                    VStack {
-                        // EULA part.
-                        HStack {
-                            Text("By continuing you agree to the")
-                            Link("EULA", destination: URL(string: "https://www.dimchat.org/eula")!)
-                        }
-                        
-                        // Enter button
-                        Button {
-                            usernameValidator.set(username: usernameTextField, context: context)
-                        } label: {
-                            Text("Continue")
-                                .padding()
-                                .foregroundColor(.white)
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Asset.dimOrangeDark.swiftUIColor, Asset.dimOrangeLight.swiftUIColor]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .cornerRadius(10.0)
-                        }
-                    }
-                    .padding()
                 }
-                .onTapGesture {
-                    hideKeyboard()
-                }
-                .onAppear {
-                    UNUserNotificationCenter.current().requestAuthorization(
-                        options: [.alert, .badge, .sound]
-                    ) { success, error in
-                        if success {
-                            print("All set!")
-                        } else if let e = error {
-                            print(e.localizedDescription)
-                        }
+                .padding()
+            }
+            .onTapGesture {
+                hideKeyboard()
+            }
+            .onAppear {
+                UNUserNotificationCenter.current().requestAuthorization(
+                    options: [.alert, .badge, .sound]
+                ) { success, error in
+                    if success {
+                        print("All set!")
+                    } else if let e = error {
+                        print(e.localizedDescription)
                     }
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .banner(data: $appSession.bannerData, isPresented: $appSession.bannerDataShouldShow)
     }
 }
 
