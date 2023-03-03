@@ -7,6 +7,7 @@
 
 import CoreData
 import SwiftUI
+import UIKit
 
 /// The `HomeView` where users are presented with the different conversations that they are in.
 /// It is also here that we redirect them to other pages, let it be the `ChatView` or the `SettingsView`.
