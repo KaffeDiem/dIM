@@ -14,7 +14,6 @@ import SwiftUI
 ///
 /// It is also here that we send new messages.
 struct ChatView: View {
-    
     /// The `CoreData` object context to which we save messages to persistent storage.
     @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.

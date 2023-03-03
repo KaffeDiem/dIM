@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 /// A conversation is a thread of messages with some user that you have added.
 ///
@@ -33,5 +34,49 @@ struct Conversation: Identifiable {
     /// - Parameter message: The message to set last message to.
     mutating func updateLastMessage(new message: LocalMessage) {
         lastMessage = message
+    }
+}
+
+extension Conversation {
+    static func map(conversationEntities: [ConversationEntity]) -> [Conversation] {
+        return conversationEntities.map { conversationEntity in
+            let messages: [LocalMessage] = []
+            Conversation(
+                id: conversationEntity.id,
+                author: conversationEntity.author,
+                lastMessage: conversationEntity.lastMessage,
+                messages: messages
+            )
+        }
+    }
+}
+
+class ConversationStorage: NSObject, ObservableObject {
+    @Published var conversations: [Conversation] = []
+    private let conversationsController: NSFetchedResultsController<ConversationEntity>
+    
+    init(managedObjectContext: NSManagedObjectContext) {
+        conversationsController = NSFetchedResultsController(
+            fetchRequest: ConversationEntity.fetchRequest(),
+            managedObjectContext: managedObjectContext,
+            sectionNameKeyPath: nil, cacheName: nil)
+        super.init()
+        
+        conversationsController.delegate = self
+        
+        do {
+            try conversationsController.performFetch()
+            conversations = conversationsController.fetchedObjects.map { Conversation.map(conversationEntities: $0) } ?? []
+        } catch {
+            print("Failed to fetch conversations.")
+        }
+    }
+}
+
+
+extension ConversationStorage: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let conversations = controller.fetchedObjects as? [ConversationEntity] else { return }
+        self.conversations = conversations
     }
 }
