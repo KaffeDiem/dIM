@@ -11,27 +11,19 @@ struct DIMChatTextField: View {
     typealias OnSubmit = (_ text: String) -> Void
     
     @Binding var text: String
-    let image: UIImage? = nil
     let placeholder: String
-    let characterLimitShown: Bool
     let onSubmit: OnSubmit?
+    
+    @FocusState private var isFocused: Bool
+    @State private var characterLimitShown: Bool = false
+    private let characterLimit = 260
     
     @State private var borderColor: Color = Asset.greyLight.swiftUIColor
     private let borderColorActive: Color = Asset.dimOrangeLight.swiftUIColor
     private let borderColorInactive: Color = Asset.greyLight.swiftUIColor
     
-    @FocusState private var isFocused: Bool
-    
     var body: some View {
         HStack(spacing: 8) {
-            if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .offset(x: 24, y: 0)
-                    .frame(height: 20, alignment: .leading)
-            }
-            
             TextField(placeholder, text: $text, onEditingChanged: { editing in
                 withAnimation(.spring()) {
                     borderColor = editing ? borderColorActive : borderColorInactive
@@ -40,28 +32,60 @@ struct DIMChatTextField: View {
             .focused($isFocused)
             .padding([.leading, .top, .bottom], 12)
             .onSubmit {
-                if let onSubmit {
-                    onSubmit(text)
-                }
+                submit()
             }
             
             if characterLimitShown {
-                if text.count > 260 {
-                    Text("\(text.count)/260")
-                        .foregroundColor(.red)
-                        .padding(.trailing, 12)
-                } else {
-                    Text("\(text.count)/260")
-                        .padding(.trailing, 12)
-                }
+                Text("\(text.count)/260")
+                    .foregroundColor(.red)
+                    .padding([.leading, .trailing], 8)
             }
+            
+            Button {
+                submit()
+            } label: {
+                Image(systemName: text.isEmpty ? "arrow.up.circle" : "arrow.up.circle.fill")
+                    .animation(.spring(), value: text.isEmpty)
+                    .imageScale(.large)
+            }
+            .padding(.trailing)
         }
+        .onChange(of: text, perform: { newValue in
+            characterLimitShown = newValue.count > characterLimit
+        })
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(borderColor)
         )
         .onAppear {
             isFocused = true
+        }
+    }
+    
+    private func submit() {
+        if let onSubmit {
+            onSubmit(text)
+        }
+    }
+}
+
+struct ChatTextField_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            DIMChatTextField(text: .constant("Test"), placeholder: "", onSubmit: nil)
+                .padding()
+                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+                .previewDisplayName("Short text")
+            
+            DIMChatTextField(text: .constant(""), placeholder: "", onSubmit: nil)
+                .padding()
+                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+                .previewDisplayName("No text")
+            
+            DIMChatTextField(text: .constant("Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries."), placeholder: "", onSubmit: nil)
+                .padding()
+                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+                .previewDisplayName("Long text")
         }
     }
 }

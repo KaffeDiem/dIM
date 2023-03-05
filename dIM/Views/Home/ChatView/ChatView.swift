@@ -126,19 +126,10 @@ struct ChatView: View {
             
             // MARK: Send message
             HStack(spacing: 12) {
-                DIMChatTextField(text: $message, placeholder: "Aa", characterLimitShown: true) { text in
+                DIMChatTextField(text: $message, placeholder: "Aa") { text in
                     send(message: message)
                 }
-                .padding([.leading, .bottom, .top])
-                
-                Button {
-                    send(message: message)
-                } label: {
-                    Image(systemName: message.isEmpty ? "arrow.up.circle" : "arrow.up.circle.fill")
-                        .animation(.spring(), value: message.isEmpty)
-                        .imageScale(.large)
-                }
-                .padding(.trailing)
+                .padding()
             }
         }
         .navigationTitle(title)
