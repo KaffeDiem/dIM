@@ -30,6 +30,22 @@ struct DIMChatTextField: View {
                 }
             })
             .focused($isFocused)
+            .toolbarRole(.editor)
+            .toolbarTitleMenu(content: {
+                Text("World")
+            })
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    HStack {
+                        Button {
+                            print("Add stickers")
+                        } label: {
+                            Image(systemName: "face.smiling.inverse")
+                        }
+                        Spacer()
+                    }
+                }
+            }
             .padding([.leading, .top, .bottom], 12)
             .onSubmit {
                 submit()
