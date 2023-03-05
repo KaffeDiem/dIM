@@ -21,7 +21,8 @@ struct DIMChatTextField: View {
     @State private var borderColor: Color = Asset.greyLight.swiftUIColor
     private let borderColorActive: Color = Asset.dimOrangeLight.swiftUIColor
     private let borderColorInactive: Color = Asset.greyLight.swiftUIColor
-    
+    @State private var stickersSheetIsPresented = false
+  
     var body: some View {
         HStack(spacing: 8) {
             TextField(placeholder, text: $text, onEditingChanged: { editing in
@@ -38,7 +39,7 @@ struct DIMChatTextField: View {
                 ToolbarItemGroup(placement: .keyboard) {
                     HStack {
                         Button {
-                            print("Add stickers")
+                            stickersSheetIsPresented = true
                         } label: {
                             Image(systemName: "face.smiling.inverse")
                         }
@@ -75,6 +76,10 @@ struct DIMChatTextField: View {
         )
         .onAppear {
             isFocused = true
+        }
+        .sheet(isPresented: $stickersSheetIsPresented) {
+            StickersView()
+                .presentationDetents([.medium])
         }
     }
     
