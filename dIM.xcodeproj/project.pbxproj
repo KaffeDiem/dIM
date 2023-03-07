@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		B0024A9329954CBD00ADB06F /* Extensions+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */; };
+		B019E3C129B2644F00F6BE12 /* StoreKitConfiguration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B019E3C029B2644F00F6BE12 /* StoreKitConfiguration.storekit */; };
+		B019E3C329B265A900F6BE12 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3C229B265A900F6BE12 /* PurchaseManager.swift */; };
+		B019E3C529B4E51300F6BE12 /* StickersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3C429B4E51300F6BE12 /* StickersView.swift */; };
+		B019E3C829B4EB8000F6BE12 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = B019E3C729B4EB8000F6BE12 /* Lottie */; };
+		B019E3CD29B4EDFC00F6BE12 /* sick.json in Resources */ = {isa = PBXBuildFile; fileRef = B019E3C929B4EDFC00F6BE12 /* sick.json */; };
+		B019E3CE29B4EDFC00F6BE12 /* hello-world.json in Resources */ = {isa = PBXBuildFile; fileRef = B019E3CA29B4EDFC00F6BE12 /* hello-world.json */; };
+		B019E3CF29B4EDFC00F6BE12 /* good-night.json in Resources */ = {isa = PBXBuildFile; fileRef = B019E3CB29B4EDFC00F6BE12 /* good-night.json */; };
+		B019E3D029B4EDFC00F6BE12 /* fiery.json in Resources */ = {isa = PBXBuildFile; fileRef = B019E3CC29B4EDFC00F6BE12 /* fiery.json */; };
+		B019E3D329B4EEAB00F6BE12 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3D229B4EEAB00F6BE12 /* LottieView.swift */; };
+		B019E3D529B5128B00F6BE12 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3D429B5128B00F6BE12 /* CollectionView.swift */; };
+		B019E3D829B512BF00F6BE12 /* AnimationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3D729B512BF00F6BE12 /* AnimationViewCell.swift */; };
+		B019E3DA29B5130000F6BE12 /* CollectionViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3D929B5130000F6BE12 /* CollectionViewCoordinator.swift */; };
+		B019E3DC29B5DAC100F6BE12 /* UnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019E3DB29B5DAC100F6BE12 /* UnlockView.swift */; };
+		B019E3DF29B634B900F6BE12 /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = B019E3DE29B634B900F6BE12 /* Shiny */; };
 		B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */; };
 		B020E7D827A944E50098097A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B020E7D727A944E50098097A /* HomeViewModel.swift */; };
 		B0225B0D271B2B87005D8098 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0225B0C271B2B87005D8098 /* AboutView.swift */; };
@@ -59,6 +73,18 @@
 
 /* Begin PBXFileReference section */
 		B0024A9229954CBD00ADB06F /* Extensions+Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Bundle.swift"; sourceTree = "<group>"; };
+		B019E3C029B2644F00F6BE12 /* StoreKitConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKitConfiguration.storekit; sourceTree = "<group>"; };
+		B019E3C229B265A900F6BE12 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		B019E3C429B4E51300F6BE12 /* StickersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersView.swift; sourceTree = "<group>"; };
+		B019E3C929B4EDFC00F6BE12 /* sick.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sick.json; sourceTree = "<group>"; };
+		B019E3CA29B4EDFC00F6BE12 /* hello-world.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "hello-world.json"; sourceTree = "<group>"; };
+		B019E3CB29B4EDFC00F6BE12 /* good-night.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "good-night.json"; sourceTree = "<group>"; };
+		B019E3CC29B4EDFC00F6BE12 /* fiery.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fiery.json; sourceTree = "<group>"; };
+		B019E3D229B4EEAB00F6BE12 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
+		B019E3D429B5128B00F6BE12 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		B019E3D729B512BF00F6BE12 /* AnimationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationViewCell.swift; sourceTree = "<group>"; };
+		B019E3D929B5130000F6BE12 /* CollectionViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCoordinator.swift; sourceTree = "<group>"; };
+		B019E3DB29B5DAC100F6BE12 /* UnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockView.swift; sourceTree = "<group>"; };
 		B0202E4D26FB7FC60061DE8D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		B020E7D727A944E50098097A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B0225B0C271B2B87005D8098 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -115,13 +141,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B019E3DF29B634B900F6BE12 /* Shiny in Frameworks */,
 				B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */,
+				B019E3C829B4EB8000F6BE12 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B019E3D129B4EE0200F6BE12 /* LoloStickers */ = {
+			isa = PBXGroup;
+			children = (
+				B019E3CA29B4EDFC00F6BE12 /* hello-world.json */,
+				B019E3CC29B4EDFC00F6BE12 /* fiery.json */,
+				B019E3C929B4EDFC00F6BE12 /* sick.json */,
+				B019E3CB29B4EDFC00F6BE12 /* good-night.json */,
+			);
+			path = LoloStickers;
+			sourceTree = "<group>";
+		};
+		B019E3D629B512AE00F6BE12 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				B019E3D429B5128B00F6BE12 /* CollectionView.swift */,
+				B019E3D729B512BF00F6BE12 /* AnimationViewCell.swift */,
+				B019E3D929B5130000F6BE12 /* CollectionViewCoordinator.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 		B0225B09271B2AF5005D8098 /* SettingsView */ = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				B028A6D129A7B5F700E2BEB1 /* DIMChatTextField.swift */,
+				B019E3D629B512AE00F6BE12 /* CollectionView */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -162,10 +212,13 @@
 				B080269F28EDA83B00CBE455 /* Documentation.docc */,
 				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
+				B019E3D129B4EE0200F6BE12 /* LoloStickers */,
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
+				B019E3C029B2644F00F6BE12 /* StoreKitConfiguration.storekit */,
 				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
 				B028A6CF29A76EF700E2BEB1 /* Assets+Generated.swift */,
 				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
+				B019E3C229B265A900F6BE12 /* PurchaseManager.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
 				B05E1F4D26D3C7FF00AD9E65 /* Controllers */,
 				B0202E4C26FB7FC60061DE8D /* DataModel.xcdatamodeld */,
@@ -267,6 +320,8 @@
 			isa = PBXGroup;
 			children = (
 				B05E1F4A26D3B44300AD9E65 /* ChatView.swift */,
+				B019E3C429B4E51300F6BE12 /* StickersView.swift */,
+				B019E3D229B4EEAB00F6BE12 /* LottieView.swift */,
 				B0B94FF9279D545700AD199D /* ChatViewDetails */,
 			);
 			path = ChatView;
@@ -302,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				B0225B0C271B2B87005D8098 /* AboutView.swift */,
+				B019E3DB29B5DAC100F6BE12 /* UnlockView.swift */,
 			);
 			path = SettingsDetailView;
 			sourceTree = "<group>";
@@ -356,6 +412,8 @@
 			name = dIM;
 			packageProductDependencies = (
 				B09FAD1C2789EFFA0030B777 /* CodeScanner */,
+				B019E3C729B4EB8000F6BE12 /* Lottie */,
+				B019E3DE29B634B900F6BE12 /* Shiny */,
 			);
 			productName = bluetoothChat;
 			productReference = B05E1F3226D3B3A800AD9E65 /* dIM.app */;
@@ -386,6 +444,8 @@
 			mainGroup = B05E1F2926D3B3A800AD9E65;
 			packageReferences = (
 				B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				B019E3C629B4EB8000F6BE12 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				B019E3DD29B634B900F6BE12 /* XCRemoteSwiftPackageReference "shiny" */,
 			);
 			productRefGroup = B05E1F3326D3B3A800AD9E65 /* Products */;
 			projectDirPath = "";
@@ -402,8 +462,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B05E1F4226D3B3AB00AD9E65 /* LaunchScreen.storyboard in Resources */,
+				B019E3D029B4EDFC00F6BE12 /* fiery.json in Resources */,
 				B05E1F3F26D3B3AB00AD9E65 /* Preview Assets.xcassets in Resources */,
+				B019E3CF29B4EDFC00F6BE12 /* good-night.json in Resources */,
+				B019E3C129B2644F00F6BE12 /* StoreKitConfiguration.storekit in Resources */,
 				B05E1F3C26D3B3AB00AD9E65 /* Assets.xcassets in Resources */,
+				B019E3CD29B4EDFC00F6BE12 /* sick.json in Resources */,
+				B019E3CE29B4EDFC00F6BE12 /* hello-world.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,12 +483,15 @@
 				B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */,
 				B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */,
 				B05E1F4B26D3B44300AD9E65 /* ChatView.swift in Sources */,
+				B019E3D829B512BF00F6BE12 /* AnimationViewCell.swift in Sources */,
 				B07417A326D6CB0800F9C649 /* DeviceModel.swift in Sources */,
 				B05E1F5126D3CADC00AD9E65 /* ServiceModel.swift in Sources */,
+				B019E3D529B5128B00F6BE12 /* CollectionView.swift in Sources */,
 				B0B183DE29A0925A005CA662 /* Extensions+View.swift in Sources */,
 				B05E1F5526D3DB3400AD9E65 /* BluetoothManagerCentral.swift in Sources */,
 				B0B183D7299CCE4A005CA662 /* Extensions+Decodable.swift in Sources */,
 				B05E1F3626D3B3A800AD9E65 /* AppDelegate.swift in Sources */,
+				B019E3D329B4EEAB00F6BE12 /* LottieView.swift in Sources */,
 				B05E1F5326D3D3C000AD9E65 /* ConnectionView.swift in Sources */,
 				B05F7A9328F00A2700ABAC7E /* UsernameValidator.swift in Sources */,
 				B027E2F92996341A001D5F18 /* UserDefaultsKeys.swift in Sources */,
@@ -431,8 +499,12 @@
 				B0B183CC29992E4D005CA662 /* LiveDataController.swift in Sources */,
 				B0202E4E26FB7FC60061DE8D /* DataModel.xcdatamodeld in Sources */,
 				B070BAEE2722E0740036091A /* MessageBubble.swift in Sources */,
+				B019E3DC29B5DAC100F6BE12 /* UnlockView.swift in Sources */,
 				B05E1F3826D3B3A800AD9E65 /* SceneDelegate.swift in Sources */,
 				B05E1F3A26D3B3A800AD9E65 /* HomeView.swift in Sources */,
+				B019E3C329B265A900F6BE12 /* PurchaseManager.swift in Sources */,
+				B019E3DA29B5130000F6BE12 /* CollectionViewCoordinator.swift in Sources */,
+				B019E3C529B4E51300F6BE12 /* StickersView.swift in Sources */,
 				B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */,
 				B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */,
 				B0357C0B26DBEB950013CAF9 /* QRView.swift in Sources */,
@@ -675,6 +747,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B019E3C629B4EB8000F6BE12 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		B019E3DD29B634B900F6BE12 /* XCRemoteSwiftPackageReference "shiny" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maustinstar/shiny";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -686,6 +774,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B019E3C729B4EB8000F6BE12 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B019E3C629B4EB8000F6BE12 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		B019E3DE29B634B900F6BE12 /* Shiny */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B019E3DD29B634B900F6BE12 /* XCRemoteSwiftPackageReference "shiny" */;
+			productName = Shiny;
+		};
 		B09FAD1C2789EFFA0030B777 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B09FAD1B2789EFFA0030B777 /* XCRemoteSwiftPackageReference "CodeScanner" */;

@@ -8,23 +8,10 @@
 import SwiftUI
 
 struct StickersView: View {
-    let rows = [GridItem(.fixed(30)), GridItem(.flexible(minimum: 64, maximum: 128))]
+    @State private var data: [String] = ["hello-world", "fiery", "sick", "good-night"]
     
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHGrid(rows: rows, alignment: .center) {
-                ForEach(0x1f600...0x1f679, id: \.self) { value in
-                    Text(String(format: "%x", value))
-                    Text(emoji(value))
-                        .font(.largeTitle)
-                }
-            }
-        }
-    }
-    
-    private func emoji(_ value: Int) -> String {
-        guard let scalar = UnicodeScalar(value) else { return "?" }
-        return String(Character(scalar))
+        CollectionView<AnimationViewCell>(items: $data, onTap: { text in print(text) })
     }
 }
 

@@ -1,0 +1,35 @@
+{
+  "identifier" : "FE112862",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6446035642",
+      "localizations" : [
+        {
+          "description" : "Send animated stickers to your friends.",
+          "displayName" : "Animated stickers",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "dim_sticker_unlock",
+      "referenceName" : "Stickers",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1583606879",
+    "_developerTeamID" : "T3U4TGS8MW",
+    "_lastSynchronizedDate" : 699785544.73469996
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

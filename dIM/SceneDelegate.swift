@@ -16,6 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var window: UIWindow?
     lazy var appSession = AppSession(context: context)
+    private let purchaseManager = PurchaseManager()
 
     /// Handle deep links for scanning contacts from the camera app.
     ///
@@ -33,6 +34,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let contentView = SetupView()
             .environment(\.managedObjectContext, context)
             .environmentObject(appSession)
+            .environmentObject(purchaseManager)
+            .task {
+                await self.purchaseManager.updatePurchasedProducts()
+            }
         
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)

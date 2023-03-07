@@ -8,6 +8,24 @@
         "revision" : "c27a66149b7483fe42e2ec6aad61d5c3fffe522d",
         "version" : "2.1.1"
       }
+    },
+    {
+      "identity" : "lottie-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
+      "state" : {
+        "revision" : "c3852816c622ad35a03ed39c187c1644ece2382b",
+        "version" : "4.1.3"
+      }
+    },
+    {
+      "identity" : "shiny",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maustinstar/shiny",
+      "state" : {
+        "branch" : "master",
+        "revision" : "862360b8ab6b9ea9eb1156569a30f154b22625a5"
+      }
     }
   ],
   "version" : 2

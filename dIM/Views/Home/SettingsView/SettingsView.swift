@@ -104,6 +104,16 @@ struct SettingsView: View {
             }
             
             Section {
+                NavigationLink(destination: UnlockView()) {
+                    Label("Unlock stickers", systemImage: "face.smiling.inverse")
+                        .foregroundColor(.accentColor)
+                        .imageScale(.large)
+                }
+            }  footer: {
+                Text("Support the development of dIM and unlock animated stickers to be used in the chat.")
+            }
+            
+            Section {
                 Label(
                     appSession.connectedDevicesAmount < 0 ? "No devices connected." : "\(appSession.connectedDevicesAmount) devices connected.",
                     systemImage: "ipad.and.iphone")

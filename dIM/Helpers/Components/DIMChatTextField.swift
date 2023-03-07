@@ -31,10 +31,6 @@ struct DIMChatTextField: View {
                 }
             })
             .focused($isFocused)
-            .toolbarRole(.editor)
-            .toolbarTitleMenu(content: {
-                Text("World")
-            })
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     HStack {
