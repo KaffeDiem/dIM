@@ -30,8 +30,6 @@ struct SettingsView: View {
     
     @State private var changeUsernameAlertMessageIsShown = false
     
-    private let usernameValidator = UsernameValidator()
-    
     /// All conversations stored to CoreData
     @FetchRequest(
         entity: ConversationEntity.entity(),
@@ -59,7 +57,7 @@ struct SettingsView: View {
                         TextField("Choose a username...", text: $usernameTextFieldText, onCommit: {
                             hideKeyboard()
                             
-                            switch usernameValidator.validate(username: usernameTextFieldText) {
+                            switch UsernameValidator.shared.validate(username: usernameTextFieldText) {
                             case .valid, .demoMode:
                                 changeUsernameAlertMessageIsShown = true
                             case .error(message: let errorMessage):
@@ -136,7 +134,7 @@ struct SettingsView: View {
         // Change username alert
         .alert("Change username", isPresented: $changeUsernameAlertMessageIsShown) {
             Button("Change", role: .destructive) {
-                let state = usernameValidator.set(username: usernameTextFieldText, context: context)
+                let state = UsernameValidator.shared.set(username: usernameTextFieldText, context: context)
                 switch state {
                 case .valid(let userInfo):
                     usernameTextFieldText = userInfo.name
@@ -161,8 +159,8 @@ struct SettingsView: View {
     
     /// Revert username to what is stored in UserDefaults
     private func setUsernameTextFieldToStoredValue() {
-        usernameTextFieldText = usernameValidator.userInfo?.name ?? ""
-        usernameTextFieldIdentifier = usernameValidator.userInfo?.id ?? ""
+        usernameTextFieldText = UsernameValidator.shared.userInfo?.name ?? ""
+        usernameTextFieldIdentifier = UsernameValidator.shared.userInfo?.id ?? ""
     }
     
     /// Delete all conversations (very destructive)

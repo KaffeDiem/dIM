@@ -10,6 +10,9 @@ import Combine
 import CoreData
 
 class UsernameValidator: ObservableObject {
+    /// UsernameValidator as a singleton. Use this to access all user information.
+    static let shared = UsernameValidator()
+    
     struct UserInfo {
         let id: String
         let name: String
@@ -43,26 +46,13 @@ class UsernameValidator: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
+    private init() {
         self.state = .undetermined
         if let username = usernameStore, let userId = userIdStore {
             userInfo = .init(id: userId, name: username)
+            isUsernameValid = true
         }
-        setupBindings()
         setupState()
-    }
-    
-    private func setupBindings() {
-        $state.receive(on: RunLoop.main)
-            .sink { [weak self] state in
-                guard let self else { return }
-                switch state {
-                case .valid(let userInfo), .demoMode(let userInfo):
-                    self.isUsernameValid = true
-                    self.userInfo = userInfo
-                default: ()
-                }
-            }.store(in: &cancellables)
     }
     
     private func setupState() {
@@ -89,6 +79,10 @@ class UsernameValidator: ObservableObject {
         default: ()
         }
         self.state = state
+        if let username = usernameStore, let userId = userIdStore {
+            userInfo = .init(id: userId, name: username)
+            isUsernameValid = true
+        }
         return state
     }
     
