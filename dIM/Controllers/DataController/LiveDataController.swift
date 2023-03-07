@@ -51,15 +51,10 @@ class LiveDataController: NSObject, DataController {
     /// CoreBluetooth requires a reference to connected peripherals.
     private var disoveredPeripherals: [CBPeripheral] = []
     
-    private let usernameValidator = UsernameValidator()
-    private var usernameWithDigits: String?
-    
     weak var delegate: DataControllerDelegate?
     
     /// A list of previously seen messages used to not send messages repeatedly.
     private var previouslySeenMessages = [Int32]()
-    
-    private var cancellables = Set<AnyCancellable>()
     
     private let characteristic: CBMutableCharacteristic
     private let service: CBMutableService
@@ -79,18 +74,6 @@ class LiveDataController: NSObject, DataController {
         
         centralManager.delegate = self
         peripheralManager.delegate = self
-        
-        self.usernameWithDigits = usernameValidator.userInfo?.asString
-        
-        setupBindings()
-    }
-    
-    private func setupBindings() {
-        usernameValidator.$userInfo.sink { [weak self] userInfo in
-            if let usernameWithDigits = userInfo?.asString {
-                self?.usernameWithDigits = usernameWithDigits
-            }
-        }.store(in: &cancellables)
     }
     
     /// Send a message to another dIM user.
@@ -105,8 +88,8 @@ class LiveDataController: NSObject, DataController {
         guard centralManager.retrieveConnectedPeripherals(withServices: [service.uuid]).count > 0 else {
             throw DataControllerError.noConnectedDevices
         }
-        guard let username = usernameValidator.userInfo?.asString else {
-            fatalError("Cannot find username while sending a message. This is not allowed.")
+        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
+            throw DataControllerError.unknown
         }
         guard let receiver = conversation.author else {
             fatalError("Cannot find receiver. This is not allowed.")
@@ -125,7 +108,7 @@ class LiveDataController: NSObject, DataController {
         let encryptedMessage = Message(
             id: messageId,
             kind: .regular,
-            sender: username,
+            sender: usernameWithDigits,
             receiver: receiver,
             text: encryptedText
         )
@@ -142,7 +125,7 @@ class LiveDataController: NSObject, DataController {
         return Message(
             id: messageId,
             kind: .regular,
-            sender: username,
+            sender: usernameWithDigits,
             receiver: receiver,
             text: text
         )
@@ -272,7 +255,7 @@ extension LiveDataController: CBPeripheralDelegate {
             guard !previouslySeenMessages.contains(encryptedMessage.id) else { return }
             previouslySeenMessages.append(encryptedMessage.id)
             
-            let messageIsForMe = encryptedMessage.receiver == usernameWithDigits
+            let messageIsForMe = encryptedMessage.receiver == UsernameValidator.shared.userInfo?.asString
             // If message is for me receive and handle, otherwise pass it on
             if messageIsForMe {
                 let messageComponents = encryptedMessage.text.components(separatedBy: "/")
@@ -306,7 +289,7 @@ extension LiveDataController: CBPeripheralManagerDelegate {
             peripheralManager.add(service)
             peripheralManager.startAdvertising([
                 CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
-                CBAdvertisementDataLocalNameKey: UsernameValidator().userInfo?.name ?? "-"
+                CBAdvertisementDataLocalNameKey: UsernameValidator.shared.userInfo?.name ?? "-"
             ])
         default:
             delegate?.dataController(self, didFailWith: DataControllerError.bluetoothTurnedOff)

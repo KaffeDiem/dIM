@@ -28,8 +28,7 @@ struct QRView: View {
     private let filter = CIFilter.qrCodeGenerator()
     
     init() {
-        let validator = UsernameValidator()
-        guard let username = validator.userInfo?.asString else {
+        guard let username = UsernameValidator.shared.userInfo?.asString else {
             fatalError("QR view was opened but no username has been set")
         }
         self.username = username

@@ -87,7 +87,6 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     var seenCBCentral: [CBCentral] = []
     
     private let dataController: LiveDataController
-    private let usernameValidator = UsernameValidator()
     
     /// The initialiser for the AppSession.
     /// Sets up the `centralManager` and the `peripheralManager`.
@@ -117,6 +116,12 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         let messageToBeStored: Message
         do {
             messageToBeStored = try dataController.send(message, to: conversation)
+        } catch DataControllerError.noConnectedDevices {
+            showBanner(.init(
+                title: "Message in queue",
+                message: "There are currently no connected devices. The message will be delivered later.",
+                kind: .normal))
+            return
         } catch {
             showErrorMessage(error.localizedDescription)
             return
@@ -138,11 +143,6 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         
         do {
             try context.save()
-        } catch DataControllerError.noConnectedDevices {
-            showBanner(.init(
-                title: "Message in queue",
-                message: "There are currently no connected devices. The message will be delivered later.",
-                kind: .normal))
         } catch {
             showErrorMessage(error.localizedDescription)
         }
@@ -155,7 +155,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     ///
     /// - Parameter conversation: The given conversation in which we have read the messages.
     func sendReadMessages(for conversation: ConversationEntity) {
-        guard let usernameWithDigits = usernameValidator.userInfo?.asString else {
+        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
             fatalError("Tried to send read messages before username was set.")
         }
         guard let receiver = conversation.author else {
@@ -213,7 +213,7 @@ extension AppSession {
                     message: encryptedMessage,
                     conversation: conversation)
 
-                guard let usernameWithDigits = self.usernameValidator.userInfo?.asString else {
+                guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
                     self.showErrorMessage("Could not find your current username.")
                     return
                 }
@@ -320,7 +320,7 @@ extension AppSession {
     }
     
     private func sendAcknowledgement(of message: MessageEntity) {
-        guard let usernameWithDigits = usernameValidator.userInfo?.asString else {
+        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
             fatalError("ACK sent but username has not been set. This is not allowed.")
         }
         
@@ -366,7 +366,7 @@ extension AppSession: DataControllerDelegate {
     }
     
     func dataController(_ dataController: DataController, didFailWith error: Error) {
-        showErrorMessage(error.localizedDescription)
+        ()
     }
 }
 

@@ -30,8 +30,7 @@ extension AppSession {
         // Add message to list of previously seen messages
         seenMessages.append(messageEncrypted.id)
         
-        let validator = UsernameValidator()
-        let usernameWithDigits = validator.userInfo?.asString
+        let usernameWithDigits = UsernameValidator.shared.userInfo?.asString
         let messageIsForMe: Bool = messageEncrypted.receiver == usernameWithDigits
         
         // If message is not for me relay it

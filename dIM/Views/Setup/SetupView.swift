@@ -27,14 +27,12 @@ struct SetupView: View {
     /// Show the carousel or not.
     @State private var carouselShown = true
     
-    @ObservedObject private var usernameValidator = UsernameValidator()
-    
     @State private var usernameTextField = ""
     @State private var usernameTextFieldState: UsernameValidator.State = .undetermined
     
     var body: some View {
         NavigationView {
-            if usernameValidator.isUsernameValid {
+            if UsernameValidator.shared.isUsernameValid {
                 HomeView()
                     .navigationBarTitle("")
                     .navigationBarBackButtonHidden(true)
@@ -66,7 +64,7 @@ struct SetupView: View {
                             }
                         
                         // Show a warning if username is invalid
-                        if case .error(let errorMessage) = usernameValidator.validate(username: usernameTextField) {
+                        if case .error(let errorMessage) = UsernameValidator.shared.validate(username: usernameTextField) {
                             Text(usernameTextField.isEmpty ? "" : errorMessage)
                                 .font(.footnote)
                                 .foregroundColor(.accentColor)
@@ -88,7 +86,7 @@ struct SetupView: View {
                         
                         // Enter button
                         Button {
-                            usernameValidator.set(username: usernameTextField, context: context)
+                            UsernameValidator.shared.set(username: usernameTextField, context: context)
                         } label: {
                             Text("Continue")
                                 .padding()

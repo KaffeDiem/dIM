@@ -56,8 +56,10 @@ struct BannerModifier: ViewModifier {
                     }
                     .foregroundColor(Color.white)
                     .padding(12)
-                    .background(data.kind.color)
-                    .cornerRadius(8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .foregroundColor(data.kind.color)
+                    )
                     Spacer()
                 }
                 .zIndex(99)
@@ -82,5 +84,12 @@ struct BannerModifier: ViewModifier {
                 }
             }
         }
+    }
+}
+
+struct BannerPreview_Previews: PreviewProvider {
+    static var previews: some View {
+        Text("Hello, world!")
+            .banner(data: .constant(.init(title: "Test", message: "Some message")), isPresented: .constant(true))
     }
 }

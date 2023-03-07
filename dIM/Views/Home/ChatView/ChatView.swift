@@ -51,8 +51,7 @@ struct ChatView: View {
             animation: nil
         )
         
-        let usernameValidator = UsernameValidator()
-        if let username = usernameValidator.userInfo?.asString {
+        if let username = UsernameValidator.shared.userInfo?.asString {
             self.username = username
         } else {
             fatalError("Unexpectedly did not find any username while opening a chat view")
