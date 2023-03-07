@@ -366,7 +366,7 @@ extension AppSession: DataControllerDelegate {
     }
     
     func dataController(_ dataController: DataController, didFailWith error: Error) {
-        showErrorMessage(error.localizedDescription)
+        ()
     }
 }
 
