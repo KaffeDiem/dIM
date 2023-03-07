@@ -59,6 +59,7 @@ class PurchaseManager: ObservableObject {
         // Do not load products if it has been done already
         guard !self.isProductsLoaded else { return }
         self.availableProducts = try await Product.products(for: ProductIds.allCases.map { $0.rawValue })
+        await updatePurchasedProducts()
         self.isProductsLoaded = true
     }
     
@@ -83,6 +84,7 @@ class PurchaseManager: ObservableObject {
     
     func restore() async throws {
         try await AppStore.sync()
+        await updatePurchasedProducts()
     }
     
     @MainActor

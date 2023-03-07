@@ -95,7 +95,7 @@ struct SettingsView: View {
             
             Section {
                 NavigationLink(destination: UnlockView()) {
-                    Label("Unlock stickers", systemImage: "face.smiling.inverse")
+                    Label("Unlock features", systemImage: "face.smiling")
                         .foregroundColor(.accentColor)
                         .imageScale(.large)
                 }
