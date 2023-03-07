@@ -11,6 +11,8 @@ import Shiny
 struct PurchaseCell: View {
     typealias OnTap = () -> Void
     
+    @Environment(\.colorScheme) var colorScheme
+    
     let name: String
     let price: String
     let description: String
@@ -21,9 +23,9 @@ struct PurchaseCell: View {
             VStack(alignment: .leading) {
                 Text(name)
                     .font(.subheadline)
+                    .fontWeight(.heavy)
                 HStack {
                     Text(description)
-                        .font(.headline)
                 }
             }
             Spacer()
@@ -31,20 +33,15 @@ struct PurchaseCell: View {
                 onTap()
             } label: {
                 Text(price)
-                    .foregroundColor(.black)
-                    .fontWeight(.bold)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .shiny(.hyperGlossy(.orange))
-                    )
-           }
+                    .fontWeight(.bold).shiny(.hyperGlossy(.systemGray2))
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .foregroundColor(.white)
-                .opacity(0.1)
+                .foregroundColor(colorScheme == .light ? .black : .white )
+                .opacity(0.05)
         )
     }
 }
@@ -54,22 +51,28 @@ struct UnlockView: View {
     
     var body: some View {
         ZStack {
-            if !purchaseManager.isProductsLoaded {
-                ProgressView()
-            }
-            
             ScrollView {
                 VStack(alignment: .leading) {
                     FeatureCell(image: Image("appiconsvg"), title: "Support & Unlock", subtitle: "Support the development of dIM by unlocking additional features.")
                         .padding()
                     
-                    ForEach(purchaseManager.availableProducts) { product in
-                        PurchaseCell(name: product.displayName, price: product.displayPrice, description: product.description) {
-                            Task {
-                                try? await purchaseManager.purchase(product)
+                    if purchaseManager.isProductsLoaded {
+                        if purchaseManager.availableProductsNotPurchased.isEmpty {
+                            Text("All available products has been purchased. Thank you for your support.")
+                                .padding()
+                        } else {
+                            ForEach(purchaseManager.availableProductsNotPurchased) { product in
+                                PurchaseCell(name: product.displayName, price: product.displayPrice, description: product.description) {
+                                    Task {
+                                        try? await purchaseManager.purchase(product)
+                                    }
+                                }.padding()
                             }
                         }
-                        .padding()
+                    } else {
+                        ProgressView().fontWeight(.heavy)
+                            .padding(50)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                     
                     Button {

@@ -7,6 +7,7 @@
 
 import Foundation
 import StoreKit
+import Combine
 
 /// The purchase manager handles fetching
 class PurchaseManager: ObservableObject {
@@ -23,11 +24,30 @@ class PurchaseManager: ObservableObject {
     @Published private(set) var purchasedProductIds = Set<ProductIds>()
     /// List of all available products.
     @Published private(set) var availableProducts: [Product] = []
+    /// List of all purchased products.
+    @Published private(set) var purchasedProducts: [Product] = []
+    /// Available products which has not yet been purcahsed
+    @Published private(set) var availableProductsNotPurchased: [Product] = []
     
     private var updates: Task<Void, Never>? = nil
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init() {
         updates = oberserveTransactionUpdates()
+        
+        $availableProducts.combineLatest($purchasedProducts)
+            .sink { [weak self] available, purchased in
+                var availableForPurchase: [Product] = []
+                for availableProduct in available {
+                    if purchased.contains(availableProduct) {
+                        
+                    } else {
+                        availableForPurchase.append(availableProduct)
+                    }
+                }
+                self?.availableProductsNotPurchased = availableForPurchase
+            }.store(in: &cancellables)
     }
     
     deinit {
@@ -49,7 +69,7 @@ class PurchaseManager: ObservableObject {
         case .success(.verified(let transaction)): ()
             await transaction.finish()
             await self.updatePurchasedProducts()
-        case .success(.unverified(let transaction, let error)):
+        case .success(.unverified(let _, let error)):
             print(error.localizedDescription)
             break
         case .pending: ()
@@ -72,14 +92,19 @@ class PurchaseManager: ObservableObject {
                 continue
             }
             guard let supportedProductId = ProductIds(rawValue: transaction.productID) else {
-                #warning("Figure out what to do here")
-                fatalError("Received a purchased product with unknown product id.")
+                continue
             }
+            
             if transaction.revocationDate == nil {
                 self.purchasedProductIds.insert(supportedProductId)
             } else {
                 self.purchasedProductIds.remove(supportedProductId)
             }
+        }
+        do {
+            self.purchasedProducts = try await Product.products(for: purchasedProductIds.map { $0.rawValue })
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -88,7 +113,6 @@ class PurchaseManager: ObservableObject {
         Task(priority: .background) { [weak self] in
             guard let self else { return }
             for await _ in Transaction.updates {
-                // TODO: Work on the verification result directly here - no reason to fetch it again
                 await self.updatePurchasedProducts()
             }
         }

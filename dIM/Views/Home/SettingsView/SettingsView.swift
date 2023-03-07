@@ -94,14 +94,6 @@ struct SettingsView: View {
             }
             
             Section {
-                NavigationLink(destination: AboutView()) {
-                    Label("About & Contact", systemImage: "questionmark")
-                        .foregroundColor(.accentColor)
-                        .imageScale(.large)
-                }
-            }
-            
-            Section {
                 NavigationLink(destination: UnlockView()) {
                     Label("Unlock stickers", systemImage: "face.smiling.inverse")
                         .foregroundColor(.accentColor)
@@ -123,6 +115,14 @@ struct SettingsView: View {
                 Text("Connectivity")
             } footer: {
                 Text("Information about connected devices and amount of messages routed through your phone.")
+            }
+            
+            Section {
+                NavigationLink(destination: AboutView()) {
+                    Label("About & Contact", systemImage: "questionmark")
+                        .foregroundColor(.accentColor)
+                        .imageScale(.large)
+                }
             }
         }
         .symbolRenderingMode(.hierarchical)
