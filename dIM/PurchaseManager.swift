@@ -15,9 +15,6 @@ class PurchaseManager: ObservableObject {
         case stickers = "dim_sticker_unlock"
     }
     
-    /// Set to true once the purchase manager has finished loading and will
-    /// enable the user to send stickers to contacts.
-    @Published private(set) var isStickersUnlocked = false
     /// Determine if the purchase manager is still loading purchased products.
     @Published private(set) var isProductsLoaded = false
     /// All purchased product ids as strings.

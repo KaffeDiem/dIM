@@ -14,14 +14,11 @@ import SwiftUI
 ///
 /// It is also here that we send new messages.
 struct ChatView: View {
-    
-    /// The `CoreData` object context to which we save messages to persistent storage.
     @Environment(\.managedObjectContext) var context
-    /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
-    /// The `appSession` object is used to send and receive messages.
-    /// It handles the logic behind this view.
+    
     @EnvironmentObject var appSession: AppSession
+    @EnvironmentObject var purchaseManager: PurchaseManager
     
     /// The current conversation that the user is in. Used to get messages from conversation.
     @ObservedObject var conversation: ConversationEntity
@@ -125,7 +122,11 @@ struct ChatView: View {
             
             // MARK: Send message
             HStack(spacing: 12) {
-                DIMChatTextField(text: $message, placeholder: "Aa") { text in
+                DIMChatTextField(
+                    text: $message,
+                    placeholder: "Aa",
+                    stickersUnlocked: purchaseManager.purchasedProductIds.contains(.stickers)
+                ) { text in
                     send(message: message)
                 }
                 .padding()

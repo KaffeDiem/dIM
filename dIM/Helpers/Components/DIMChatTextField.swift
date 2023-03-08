@@ -12,6 +12,7 @@ struct DIMChatTextField: View {
     
     @Binding var text: String
     let placeholder: String
+    let stickersUnlocked: Bool
     let onSubmit: OnSubmit?
     
     @FocusState private var isFocused: Bool
@@ -86,23 +87,26 @@ struct DIMChatTextField: View {
     }
 }
 
-struct ChatTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            DIMChatTextField(text: .constant("Test"), placeholder: "", onSubmit: nil)
-                .padding()
-                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
-                .previewDisplayName("Short text")
-            
-            DIMChatTextField(text: .constant(""), placeholder: "", onSubmit: nil)
-                .padding()
-                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
-                .previewDisplayName("No text")
-            
-            DIMChatTextField(text: .constant("Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries."), placeholder: "", onSubmit: nil)
-                .padding()
-                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
-                .previewDisplayName("Long text")
-        }
-    }
-}
+//struct ChatTextField_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            DIMChatTextField(text: .constant("Test"), placeholder: "", onSubmit: nil)
+//                .padding()
+//                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+//                .previewDisplayName("Short text")
+//                .environmentObject(PurchaseManager())
+//
+//            DIMChatTextField(text: .constant(""), placeholder: "", onSubmit: nil)
+//                .padding()
+//                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+//                .previewDisplayName("No text")
+//                .environmentObject(PurchaseManager())
+//
+//            DIMChatTextField(text: .constant("Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries. Some very long text which pushes the limits of what a message box will keep in the boundaries."), placeholder: "", onSubmit: nil)
+//                .padding()
+//                .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+//                .previewDisplayName("Long text")
+//                .environmentObject(PurchaseManager())
+//        }
+//    }
+//}

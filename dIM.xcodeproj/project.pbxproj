@@ -69,6 +69,21 @@
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
 		B0DF7F9A26F4ADE400015071 /* MessageQueueHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */; };
+		B0FAB1B629B8ED140023EE95 /* morning.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1A729B8ED130023EE95 /* morning.json */; };
+		B0FAB1B829B8ED140023EE95 /* yes.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1A929B8ED130023EE95 /* yes.json */; };
+		B0FAB1B929B8ED140023EE95 /* hiding.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AA29B8ED130023EE95 /* hiding.json */; };
+		B0FAB1BA29B8ED140023EE95 /* love.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AB29B8ED130023EE95 /* love.json */; };
+		B0FAB1BB29B8ED140023EE95 /* devilangel.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AC29B8ED130023EE95 /* devilangel.json */; };
+		B0FAB1BC29B8ED140023EE95 /* goodbye.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AD29B8ED130023EE95 /* goodbye.json */; };
+		B0FAB1BD29B8ED140023EE95 /* letsgo.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AE29B8ED140023EE95 /* letsgo.json */; };
+		B0FAB1BE29B8ED140023EE95 /* lmao.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1AF29B8ED140023EE95 /* lmao.json */; };
+		B0FAB1BF29B8ED140023EE95 /* confused.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B029B8ED140023EE95 /* confused.json */; };
+		B0FAB1C029B8ED140023EE95 /* shocked.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B129B8ED140023EE95 /* shocked.json */; };
+		B0FAB1C129B8ED140023EE95 /* fine.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B229B8ED140023EE95 /* fine.json */; };
+		B0FAB1C229B8ED140023EE95 /* celebration.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B329B8ED140023EE95 /* celebration.json */; };
+		B0FAB1C329B8ED140023EE95 /* boss.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B429B8ED140023EE95 /* boss.json */; };
+		B0FAB1C429B8ED140023EE95 /* crying.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1B529B8ED140023EE95 /* crying.json */; };
+		B0FAB1C629B8ED480023EE95 /* cheering.json in Resources */ = {isa = PBXBuildFile; fileRef = B0FAB1C529B8ED480023EE95 /* cheering.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -134,6 +149,21 @@
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
 		B0DF7F9926F4ADE400015071 /* MessageQueueHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueHandler.swift; sourceTree = "<group>"; };
 		B0F199D128EF6C5B00F11157 /* dIM.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = dIM.entitlements; sourceTree = "<group>"; };
+		B0FAB1A729B8ED130023EE95 /* morning.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = morning.json; sourceTree = "<group>"; };
+		B0FAB1A929B8ED130023EE95 /* yes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = yes.json; sourceTree = "<group>"; };
+		B0FAB1AA29B8ED130023EE95 /* hiding.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hiding.json; sourceTree = "<group>"; };
+		B0FAB1AB29B8ED130023EE95 /* love.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = love.json; sourceTree = "<group>"; };
+		B0FAB1AC29B8ED130023EE95 /* devilangel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = devilangel.json; sourceTree = "<group>"; };
+		B0FAB1AD29B8ED130023EE95 /* goodbye.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = goodbye.json; sourceTree = "<group>"; };
+		B0FAB1AE29B8ED140023EE95 /* letsgo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = letsgo.json; sourceTree = "<group>"; };
+		B0FAB1AF29B8ED140023EE95 /* lmao.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = lmao.json; sourceTree = "<group>"; };
+		B0FAB1B029B8ED140023EE95 /* confused.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = confused.json; sourceTree = "<group>"; };
+		B0FAB1B129B8ED140023EE95 /* shocked.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shocked.json; sourceTree = "<group>"; };
+		B0FAB1B229B8ED140023EE95 /* fine.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fine.json; sourceTree = "<group>"; };
+		B0FAB1B329B8ED140023EE95 /* celebration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = celebration.json; sourceTree = "<group>"; };
+		B0FAB1B429B8ED140023EE95 /* boss.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = boss.json; sourceTree = "<group>"; };
+		B0FAB1B529B8ED140023EE95 /* crying.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = crying.json; sourceTree = "<group>"; };
+		B0FAB1C529B8ED480023EE95 /* cheering.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cheering.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +183,21 @@
 		B019E3D129B4EE0200F6BE12 /* LoloStickers */ = {
 			isa = PBXGroup;
 			children = (
+				B0FAB1B129B8ED140023EE95 /* shocked.json */,
+				B0FAB1AE29B8ED140023EE95 /* letsgo.json */,
+				B0FAB1AB29B8ED130023EE95 /* love.json */,
+				B0FAB1B529B8ED140023EE95 /* crying.json */,
+				B0FAB1AA29B8ED130023EE95 /* hiding.json */,
+				B0FAB1AF29B8ED140023EE95 /* lmao.json */,
+				B0FAB1C529B8ED480023EE95 /* cheering.json */,
+				B0FAB1A729B8ED130023EE95 /* morning.json */,
+				B0FAB1B329B8ED140023EE95 /* celebration.json */,
+				B0FAB1A929B8ED130023EE95 /* yes.json */,
+				B0FAB1B229B8ED140023EE95 /* fine.json */,
+				B0FAB1B029B8ED140023EE95 /* confused.json */,
+				B0FAB1AC29B8ED130023EE95 /* devilangel.json */,
+				B0FAB1B429B8ED140023EE95 /* boss.json */,
+				B0FAB1AD29B8ED130023EE95 /* goodbye.json */,
 				B019E3CA29B4EDFC00F6BE12 /* hello-world.json */,
 				B019E3CC29B4EDFC00F6BE12 /* fiery.json */,
 				B019E3C929B4EDFC00F6BE12 /* sick.json */,
@@ -461,14 +506,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0FAB1B929B8ED140023EE95 /* hiding.json in Resources */,
 				B05E1F4226D3B3AB00AD9E65 /* LaunchScreen.storyboard in Resources */,
+				B0FAB1BD29B8ED140023EE95 /* letsgo.json in Resources */,
+				B0FAB1C429B8ED140023EE95 /* crying.json in Resources */,
+				B0FAB1BC29B8ED140023EE95 /* goodbye.json in Resources */,
+				B0FAB1C629B8ED480023EE95 /* cheering.json in Resources */,
+				B0FAB1BB29B8ED140023EE95 /* devilangel.json in Resources */,
+				B0FAB1BE29B8ED140023EE95 /* lmao.json in Resources */,
 				B019E3D029B4EDFC00F6BE12 /* fiery.json in Resources */,
 				B05E1F3F26D3B3AB00AD9E65 /* Preview Assets.xcassets in Resources */,
+				B0FAB1B829B8ED140023EE95 /* yes.json in Resources */,
+				B0FAB1BF29B8ED140023EE95 /* confused.json in Resources */,
 				B019E3CF29B4EDFC00F6BE12 /* good-night.json in Resources */,
+				B0FAB1C129B8ED140023EE95 /* fine.json in Resources */,
+				B0FAB1BA29B8ED140023EE95 /* love.json in Resources */,
 				B019E3C129B2644F00F6BE12 /* StoreKitConfiguration.storekit in Resources */,
+				B0FAB1B629B8ED140023EE95 /* morning.json in Resources */,
 				B05E1F3C26D3B3AB00AD9E65 /* Assets.xcassets in Resources */,
+				B0FAB1C029B8ED140023EE95 /* shocked.json in Resources */,
 				B019E3CD29B4EDFC00F6BE12 /* sick.json in Resources */,
 				B019E3CE29B4EDFC00F6BE12 /* hello-world.json in Resources */,
+				B0FAB1C229B8ED140023EE95 /* celebration.json in Resources */,
+				B0FAB1C329B8ED140023EE95 /* boss.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,8 +8,25 @@
 import Lottie
 import UIKit
 
-public class AnimationViewCell<DataType: CustomStringConvertible>: UICollectionViewCell, Configurable {
+public class Sticker {
+    let name: String
+    let isUnlocked: Bool
+    
+    init(name: String, isUnlocked: Bool) {
+        self.name = name
+        self.isUnlocked = isUnlocked
+    }
+}
+
+
+public class AnimationViewCell<DataType: Sticker>: UICollectionViewCell, Configurable {
     let animationView = LottieAnimationView()
+    let lockView: UIImageView = {
+        let this = UIImageView(image: .init(systemName: "lock.fill"))
+        this.translatesAutoresizingMaskIntoConstraints = false
+        this.tintColor = UIColor.black.withAlphaComponent(0.9)
+        return this
+    }()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,21 +44,27 @@ public class AnimationViewCell<DataType: CustomStringConvertible>: UICollectionV
         clipsToBounds = false
         
         addSubview(animationView)
+        addSubview(lockView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             animationView.centerXAnchor.constraint(equalTo: centerXAnchor),
             animationView.centerYAnchor.constraint(equalTo: centerYAnchor),
             animationView.heightAnchor.constraint(equalTo: heightAnchor),
             animationView.widthAnchor.constraint(equalTo: widthAnchor),
+            
+            lockView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            lockView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            lockView.widthAnchor.constraint(equalToConstant: 70),
+            lockView.heightAnchor.constraint(equalToConstant: 70),
         ])
     }
     
     public func configure(using data: DataType) {
-        animationView.animation = LottieAnimation.named(data.description)
+        lockView.isHidden = data.isUnlocked
+        animationView.animation = LottieAnimation.named(data.name)
         animationView.contentMode = .scaleAspectFit
         animationView.loopMode = .loop
         animationView.play()
-        
         animationView.translatesAutoresizingMaskIntoConstraints = false
     }
     
