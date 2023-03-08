@@ -10,7 +10,8 @@ import SwiftUI
 struct StickersView: View {
     @State private var data: [Sticker]
     
-    init(stickersUnlocked: Bool = false) {
+    init() {
+        let stickersUnlocked = PurchaseManager.shared.purchasedProductIds.contains(.stickers)
         self.data = [
             .init(name: "hello-world", isUnlocked: true),
             .init(name: "fiery", isUnlocked: true),

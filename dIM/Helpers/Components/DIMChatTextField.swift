@@ -12,7 +12,6 @@ struct DIMChatTextField: View {
     
     @Binding var text: String
     let placeholder: String
-    let stickersUnlocked: Bool
     let onSubmit: OnSubmit?
     
     @FocusState private var isFocused: Bool

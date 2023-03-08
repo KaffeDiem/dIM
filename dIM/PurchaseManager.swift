@@ -11,6 +11,8 @@ import Combine
 
 /// The purchase manager handles fetching
 class PurchaseManager: ObservableObject {
+    static let shared = PurchaseManager()
+    
     enum ProductIds: String, CaseIterable {
         case stickers = "dim_sticker_unlock"
     }
@@ -30,7 +32,7 @@ class PurchaseManager: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
+    private init() {
         updates = oberserveTransactionUpdates()
         
         $availableProducts.combineLatest($purchasedProducts)

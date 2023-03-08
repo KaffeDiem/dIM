@@ -124,8 +124,7 @@ struct ChatView: View {
             HStack(spacing: 12) {
                 DIMChatTextField(
                     text: $message,
-                    placeholder: "Aa",
-                    stickersUnlocked: purchaseManager.purchasedProductIds.contains(.stickers)
+                    placeholder: "Aa"
                 ) { text in
                     send(message: message)
                 }

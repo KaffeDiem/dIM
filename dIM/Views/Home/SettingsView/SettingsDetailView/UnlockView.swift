@@ -47,8 +47,6 @@ struct PurchaseCell: View {
 }
 
 struct UnlockView: View {
-    @EnvironmentObject var purchaseManager: PurchaseManager
-    
     var body: some View {
         ZStack {
             ScrollView {
@@ -56,15 +54,15 @@ struct UnlockView: View {
                     FeatureCell(image: Image("appiconsvg"), title: "Support & Unlock", subtitle: "Support the development of dIM by unlocking additional features.")
                         .padding()
                     
-                    if purchaseManager.isProductsLoaded {
-                        if purchaseManager.availableProductsNotPurchased.isEmpty {
+                    if PurchaseManager.shared.isProductsLoaded {
+                        if PurchaseManager.shared.availableProductsNotPurchased.isEmpty {
                             Text("All available products has been purchased. Thank you for your support.")
                                 .padding()
                         } else {
-                            ForEach(purchaseManager.availableProductsNotPurchased) { product in
+                            ForEach(PurchaseManager.shared.availableProductsNotPurchased) { product in
                                 PurchaseCell(name: product.displayName, price: product.displayPrice, description: product.description) {
                                     Task {
-                                        try? await purchaseManager.purchase(product)
+                                        try? await PurchaseManager.shared.purchase(product)
                                     }
                                 }.padding()
                             }
@@ -77,7 +75,7 @@ struct UnlockView: View {
                     
                     Button {
                         Task {
-                            try? await purchaseManager.restore()
+                            try? await PurchaseManager.shared.restore()
                         }
                     } label: {
                         Text("Restore purchases")
@@ -87,7 +85,7 @@ struct UnlockView: View {
             }
         }.task {
             do {
-                try await purchaseManager.loadProducts()
+                try await PurchaseManager.shared.loadProducts()
             } catch {
                 print(error.localizedDescription)
             }
@@ -101,7 +99,6 @@ struct UnlockView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             UnlockView()
-                .environmentObject(PurchaseManager())
             
             PurchaseCell(name: "Animated stickers", price: "1.99 US$", description: "Unlock animated stickers in dIM chat", onTap: {})
         }
