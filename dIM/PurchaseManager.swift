@@ -39,9 +39,7 @@ class PurchaseManager: ObservableObject {
             .sink { [weak self] available, purchased in
                 var availableForPurchase: [Product] = []
                 for availableProduct in available {
-                    if purchased.contains(availableProduct) {
-                        
-                    } else {
+                    if !purchased.contains(availableProduct) {
                         availableForPurchase.append(availableProduct)
                     }
                 }

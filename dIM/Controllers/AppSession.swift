@@ -20,7 +20,7 @@ import Combine
 /// is stored in memory and written to the persistent storage as needed.
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
-class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+class AppSession: NSObject, ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -46,7 +46,7 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     
     // Holds an array of messages to be delivered at a later point.
     // Used for the queue functionality.
-    @Published var messageQueue: [queuedMessage] = []
+//    @Published var messageQueue: [queuedMessage] = []
     
     @Published private(set) var connectedDevicesAmount = 0
     
@@ -57,34 +57,34 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     
     /// Holds the connected characteristics. This is only used for the chat
     /// functionality for now.
-    var connectedCharateristics: [CBCharacteristic] = []
+//    var connectedCharateristics: [CBCharacteristic] = []
     
     /// The centralManager acts as our Bluetooth server and receives messages
     /// sent by clients to the server.
-    var centralManager: CBCentralManager!
+//    var centralManager: CBCentralManager!
     
     /// The peripheralManager acts as our Bluetooth clients and establishes
     /// connections to other BT servers. It also sends messages.
-    var peripheralManager: CBPeripheralManager!
+//    var peripheralManager: CBPeripheralManager!
     
     /// The characteristic which defines our chat functionality for the
     /// Bluetooth API.
-    var characteristic: CBMutableCharacteristic?
+//    var characteristic: CBMutableCharacteristic?
     
     /// Save messages which has been seen before such that they are not sent again.
     /// Otherwise they can loop around in the network forever.
-    var seenMessages: [Int32] = []
+//    var seenMessages: [Int32] = []
     
     /// A dictionary which stores how many messages we have received from a connected peripheral.
     /// It is cleaned from time to time as well.
-    var peripheralMessages: [String : [Date]] = [:]
+//    var peripheralMessages: [String : [Date]] = [:]
     
     /// A dictionary which holds the ids of messages relayed and the corresponding sender
     /// of said messages. This is used for DSR.
-    var senderOfMessageID: [Int32 : String] = [:]
+//    var senderOfMessageID: [Int32 : String] = [:]
     
     /// Seen CoreBluetooth Central devices
-    var seenCBCentral: [CBCentral] = []
+//    var seenCBCentral: [CBCentral] = []
     
     private let dataController: LiveDataController
     

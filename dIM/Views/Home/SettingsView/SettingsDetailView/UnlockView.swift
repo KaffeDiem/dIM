@@ -47,6 +47,7 @@ struct PurchaseCell: View {
 }
 
 struct UnlockView: View {
+    @State private var id = UUID()
     var body: some View {
         ZStack {
             ScrollView {
@@ -82,14 +83,18 @@ struct UnlockView: View {
                     }
                     .padding()
                 }
-            }
-        }.task {
+            }.id(id)
+        }
+        .task {
             do {
                 try await PurchaseManager.shared.loadProducts()
             } catch {
                 print(error.localizedDescription)
             }
         }
+        .onChange(of: PurchaseManager.shared.availableProductsNotPurchased, perform: { newValue in
+            self.id = UUID() // Hack to force reload the view if a product has been purchased.
+        })
         .navigationTitle("Unlock features")
         .navigationBarTitleDisplayMode(.inline)
     }

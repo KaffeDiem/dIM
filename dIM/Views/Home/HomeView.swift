@@ -122,6 +122,11 @@ struct HomeView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            Task {
+                try? await PurchaseManager.shared.loadProducts()
+            }
+        }
     }
     
     private func deleteContact(for conversation: ConversationEntity) {
