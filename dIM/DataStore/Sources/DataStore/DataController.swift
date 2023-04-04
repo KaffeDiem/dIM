@@ -7,4 +7,4 @@
 
 import Foundation
 
-protocol DataController {}
+public protocol DataController {}

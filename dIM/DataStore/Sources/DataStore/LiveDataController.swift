@@ -10,10 +10,11 @@ import CoreData
 import CoreBluetooth
 import Combine
 
-enum DataControllerError: Error, LocalizedError {
+public enum DataControllerError: Error, LocalizedError {
     case bluetoothTurnedOff
     case sentEmptyMessage
     case noConnectedDevices
+    case wrongDataFormat
     case unknown
     
     public var errorDescription: String? {
@@ -24,13 +25,15 @@ enum DataControllerError: Error, LocalizedError {
             return NSLocalizedString("You cannot send empty messages.", comment: "No message text")
         case .noConnectedDevices:
             return NSLocalizedString("There are no connected devices.", comment: "No connection")
+        case .wrongDataFormat:
+            return NSLocalizedString("The message included invalid characters. Try another message.", comment: "JSON serialization failed")
         default:
             return NSLocalizedString("An unknown error has occured in the DataController.", comment: "Unknown error")
         }
     }
 }
 
-protocol DataControllerDelegate: AnyObject {
+public protocol DataControllerDelegate: AnyObject {
     func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int)
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message)
     func dataController(_ dataController: DataController, didReceiveAcknowledgement message: Message)
@@ -44,22 +47,59 @@ protocol DataControllerDelegate: AnyObject {
 /// so much that we would not care if Bluetooth was used.
 /// The DataController communicates back through simple delegate methods, as such
 /// one should implement the ``DataControllerDelegate``.
-class LiveDataController: NSObject, DataController {
+public class LiveDataController: NSObject, DataController {
+    public struct Config {
+        /**
+         Enable the message queue, which is the feature that allows your messages
+         to be delivered by others if you are not in range of receipent.
+         
+         If a message is sent from A->B but B is not in range, however A->C is in range,
+         then C travels a few miles and connects to B, such that C can deliver the message
+         from A, C->B thus delivers the message from A->B without being in range of
+         oneanother.
+         */
+        let enableMessageQueue: Bool
+        
+        /**
+         Use Dynamic Source Routing algorithm for routing ACK messages.
+         This reduces the traffic on the network up to ~50% for large networks.
+         */
+        let useDSRAlgorithm: Bool
+        
+        /**
+         Username of the user.
+         Usually formatted as `username#1234`, such that the username includes random digits.
+         */
+        let username: String
+        
+        public init(
+            enableMessageQueue: Bool = true,
+            useDSRAlgorithm: Bool = true,
+            usernameWithRandomDigits: String
+        ) {
+            self.enableMessageQueue = enableMessageQueue
+            self.useDSRAlgorithm = useDSRAlgorithm
+            self.username = usernameWithRandomDigits
+        }
+    }
+    
+    public weak var delegate: DataControllerDelegate?
+    
     private let centralManager: CBCentralManager
     private let peripheralManager: CBPeripheralManager
     
     /// CoreBluetooth requires a reference to connected peripherals.
     private var disoveredPeripherals: [CBPeripheral] = []
     
-    weak var delegate: DataControllerDelegate?
-    
     /// A list of previously seen messages used to not send messages repeatedly.
     private var previouslySeenMessages = [Int32]()
     
     private let characteristic: CBMutableCharacteristic
     private let service: CBMutableService
+    private let config: Config
     
-    override init() {
+    public init(config: Config) {
+        self.config = config
         self.centralManager = CBCentralManager(delegate: nil, queue: .main)
         self.peripheralManager = CBPeripheralManager(delegate: nil, queue: nil)
         self.characteristic = CBMutableCharacteristic(
@@ -89,34 +129,37 @@ class LiveDataController: NSObject, DataController {
             let encryptedMessage = Message(
                 id: messageId,
                 kind: .regular,
-                sender: message.author,
+                sender: config.username,
                 receiver: message.receipent,
                 text: message.encryptedText)
             
-            // Send the encrypted message to all connected peripherals
+            // Encode the encrypted message to JSON.
+            // Send it off to all connected devices.
             do {
                 let messageEncoded = try JSONEncoder().encode(encryptedMessage)
                 self.peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
             } catch {
-                throw error
+                throw DataControllerError.wrongDataFormat
             }
         }
     }
     
-    func sendAcknowledgementOrRead(message: Message) throws {
-        previouslySeenMessages.append(message.id)
-        let messageEncoded = try JSONEncoder().encode(message)
-        peripheralManager.updateValue(
-            messageEncoded,
-            for: characteristic,
-            onSubscribedCentrals: nil)
+    func sendAcknowledgementOrRead(message: Message) async throws {
+        Task {
+            previouslySeenMessages.append(message.id)
+            let messageEncoded = try JSONEncoder().encode(message)
+            peripheralManager.updateValue(
+                messageEncoded,
+                for: characteristic,
+                onSubscribedCentrals: nil)
+        }
     }
 }
 
 // MARK: CBCentralManagerDelegate
 // CBCentralManager handles discovering other devices and connecting to them.
 extension LiveDataController: CBCentralManagerDelegate {
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
             centralManager.scanForPeripherals(withServices: [Session.UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
@@ -125,7 +168,7 @@ extension LiveDataController: CBCentralManagerDelegate {
         }
     }
     
-    func centralManager(
+    public func centralManager(
         _ central: CBCentralManager,
         didDiscover peripheral: CBPeripheral,
         advertisementData: [String : Any],
@@ -143,17 +186,17 @@ extension LiveDataController: CBCentralManagerDelegate {
         delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheral.delegate = self
         peripheral.discoverServices([Session.UUID])
     }
     
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+    public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         disoveredPeripherals.removeAll(where: { $0 == peripheral })
         delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
-    func centralManager(
+    public func centralManager(
         _ central: CBCentralManager,
         didFailToConnect peripheral: CBPeripheral,
         error: Error?
@@ -167,7 +210,7 @@ extension LiveDataController: CBCentralManagerDelegate {
 
 // MARK: CBPeripheralDelegate
 extension LiveDataController: CBPeripheralDelegate {
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let error {
             delegate?.dataController(self, didFailWith: error)
             return
@@ -178,7 +221,7 @@ extension LiveDataController: CBPeripheralDelegate {
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let error {
             delegate?.dataController(self, didFailWith: error)
             return
@@ -193,7 +236,7 @@ extension LiveDataController: CBPeripheralDelegate {
         delegate?.dataController(self, isConnectedTo: centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
-    func peripheral(
+    public func peripheral(
         _ peripheral: CBPeripheral,
         didUpdateNotificationStateFor characteristic: CBCharacteristic,
         error: Error?
@@ -203,11 +246,11 @@ extension LiveDataController: CBPeripheralDelegate {
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+    public func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         delegate?.dataController(self, isConnectedTo: centralManager.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }
     
-    func peripheral(
+    public func peripheral(
         _ peripheral: CBPeripheral,
         didUpdateValueFor characteristic: CBCharacteristic,
         error: Error?
@@ -227,15 +270,15 @@ extension LiveDataController: CBPeripheralDelegate {
             guard !previouslySeenMessages.contains(encryptedMessage.id) else { return }
             previouslySeenMessages.append(encryptedMessage.id)
             
-            let messageIsForMe = encryptedMessage.receiver == UsernameValidator.shared.userInfo?.asString
+            let messageIsForMe = config.username == encryptedMessage.receiver
             // If message is for me receive and handle, otherwise pass it on
             if messageIsForMe {
                 let messageComponents = encryptedMessage.text.components(separatedBy: "/")
                 // Decide type of message and handle accordingly
                 switch messageComponents.first {
-                case "ACK":
+                case Message.Kind.acknowledgement.asString:
                     delegate?.dataController(self, didReceiveAcknowledgement: encryptedMessage)
-                case "READ":
+                case Message.Kind.read.asString:
                     delegate?.dataController(self, didReceiveRead: encryptedMessage)
                 default:
                     delegate?.dataController(self, didReceive: encryptedMessage)
@@ -254,21 +297,21 @@ extension LiveDataController: CBPeripheralDelegate {
 // MARK: CBPeripheralManagerDelegate
 // CBCentralManager handles being discovered by other devices and connecting to them.
 extension LiveDataController: CBPeripheralManagerDelegate {
-    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+    public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
         case .poweredOn:
             peripheralManager.removeAllServices()
             peripheralManager.add(service)
             peripheralManager.startAdvertising([
                 CBAdvertisementDataServiceUUIDsKey: [Session.UUID],
-                CBAdvertisementDataLocalNameKey: UsernameValidator.shared.userInfo?.name ?? "-"
+                CBAdvertisementDataLocalNameKey: config.username
             ])
         default:
             delegate?.dataController(self, didFailWith: DataControllerError.bluetoothTurnedOff)
         }
     }
     
-    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+    public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
         if let error {
             delegate?.dataController(self, didFailWith: error)
         }

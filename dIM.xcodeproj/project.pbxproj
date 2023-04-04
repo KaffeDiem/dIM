@@ -39,7 +39,6 @@
 		B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = B080269F28EDA83B00CBE455 /* Documentation.docc */; };
 		B087301A276F852300723C41 /* ExplanatoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0873019276F852300723C41 /* ExplanatoryView.swift */; };
 		B09FAD1D2789EFFA0030B777 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B09FAD1C2789EFFA0030B777 /* CodeScanner */; };
-		B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81027511A0400EC3299 /* GLOBALS.swift */; };
 		B0A2B81327511C4C00EC3299 /* DSRRoutingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */; };
 		B0ABA9062702F3D1005C83DC /* MessageStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */; };
 		B0B0D06A26FCFD4200E2512B /* MessageStatusChatIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0D06926FCFD4200E2512B /* MessageStatusChatIcon.swift */; };
@@ -87,7 +86,6 @@
 		B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoHandler.swift; sourceTree = "<group>"; };
 		B080269F28EDA83B00CBE455 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		B0873019276F852300723C41 /* ExplanatoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplanatoryView.swift; sourceTree = "<group>"; };
-		B0A2B81027511A0400EC3299 /* GLOBALS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLOBALS.swift; sourceTree = "<group>"; };
 		B0A2B81227511C4C00EC3299 /* DSRRoutingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRRoutingHandler.swift; sourceTree = "<group>"; };
 		B0ABA9052702F3D1005C83DC /* MessageStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusModel.swift; sourceTree = "<group>"; };
 		B0B0D06926FCFD4200E2512B /* MessageStatusChatIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStatusChatIcon.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
 				B05E1F3526D3B3A800AD9E65 /* AppDelegate.swift */,
-				B0A2B81027511A0400EC3299 /* GLOBALS.swift */,
 				B028A6CF29A76EF700E2BEB1 /* Assets+Generated.swift */,
 				B05E1F3726D3B3A800AD9E65 /* SceneDelegate.swift */,
 				B05E1F3B26D3B3AB00AD9E65 /* Assets.xcassets */,
@@ -440,7 +437,6 @@
 				B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */,
 				B0B86E262995137C00CCC465 /* Extensions+HideKeyboard.swift in Sources */,
 				B028A6D229A7B5F700E2BEB1 /* DIMChatTextField.swift in Sources */,
-				B0A2B81127511A0400EC3299 /* GLOBALS.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetupView.swift in Sources */,
 				B028A6D729A828F800E2BEB1 /* Extensions+IfModifier.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* AppSession.swift in Sources */,
