@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CryptoController
 
 /// The main `SettingsView` which shows a number of subviews for different purposes.
 ///
@@ -150,11 +151,11 @@ struct SettingsView: View {
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
                     deleteAllConversations()
-                    CryptoHandler.resetKeys()
+                    CryptoController.resetKeys()
                 case .demoMode(let userInfo):
                     usernameTextFieldText = userInfo.name
                     usernameTextFieldIdentifier = userInfo.id
-                    CryptoHandler.resetKeys()
+                    CryptoController.resetKeys()
                 default:
                     setUsernameTextFieldToStoredValue()
                 }

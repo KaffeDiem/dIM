@@ -8,43 +8,6 @@
 import SwiftUI
 import Shiny
 
-struct PurchaseCell: View {
-    typealias OnTap = () -> Void
-    
-    @Environment(\.colorScheme) var colorScheme
-    
-    let name: String
-    let price: String
-    let description: String
-    let onTap: OnTap
-    
-    var body: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading) {
-                Text(name)
-                    .font(.subheadline)
-                    .fontWeight(.heavy)
-                HStack {
-                    Text(description)
-                }
-            }
-            Spacer()
-            Button {
-                onTap()
-            } label: {
-                Text(price)
-                    .fontWeight(.bold).shiny(.hyperGlossy(.systemGray2))
-            }
-            .buttonStyle(.borderedProminent)
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .foregroundColor(colorScheme == .light ? .black : .white )
-                .opacity(0.05)
-        )
-    }
-}
 
 struct UnlockView: View {
     @State private var id = UUID()
@@ -63,7 +26,13 @@ struct UnlockView: View {
                             ForEach(PurchaseManager.shared.availableProductsNotPurchased) { product in
                                 PurchaseCell(name: product.displayName, price: product.displayPrice, description: product.description) {
                                     Task {
-                                        try? await PurchaseManager.shared.purchase(product)
+                                        try? await PurchaseManager.shared.purchase(product) { result in
+                                            id = UUID()
+                                            switch result {
+                                            case .success(let product): ()
+                                            case .failure(let error): ()
+                                            }
+                                        }
                                     }
                                 }.padding()
                             }

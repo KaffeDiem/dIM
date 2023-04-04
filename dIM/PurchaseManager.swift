@@ -9,6 +9,10 @@ import Foundation
 import StoreKit
 import Combine
 
+enum PurchaseManagerError: Error {
+    case couldNotPurchase
+}
+
 /// The purchase manager handles fetching
 class PurchaseManager: ObservableObject {
     static let shared = PurchaseManager()
@@ -60,15 +64,16 @@ class PurchaseManager: ObservableObject {
         self.isProductsLoaded = true
     }
     
-    func purchase(_ product: Product) async throws {
+    func purchase(_ product: Product, completion: @escaping (Result<Product, PurchaseManagerError>) -> Void) async throws {
         let purchaseResult = try await product.purchase()
         
         switch purchaseResult {
         case .success(.verified(let transaction)): ()
             await transaction.finish()
             await self.updatePurchasedProducts()
+            completion(.success(product))
+            return
         case .success(.unverified(let _, let error)):
-            print(error.localizedDescription)
             break
         case .pending: ()
             break
@@ -77,6 +82,8 @@ class PurchaseManager: ObservableObject {
         default:
             break
         }
+        
+        completion(.failure(PurchaseManagerError.couldNotPurchase))
     }
     
     func restore() async throws {

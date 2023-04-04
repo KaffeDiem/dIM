@@ -8,6 +8,7 @@
 import SwiftUI
 import CodeScanner
 import CoreImage.CIFilterBuiltins
+import CryptoController
 
 /// The `QRView` gets the users public key in a string format,
 /// then generates a QR code and displays it nicely.
@@ -56,7 +57,7 @@ struct QRView: View {
                  The form of the QR code is:
                  dim://username//publickey
                  */
-                Image(uiImage: generateQRCode(from: "dim://\(username)//\(CryptoHandler.fetchPublicKeyString())"))
+                Image(uiImage: generateQRCode(from: "dim://\(username)//\(CryptoController.fetchPublicKeyString())"))
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()

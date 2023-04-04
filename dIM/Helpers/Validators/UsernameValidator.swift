@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CoreData
+import CryptoController
 
 class UsernameValidator: ObservableObject {
     /// UsernameValidator as a singleton. Use this to access all user information.
@@ -108,14 +109,14 @@ class UsernameValidator: ObservableObject {
 extension UsernameValidator {
     /// Activate demo mode for App Store review process
     private func activateDemoMode(for context: NSManagedObjectContext) {
-        let _ = CryptoHandler.fetchPublicKeyString()
+        let _ = CryptoController.fetchPublicKeyString()
         
         // Add a test conversation
         let conversation = ConversationEntity(context: context)
         conversation.author = "SteveJobs#123456"
-        let privateKey = CryptoHandler.generatePrivateKey()
+        let privateKey = CryptoController.generatePrivateKey()
         let publicKey = privateKey.publicKey
-        let publicKeyText = CryptoHandler.convertPublicKeyToString(publicKey)
+        let publicKeyText = CryptoController.convertPublicKeyToString(publicKey)
         conversation.publicKey = publicKeyText
         
         // And fill that conversation with a message

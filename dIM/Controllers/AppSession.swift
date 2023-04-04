@@ -10,6 +10,8 @@ import CoreBluetooth
 import SwiftUI
 import CoreData
 import Combine
+import DataController
+import CryptoController
 
 /// The Bluetooth Manager handles all searching for, creating connection to
 /// and sending/receiving messages to/from other Bluetooth devices.
@@ -115,7 +117,8 @@ class AppSession: NSObject, ObservableObject {
     func send(text message: String, conversation: ConversationEntity) {
         let messageToBeStored: Message
         do {
-            messageToBeStored = try dataController.send(message, to: conversation)
+            let username = UsernameValidator.shared.userInfo?.asString
+            messageToBeStored = try dataController.send(message, to: conversation.author ?? "", publicKey: conversation.publicKey ?? "", from: username ?? "-")
         } catch DataControllerError.noConnectedDevices {
             showBanner(.init(
                 title: "Message in queue",
@@ -345,16 +348,16 @@ extension AppSession {
 }
 
 extension AppSession: DataControllerDelegate {
+    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
+        receive(encryptedMessage: encryptedMessage)
+    }
+    
     func dataController(_ dataController: DataController, isConnectedTo deviceAmount: Int) {
         connectedDevicesAmount = deviceAmount
     }
     
     func dataControllerDidRelayMessage(_ dataController: DataController) {
         routedCounter += 1
-    }
-    
-    func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
-        receive(encryptedMessage: encryptedMessage)
     }
     
     func dataController(_ dataController: DataController, didReceiveAcknowledgement message: Message) {
@@ -387,9 +390,9 @@ extension AppSession {
         }
     }
     private func decryptMessageToText(message: Message, conversation: ConversationEntity) throws -> String {
-        let publicKeyOfSender = try CryptoHandler.convertPublicKeyStringToKey(conversation.publicKey)
-        let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: CryptoHandler.fetchPrivateKey(), publicKey: publicKeyOfSender)
-        return CryptoHandler.decryptMessage(text: message.text, symmetricKey: symmetricKey)
+        let publicKeyOfSender = try CryptoController.convertPublicKeyStringToKey(conversation.publicKey)
+        let symmetricKey = try CryptoController.deriveSymmetricKey(privateKey: CryptoController.fetchPrivateKey(), publicKey: publicKeyOfSender)
+        return CryptoController.decryptMessage(text: message.text, symmetricKey: symmetricKey)
     }
     
     /// Send a notification to the user if the app is closed and and we retrieve a message.
