@@ -142,7 +142,6 @@
 		B05E1F2926D3B3A800AD9E65 = {
 			isa = PBXGroup;
 			children = (
-				B028A6D629A828F800E2BEB1 /* Extensions+IfModifier.swift */,
 				B05E1F3426D3B3A800AD9E65 /* dIM */,
 				B05E1F3326D3B3A800AD9E65 /* Products */,
 			);
@@ -254,6 +253,7 @@
 		B098EFAD28E9E2AC0040B434 /* Extensions+CustomUI */ = {
 			isa = PBXGroup;
 			children = (
+				B028A6D629A828F800E2BEB1 /* Extensions+IfModifier.swift */,
 				B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */,
 				B028A6D429A8286200E2BEB1 /* Extenstions+RemoveFocusOnTap.swift */,
 				B0B183DD29A0925A005CA662 /* Extensions+View.swift */,
