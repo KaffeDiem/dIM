@@ -103,6 +103,7 @@
 		B0B183DB29A09070005CA662 /* BannerModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerModifier.swift; sourceTree = "<group>"; };
 		B0B183DD29A0925A005CA662 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HideKeyboard.swift"; sourceTree = "<group>"; };
+		B0C47EF029DC5CF700A52F40 /* DataStore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStore; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
@@ -158,6 +159,7 @@
 		B05E1F3426D3B3A800AD9E65 /* dIM */ = {
 			isa = PBXGroup;
 			children = (
+				B0C47EF029DC5CF700A52F40 /* DataStore */,
 				B080269F28EDA83B00CBE455 /* Documentation.docc */,
 				B0F199D128EF6C5B00F11157 /* dIM.entitlements */,
 				B05E1F4326D3B3AB00AD9E65 /* Info.plist */,
