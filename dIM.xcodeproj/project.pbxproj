@@ -46,6 +46,7 @@
 		B0B183DC29A09070005CA662 /* BannerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183DB29A09070005CA662 /* BannerModifier.swift */; };
 		B0B183DE29A0925A005CA662 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B183DD29A0925A005CA662 /* Extensions+View.swift */; };
 		B0B86E262995137C00CCC465 /* Extensions+HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */; };
+		B0C47EF429DC65FD00A52F40 /* DataControllerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C47EF329DC65FD00A52F40 /* DataControllerError.swift */; };
 		B0C6896926E5410D004937D5 /* LocalMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C6896826E5410D004937D5 /* LocalMessageModel.swift */; };
 		B0D15B6F26D913B10099F8F5 /* RetrieveMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */; };
 		B0D15B7326D91BBF0099F8F5 /* RelayMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */; };
@@ -94,6 +95,7 @@
 		B0B183DD29A0925A005CA662 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		B0B86E252995137C00CCC465 /* Extensions+HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HideKeyboard.swift"; sourceTree = "<group>"; };
 		B0C47EF029DC5CF700A52F40 /* DataStore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStore; sourceTree = "<group>"; };
+		B0C47EF329DC65FD00A52F40 /* DataControllerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataControllerError.swift; sourceTree = "<group>"; };
 		B0C6896826E5410D004937D5 /* LocalMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMessageModel.swift; sourceTree = "<group>"; };
 		B0D15B6E26D913B10099F8F5 /* RetrieveMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveMessage.swift; sourceTree = "<group>"; };
 		B0D15B7226D91BBF0099F8F5 /* RelayMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessage.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 		B05E1F2926D3B3A800AD9E65 = {
 			isa = PBXGroup;
 			children = (
+				B0C47EF329DC65FD00A52F40 /* DataControllerError.swift */,
 				B05E1F3426D3B3A800AD9E65 /* dIM */,
 				B05E1F3326D3B3A800AD9E65 /* Products */,
 			);
@@ -437,6 +440,7 @@
 				B08026A028EDA83B00CBE455 /* Documentation.docc in Sources */,
 				B0B86E262995137C00CCC465 /* Extensions+HideKeyboard.swift in Sources */,
 				B028A6D229A7B5F700E2BEB1 /* DIMChatTextField.swift in Sources */,
+				B0C47EF429DC65FD00A52F40 /* DataControllerError.swift in Sources */,
 				B064B43726D771F0005D6BFB /* SetupView.swift in Sources */,
 				B028A6D729A828F800E2BEB1 /* Extensions+IfModifier.swift in Sources */,
 				B05E1F4F26D3C9C100AD9E65 /* AppSession.swift in Sources */,
