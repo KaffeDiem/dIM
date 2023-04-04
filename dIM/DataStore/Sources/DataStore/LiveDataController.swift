@@ -76,59 +76,31 @@ class LiveDataController: NSObject, DataController {
         peripheralManager.delegate = self
     }
     
-    /// Send a message to another dIM user.
-    /// - Parameters:
-    ///   - text: The message text.
-    ///   - conversation: The conversation, which holds necessary information for sending a message.
-    /// - Returns: The sent message.
-    func send(_ text: String, to conversation: ConversationEntity) throws -> Message {
-        guard !text.isEmpty else {
-            throw DataControllerError.sentEmptyMessage
+    func send(message: SendMessageInformation) async throws {
+        Task {
+            guard !message.encryptedText.isEmpty else {
+                throw DataControllerError.sentEmptyMessage
+            }
+            guard centralManager.retrieveConnectedPeripherals(withServices: [service.uuid]).count > 0 else {
+                throw DataControllerError.noConnectedDevices
+            }
+            
+            let messageId = Int32.random(in: 0...Int32.max)
+            let encryptedMessage = Message(
+                id: messageId,
+                kind: .regular,
+                sender: message.author,
+                receiver: message.receipent,
+                text: message.encryptedText)
+            
+            // Send the encrypted message to all connected peripherals
+            do {
+                let messageEncoded = try JSONEncoder().encode(encryptedMessage)
+                self.peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
+            } catch {
+                throw error
+            }
         }
-        guard centralManager.retrieveConnectedPeripherals(withServices: [service.uuid]).count > 0 else {
-            throw DataControllerError.noConnectedDevices
-        }
-        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
-            throw DataControllerError.unknown
-        }
-        guard let receiver = conversation.author else {
-            fatalError("Cannot find receiver. This is not allowed.")
-        }
-        guard let receiverPublicKeyText = conversation.publicKey else {
-            fatalError("Cannot find public key of receiver. This is not allowed.")
-        }
-        
-        let privateKey = try CryptoHandler.fetchPrivateKey()
-        let receiverPublicKey = try CryptoHandler.convertPublicKeyStringToKey(receiverPublicKeyText)
-        let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
-        let encryptedText = try CryptoHandler.encryptMessage(
-            text: text, symmetricKey: symmetricKey)
-        
-        let messageId = Int32.random(in: 0...Int32.max)
-        let encryptedMessage = Message(
-            id: messageId,
-            kind: .regular,
-            sender: usernameWithDigits,
-            receiver: receiver,
-            text: encryptedText
-        )
-        
-        // Send the encrypted message to all connected peripherals
-        do {
-            let messageEncoded = try JSONEncoder().encode(encryptedMessage)
-            self.peripheralManager.updateValue(messageEncoded, for: characteristic, onSubscribedCentrals: nil)
-        } catch {
-            throw error
-        }
-        
-        // Return the unencrypted sent message.
-        return Message(
-            id: messageId,
-            kind: .regular,
-            sender: usernameWithDigits,
-            receiver: receiver,
-            text: text
-        )
     }
     
     func sendAcknowledgementOrRead(message: Message) throws {
