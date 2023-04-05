@@ -45,4 +45,13 @@ public struct Message: Codable, Identifiable {
     public var sender: String
     public var receiver: String
     public var text: String // Note that text in the message struct is encrypted
+    
+    public init(id: Int32, kind: Kind, sender: String, receiver: String, text: String) {
+        self.id = id
+        self.kind = kind
+        self.sender = sender
+        self.receiver = receiver
+        self.text = text
+    }
+    
 }

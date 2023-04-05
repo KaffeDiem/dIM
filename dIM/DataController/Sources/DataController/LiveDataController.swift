@@ -91,7 +91,7 @@ public class LiveDataController: NSObject, DataController {
         peripheralManager.delegate = self
     }
     
-    func send(message: SendMessageInformation) async throws {
+    public func send(message: SendMessageInformation) async throws {
         Task {
             guard !message.encryptedText.isEmpty else {
                 throw DataControllerError.sentEmptyMessage

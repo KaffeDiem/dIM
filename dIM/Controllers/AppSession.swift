@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import CoreBluetooth
 import SwiftUI
 import CoreData
 import Combine
+import DataController
 
 /// The Bluetooth Manager handles all searching for, creating connection to
 /// and sending/receiving messages to/from other Bluetooth devices.
@@ -20,7 +20,7 @@ import Combine
 /// is stored in memory and written to the persistent storage as needed.
 /// - Note: It conforms to a variety of delegates which is used for callback functions from the Apple APIs.
 /// - Note: In code the AppSession has been divided into files for seperation and isolation of features.
-class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
+class AppSession: ObservableObject  {
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -112,10 +112,33 @@ class AppSession: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         }
     }
     
-    func send(text message: String, conversation: ConversationEntity) {
-        let messageToBeStored: Message
+    func send(text message: String, conversation: ConversationEntity) async {
+        var messageToBeStored: Message
         do {
-            messageToBeStored = try dataController.send(message, to: conversation)
+            // Encrypt the plan text message before handing it over to the `DataController`
+            guard let receipentPublicKey = conversation.publicKey, let receipent = conversation.author else {
+                fatalError("Tried to fetch public key of conversation but it was nil")
+            }
+            
+            guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
+                fatalError("Tried to send a message without having a username, developer error.")
+            }
+            
+            let privateKey = try CryptoHandler.fetchPrivateKey()
+            let receiverPublicKey = try CryptoHandler.convertPublicKeyStringToKey(receipentPublicKey)
+            let symmetricKey = try CryptoHandler.deriveSymmetricKey(privateKey: privateKey, publicKey: receiverPublicKey)
+            let encryptedText = try CryptoHandler.encryptMessage(
+                text: message, symmetricKey: symmetricKey)
+            
+            let sendMessageInformation = SendMessageInformation(encryptedText: encryptedText, receipentWithDigits: receipent)
+            try await dataController.send(message: sendMessageInformation)
+            
+            messageToBeStored = Message(
+                id: Int32.random(in: 0...Int32.max),
+                kind: .regular,
+                sender: usernameWithDigits,
+                receiver: receipent,
+                text: encryptedText)
         } catch DataControllerError.noConnectedDevices {
             showBanner(.init(
                 title: "Message in queue",
