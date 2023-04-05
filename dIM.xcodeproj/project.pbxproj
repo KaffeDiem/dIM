@@ -206,7 +206,6 @@
 			children = (
 				B05E1F4E26D3C9C100AD9E65 /* AppSession.swift */,
 				B028A6CD29A5C1F600E2BEB1 /* ScanHandler.swift */,
-				B0B183CD29996FB2005CA662 /* DataController */,
 				B07D3F0C26DCF10A0037F5BB /* CryptoHandler.swift */,
 				B0D15B6B26D9138E0099F8F5 /* Transmission */,
 				B06E299E26D5358000FBB67E /* Bluetooth */,
@@ -269,13 +268,6 @@
 				B0B94FF9279D545700AD199D /* ChatViewDetails */,
 			);
 			path = ChatView;
-			sourceTree = "<group>";
-		};
-		B0B183CD29996FB2005CA662 /* DataController */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DataController;
 			sourceTree = "<group>";
 		};
 		B0B183DA29A09056005CA662 /* ViewModifiers */ = {
