@@ -66,6 +66,13 @@ public class LiveDataController: NSObject, DataController {
     private let service: CBMutableService
     private let config: Config
     
+    /// Set up the DataController with a configuration.
+    ///
+    /// - Warning: If the username is changed after the DataController has been initialized,
+    ///           the DataController will not work as expected.
+    ///           If it is changed the DataController must re-initialized.
+    ///
+    /// - Parameter config: Config desribing the behaviour of the DataController.
     public init(config: Config) {
         self.config = config
         self.centralManager = CBCentralManager(delegate: nil, queue: .main)
@@ -128,6 +135,8 @@ public class LiveDataController: NSObject, DataController {
 // CBCentralManager handles discovering other devices and connecting to them.
 extension LiveDataController: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        // Only start scanning for devices if Bluetooth is turned on.
+        // Otherwise notify the delegate that Bluetooth is turned off.
         switch central.state {
         case .poweredOn:
             centralManager.scanForPeripherals(withServices: [Session.UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
@@ -142,14 +151,11 @@ extension LiveDataController: CBCentralManagerDelegate {
         advertisementData: [String : Any],
         rssi RSSI: NSNumber
     ) {
-        // Connect to a peripheral device only if it is not already connected.
-        switch peripheral.state {
-//        case .connected, .connecting: ()
-        default:
-            central.connect(peripheral)
-            if !disoveredPeripherals.contains(peripheral) {
-                disoveredPeripherals.append(peripheral)
-            }
+        // One could also check if the device is already connected by checking `peripheral.state`.
+        // This could save CPU usage but devices would be slower to connect. CPU usage is very low.
+        central.connect(peripheral)
+        if !disoveredPeripherals.contains(peripheral) {
+            disoveredPeripherals.append(peripheral)
         }
         delegate?.dataController(self, isConnectedTo: central.retrieveConnectedPeripherals(withServices: [Session.UUID]).count)
     }

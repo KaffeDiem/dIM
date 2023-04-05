@@ -7,17 +7,24 @@
 
 import Foundation
 
-/// Type of object sent between devices
+/*
+ Messages are the objects sent between devices. They are JSON encoded while sent
+ across the network. There are different kinds of messages each of their own
+ used to identify what type it is.
+ */
 public struct Message: Codable, Identifiable {
     public enum Kind: Int, Codable {
-        /// Regular message
+        /// Regular encrypted messages. The receipent will have to decrypt it.
         case regular = 0
-        /// Acknowledge that the message has been received. This is sent back to the sender
-        /// of a message if the message was successfully delivered and decrypted.
+        /// Acknowledment messages are sent automatically once a message has been received.
+        /// Used to verify that the receipent received and successfully decrypted the message.
         case acknowledgement = 1
         /// Read message kind which allows users to know that their sent message has been read.
-        /// This is only used if the feature has been enabled in settings.
+        /// They should not be sent per default, as it may be privacy
         case read = 2
+        /// GPS is used to send GPS coordinates off to others. It is included for the possibility
+        /// to optionally include it in your app.
+        case gps = 3
         
         var asString: String {
             switch self {
@@ -27,11 +34,13 @@ public struct Message: Codable, Identifiable {
                 return "ACK"
             case .read:
                 return "READ"
+            case .gps:
+                return "DIM.GPS"
             }
         }
     }
     
-    public var id: Int32
+    public var id: Int32 // Random integer, could use a UUID in the future.
     public var kind: Kind
     public var sender: String
     public var receiver: String
