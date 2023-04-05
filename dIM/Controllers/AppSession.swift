@@ -226,8 +226,8 @@ class AppSession: ObservableObject  {
     
 // MARK: Private methods
 extension AppSession {
-    private func receive(encryptedMessage: Message) {
-        context.perform { [weak self] in
+    private func receive(encryptedMessage: Message) async {
+        await context.perform { [weak self] in
             guard let self else { return }
             do {
                 let conversation = self.getConversationFor(message: encryptedMessage)
@@ -266,8 +266,8 @@ extension AppSession {
 
                 try self.context.save()
                 
-                DispatchQueue.main.async {
-                    self.sendAcknowledgement(of: messageEntity)
+                Task {
+                    await self.sendAcknowledgement(of: messageEntity)
                     self.sendNotificationWith(text: localMessage.text, from: localMessage.sender)
                 }
             } catch {
