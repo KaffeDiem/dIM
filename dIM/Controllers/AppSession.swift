@@ -93,9 +93,10 @@ class AppSession: ObservableObject  {
     /// - Parameter context: The context for persistent storage to `CoreData`
     init(context: NSManagedObjectContext) {
         self.context = context
-        self.dataController = LiveDataController()
-        super.init()
-        
+        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
+            fatalError("Tried to set up AppSession without a valid username. This is not allowed")
+        }
+        self.dataController = LiveDataController(config: .init(usernameWithRandomDigits: usernameWithDigits))
         dataController.delegate = self
     }
     
@@ -177,7 +178,7 @@ class AppSession: ObservableObject  {
     /// ids are of those which has now been read.
     ///
     /// - Parameter conversation: The given conversation in which we have read the messages.
-    func sendReadMessages(for conversation: ConversationEntity) {
+    func sendReadMessages(for conversation: ConversationEntity) async {
         guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
             fatalError("Tried to send read messages before username was set.")
         }
@@ -208,7 +209,7 @@ class AppSession: ObservableObject  {
             text: readMessageText)
         
         do {
-            try dataController.sendAcknowledgementOrRead(message: messageRead)
+            try await dataController.sendAcknowledgementOrRead(message: messageRead)
         } catch {
             showErrorMessage(error.localizedDescription)
         }
@@ -342,7 +343,7 @@ extension AppSession {
         }
     }
     
-    private func sendAcknowledgement(of message: MessageEntity) {
+    private func sendAcknowledgement(of message: MessageEntity) async {
         guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
             fatalError("ACK sent but username has not been set. This is not allowed.")
         }
@@ -360,7 +361,7 @@ extension AppSession {
             text: ackText)
         
         do {
-            try dataController.sendAcknowledgementOrRead(message: ackMessage)
+            try await dataController.sendAcknowledgementOrRead(message: ackMessage)
         } catch {
             showErrorMessage(error.localizedDescription)
         }

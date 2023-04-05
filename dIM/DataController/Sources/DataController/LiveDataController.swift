@@ -119,7 +119,7 @@ public class LiveDataController: NSObject, DataController {
         }
     }
     
-    func sendAcknowledgementOrRead(message: Message) async throws {
+    public func sendAcknowledgementOrRead(message: Message) async throws {
         Task {
             previouslySeenMessages.append(message.id)
             let messageEncoded = try JSONEncoder().encode(message)
