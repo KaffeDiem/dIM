@@ -14,9 +14,6 @@ import SwiftUI
 ///
 /// It is also here that we send new messages.
 struct ChatView: View {
-    
-    /// The `CoreData` object context to which we save messages to persistent storage.
-    @Environment(\.managedObjectContext) var context
     /// The users current colorscheme for pretty visuals.
     @Environment(\.colorScheme) var colorScheme
     /// The `appSession` object is used to send and receive messages.
@@ -82,16 +79,18 @@ struct ChatView: View {
                                 // Resend a message which has not been delivered
                                 if message.sender == username {
                                     Button(role: .none) {
-                                        appSession.send(text: message.text ?? "", conversation: conversation)
+                                        Task {
+                                            await appSession.send(text: message.text ?? "", conversation: conversation)
+                                        }
                                     } label: {
                                         Label("Resend", systemImage: "arrow.uturn.left.circle")
                                     }
                                 }
                                 // Delete button
                                 Button(role: .destructive, action: {
-                                    context.delete(message)
+                                    appSession.context.delete(message)
                                     do {
-                                        try context.save()
+                                        try appSession.context.save()
                                     } catch {
                                         appSession.showErrorMessage(error.localizedDescription)
                                     }
@@ -145,20 +144,26 @@ struct ChatView: View {
         .onAppear() {
             // Send READ messages if enabled in settings
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessages(for: conversation)
+                Task {
+                    await appSession.sendReadMessages(for: conversation)
+                }
             }
         }
         .onDisappear() {
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {
-                appSession.sendReadMessages(for: conversation)
+                Task {
+                    await appSession.sendReadMessages(for: conversation)
+                }
             }
         }
     }
     
     private func send(message: String) {
         if message.count < 261 {
-            appSession.send(text: message, conversation: conversation)
             self.message = ""
+            Task {
+                await appSession.send(text: message, conversation: conversation)
+            }
         }
     }
 }

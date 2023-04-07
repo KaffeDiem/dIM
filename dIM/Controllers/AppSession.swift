@@ -44,32 +44,8 @@ class AppSession: ObservableObject  {
     /// a refresh of the `ChatView` and the message status is updated.
     @Published var refreshID = UUID()
     
-    // Holds an array of messages to be delivered at a later point.
-    // Used for the queue functionality.
-    @Published var messageQueue: [queuedMessage] = []
-    
     @Published private(set) var connectedDevicesAmount = 0
     
-    
-    // Holds a reference to all devices discovered. If no reference
-    // is held then the Bluetooth connection may be dropped.
-    @Published var discoveredDevices: [Device] = []
-    
-    /// Holds the connected characteristics. This is only used for the chat
-    /// functionality for now.
-    var connectedCharateristics: [CBCharacteristic] = []
-    
-    /// The centralManager acts as our Bluetooth server and receives messages
-    /// sent by clients to the server.
-    var centralManager: CBCentralManager!
-    
-    /// The peripheralManager acts as our Bluetooth clients and establishes
-    /// connections to other BT servers. It also sends messages.
-    var peripheralManager: CBPeripheralManager!
-    
-    /// The characteristic which defines our chat functionality for the
-    /// Bluetooth API.
-    var characteristic: CBMutableCharacteristic?
     
     /// Save messages which has been seen before such that they are not sent again.
     /// Otherwise they can loop around in the network forever.
@@ -82,9 +58,6 @@ class AppSession: ObservableObject  {
     /// A dictionary which holds the ids of messages relayed and the corresponding sender
     /// of said messages. This is used for DSR.
     var senderOfMessageID: [Int32 : String] = [:]
-    
-    /// Seen CoreBluetooth Central devices
-    var seenCBCentral: [CBCentral] = []
     
     private let dataController: LiveDataController
     
@@ -378,7 +351,9 @@ extension AppSession: DataControllerDelegate {
     }
     
     func dataController(_ dataController: DataController, didReceive encryptedMessage: Message) {
-        receive(encryptedMessage: encryptedMessage)
+        Task {
+            await receive(encryptedMessage: encryptedMessage)
+        }
     }
     
     func dataController(_ dataController: DataController, didReceiveAcknowledgement message: Message) {

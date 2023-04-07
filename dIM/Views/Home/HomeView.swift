@@ -64,7 +64,7 @@ struct HomeView: View {
                                 conversation.removeFromMessages(conversation.messages!)
                                 conversation.lastMessage = "Start a new conversation."
                                 do {
-                                    try Session.context.save()
+                                    try appSession.context.save()
                                 } catch {
                                     print("Context could not be saved.")
                                 }
@@ -125,10 +125,10 @@ struct HomeView: View {
     }
     
     private func deleteContact(for conversation: ConversationEntity) {
-        Session.context.delete(conversation)
+        appSession.context.delete(conversation)
         
         do {
-            try Session.context.save()
+            try appSession.context.save()
         } catch {
             print("[Error] Could not delete conversations.")
         }
@@ -143,7 +143,7 @@ struct HomeView: View {
             let request: NSFetchRequest<ConversationEntity>
             request = ConversationEntity.fetchRequest()
             
-            let count = try Session.context.count(for: request)
+            let count = try appSession.context.count(for: request)
             return count == 0
         } catch {
             return true
