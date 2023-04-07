@@ -11,7 +11,7 @@ import CoreData
 
 class UsernameValidator: ObservableObject {
     /// UsernameValidator as a singleton. Use this to access all user information.
-    static let shared = UsernameValidator()
+    static var shared = UsernameValidator()
     
     struct UserInfo {
         let id: String

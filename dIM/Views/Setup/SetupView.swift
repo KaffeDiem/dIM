@@ -12,6 +12,8 @@ import SwiftUI
  and are then redirected to ContentView which is the main View of the app.
  */
 struct SetupView: View {
+    @State private var id = UUID()
+    
     /// CoreDate context object
     @Environment(\.managedObjectContext) var context
     @Environment(\.colorScheme) private var colorScheme
@@ -30,9 +32,11 @@ struct SetupView: View {
     @State private var usernameTextField = ""
     @State private var usernameTextFieldState: UsernameValidator.State = .undetermined
     
+    @State private var usernameIsValid = UsernameValidator.shared.isUsernameValid
+    
     var body: some View {
         NavigationView {
-            if UsernameValidator.shared.isUsernameValid {
+            if usernameIsValid {
                 HomeView()
                     .navigationBarTitle("")
                     .navigationBarBackButtonHidden(true)
@@ -87,6 +91,7 @@ struct SetupView: View {
                         // Enter button
                         Button {
                             UsernameValidator.shared.set(username: usernameTextField, context: context)
+                            id = UUID() // Hack to force refresh view
                         } label: {
                             Text("Continue")
                                 .padding()
@@ -119,6 +124,10 @@ struct SetupView: View {
                     }
                 }
             }
+        }
+        .id(id)
+        .onChange(of: UsernameValidator.shared.isUsernameValid) { newValue in
+            usernameIsValid = newValue
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .banner(data: $appSession.bannerData, isPresented: $appSession.bannerDataShouldShow)

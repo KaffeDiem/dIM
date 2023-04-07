@@ -59,18 +59,27 @@ class AppSession: ObservableObject  {
     /// of said messages. This is used for DSR.
     var senderOfMessageID: [Int32 : String] = [:]
     
-    private let dataController: LiveDataController
+    private var dataController: LiveDataController
     
     /// The initialiser for the AppSession.
     /// Sets up the `centralManager` and the `peripheralManager`.
     /// - Parameter context: The context for persistent storage to `CoreData`
     init(context: NSManagedObjectContext) {
         self.context = context
-        guard let usernameWithDigits = UsernameValidator.shared.userInfo?.asString else {
-            fatalError("Tried to set up AppSession without a valid username. This is not allowed")
-        }
-        self.dataController = LiveDataController(config: .init(usernameWithRandomDigits: usernameWithDigits))
+        self.dataController = LiveDataController(config: .init(usernameWithRandomDigits: ""))
         dataController.delegate = self
+        setupBindings()
+    }
+    
+    private func setupBindings() {
+        // Reset the DataController if the username changes
+        UsernameValidator.shared.$userInfo.sink { [unowned self] userInfo in
+            guard let userInfo else { return }
+            let usernameWithDigits = userInfo.asString
+            dataController = LiveDataController(
+                config: .init(usernameWithRandomDigits: usernameWithDigits))
+            dataController.delegate = self
+        }.store(in: &cancellables)
     }
     
     func addUserFromQrScan(_ result: String) {
