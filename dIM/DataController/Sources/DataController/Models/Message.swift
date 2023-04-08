@@ -26,7 +26,7 @@ public struct Message: Codable, Identifiable {
         /// to optionally include it in your app.
         case gps = 3
         
-        var asString: String {
+        public var asString: String {
             switch self {
             case .regular:
                 return "REG"

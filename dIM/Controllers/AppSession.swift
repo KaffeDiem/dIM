@@ -113,15 +113,16 @@ class AppSession: ObservableObject  {
             let encryptedText = try CryptoHandler.encryptMessage(
                 text: message, symmetricKey: symmetricKey)
             
-            let sendMessageInformation = SendMessageInformation(encryptedText: encryptedText, receipentWithDigits: receipent)
+            let messageId = Int32.random(in: 0...Int32.max)
+            let sendMessageInformation = SendMessageInformation(id: messageId, encryptedText: encryptedText, receipentWithDigits: receipent)
             try await dataController.send(message: sendMessageInformation)
             
             messageToBeStored = Message(
-                id: Int32.random(in: 0...Int32.max),
+                id: messageId,
                 kind: .regular,
                 sender: usernameWithDigits,
                 receiver: receipent,
-                text: encryptedText)
+                text: message)
         } catch DataControllerError.noConnectedDevices {
             showBanner(.init(
                 title: "Message in queue",
@@ -147,10 +148,13 @@ class AppSession: ObservableObject  {
         conversation.date = Date()
         conversation.addToMessages(localMessage)
         
-        do {
-            try context.save()
-        } catch {
-            showErrorMessage(error.localizedDescription)
+        // Context should be saved on main thread
+        DispatchQueue.main.async { [weak self] in
+            do {
+                try self?.context.save()
+            } catch {
+                self?.showErrorMessage(error.localizedDescription)
+            }
         }
     }
     
@@ -260,29 +264,32 @@ extension AppSession {
     
     #warning("Refactor method")
     private func receiveAcknowledgement(message: Message) {
-        context.perform {
-            let conversation = self.getConversationFor(message: message)
-            guard let conversation else {
-                return
-            }
-            
-            let components = message.text.components(separatedBy: "/")
-            guard components.first == "ACK" && components.count == 2 else {
-                return
-            }
-            
-            let messages = conversation.messages?.allObjects as! [MessageEntity]
-            for message in messages {
-                if message.id == Int(components[1])! {
-                    message.status = MessageStatus.delivered.rawValue
+        Task {
+            context.perform {
+                let conversation = self.getConversationFor(message: message)
+                guard let conversation else {
+                    return
                 }
-            }
-            
-            self.refreshID = UUID()
-            do {
-                try self.context.save()
-            } catch {
-                self.showErrorMessage(error.localizedDescription)
+                
+                let components = message.text.components(separatedBy: "/")
+                guard components.first == Message.Kind.acknowledgement.asString && components.count == 2 else {
+                    return
+                }
+                
+                let messages = conversation.messages?.allObjects as! [MessageEntity]
+                
+                guard let id = Int(components[1]) else { return }
+                let messagesWithId = messages.filter { $0.id == id }
+                messagesWithId.forEach { $0.status = MessageStatus.delivered.rawValue }
+                
+                DispatchQueue.main.async {
+                    do {
+                        try self.context.save()
+                        self.refreshID = UUID()
+                    } catch {
+                        self.showErrorMessage(error.localizedDescription)
+                    }
+                }
             }
         }
     }
@@ -334,7 +341,7 @@ extension AppSession {
             fatalError("Cannot send ACK when there is no receiver. This is not allowed.")
         }
         
-        let ackText = "ACK/\(message.id)"
+        let ackText = "\(Message.Kind.acknowledgement.asString)/\(message.id)"
         let ackMessage = Message(
             id: Int32.random(in: 0...Int32.max),
             kind: .acknowledgement,

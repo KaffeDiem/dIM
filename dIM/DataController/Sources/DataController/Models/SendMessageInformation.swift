@@ -8,6 +8,7 @@
 import Foundation
 
 public struct SendMessageInformation {
+    public let id: Int32
     public let encryptedText: String
     public let receipent: String
     
@@ -19,8 +20,9 @@ public struct SendMessageInformation {
     /// - Parameters:
     ///   - encryptedText: Encrypted text message to be sent to some user.
     ///   - receipent: The receipent of the text message. Usually formatted as `username#1234`
-    public init(encryptedText: String, receipentWithDigits: String) {
+    public init(id: Int32, encryptedText: String, receipentWithDigits: String) {
         self.encryptedText = encryptedText
         self.receipent = receipentWithDigits
+        self.id = id
     }
 }

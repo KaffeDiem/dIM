@@ -100,9 +100,8 @@ public class LiveDataController: NSObject, DataController {
                 throw DataControllerError.noConnectedDevices
             }
             
-            let messageId = Int32.random(in: 0...Int32.max)
             let encryptedMessage = Message(
-                id: messageId,
+                id: message.id,
                 kind: .regular,
                 sender: config.username,
                 receiver: message.receipent,
