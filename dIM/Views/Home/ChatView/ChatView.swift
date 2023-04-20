@@ -7,7 +7,7 @@
 import MobileCoreServices
 import Foundation
 import SwiftUI
-
+import DataController
 
 /// The `ChatView` displays a conversation and all the messages that have been sent and
 /// received in said conversation.
@@ -29,7 +29,8 @@ struct ChatView: View {
     /// Temporary storage of the textfield entry.
     @State var message: String = ""
     
-    @State var reportAlertIsShown = false
+    @State private var isReportAlertPresented = false
+    @State private var isLocationSharingPresented = false
     
     /// Current username
     private let username: String
@@ -64,9 +65,9 @@ struct ChatView: View {
                     LazyVStack {
                         ForEach(messages, id: \.self) { message in
                             HStack {
-                                MessageBubble(username: username, message: message)
+                                MessageView(username: username, message: message)
                             }
-                            .padding(EdgeInsets(top: 1, leading: 0, bottom: 1, trailing: 0))
+                            .padding([.top, .bottom], 1)
                             .contextMenu {
                                 // Copy to clipboard
                                 Button(role: .none) {
@@ -87,24 +88,24 @@ struct ChatView: View {
                                     }
                                 }
                                 // Delete button
-                                Button(role: .destructive, action: {
+                                Button(role: .destructive) {
                                     appSession.context.delete(message)
                                     do {
                                         try appSession.context.save()
                                     } catch {
                                         appSession.showErrorMessage(error.localizedDescription)
                                     }
-                                }, label: {
+                                } label: {
                                     Label("Delete", systemImage: "minus.square")
-                                })
+                                }
                                 // Report button
-                                Button(role: .destructive, action: {
-                                    reportAlertIsShown = true
-                                }, label: {
+                                Button(role: .destructive) {
+                                    isReportAlertPresented = true
+                                } label: {
                                     Label("Report", systemImage: "exclamationmark.bubble")
-                                })
+                                }
                             }
-                            .alert("Report Message", isPresented: $reportAlertIsShown) {
+                            .alert("Report Message", isPresented: $isReportAlertPresented) {
                                 Button("OK", role: .cancel) {}
                             } message: {
                                 Text("dIM stores all data on yours and the senders device. Therefore you should block the user who has sent this message to you if you deem it inappropriate.\nIllegal content should be reported to the authorities.")
@@ -128,6 +129,19 @@ struct ChatView: View {
                     send(message: message)
                 }
                 .padding([.leading, .bottom, .top])
+                .toolbar {
+                    ToolbarItem(placement: .keyboard) {
+                        HStack {
+                            // Send location button
+                            Button {
+                                isLocationSharingPresented = true
+                            } label: {
+                                Label("Location", systemImage: "location.fill")
+                            }
+                            Spacer()
+                        }
+                    }
+                }
                 
                 Button {
                     send(message: message)
@@ -140,7 +154,12 @@ struct ChatView: View {
             }
         }
         .navigationTitle(title)
-        
+        .sheet(isPresented: $isLocationSharingPresented) {
+            print("Location sheet was dismissed")
+        } content: {
+            Text("Share location")
+                .presentationDetents([.medium])
+        }
         .onAppear() {
             // Send READ messages if enabled in settings
             if UserDefaults.standard.bool(forKey: UserDefaultsKey.readMessages.rawValue) {

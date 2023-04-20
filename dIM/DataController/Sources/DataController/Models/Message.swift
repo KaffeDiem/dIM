@@ -13,7 +13,7 @@ import Foundation
  used to identify what type it is.
  */
 public struct Message: Codable, Identifiable {
-    public enum Kind: Int, Codable {
+    public enum Kind: Int32, Codable {
         /// Regular encrypted messages. The receipent will have to decrypt it.
         case regular = 0
         /// Acknowledment messages are sent automatically once a message has been received.
@@ -36,6 +36,21 @@ public struct Message: Codable, Identifiable {
                 return "READ"
             case .gps:
                 return "DIM.GPS"
+            }
+        }
+        
+        public init(fromString text: String) {
+            switch text {
+            case "REG":
+                self = .regular
+            case "ACK":
+                self = .acknowledgement
+            case "READ":
+                self = .read
+            case "DIM.GPS":
+                self = .gps
+            default:
+                self = .regular
             }
         }
     }
